@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      dir="ltr"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" >
+
+    <h:head>
+        <title><ui:insert name="title">Default Title</ui:insert></title>
+        <!--<h:outputStylesheet library="primefaces-" name="theme.css" />--> 
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+
+    </h:head>
+
+    <h:body>
+
+        <p:growl id="growl" life="3000" />
+
+        <p:layout fullPage="true"  >
+            <p:layoutUnit position="north" header="#{bundle.AppName}">
+                <h:form id="menuForm" dir="rtl">
+
+                    <p:toolbar >
+                        <f:facet name="right">
+                            <p:button outcome="/index"  value="صفحه اصلی" icon="ui-icon-home" />
+                            <span class="ui-separator">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                            </span>
+                            <f:view locale="Arabic">
+                                <p:menuButton value="اطلاعات برنامه">
+                                    <p:menuitem containerStyle="text-align: right" value="اطلاعات اشخاص" outcome="/person/List.xhtml" />
+                                    <p:menuitem containerStyle="text-align: right" value="وارد کردن اکسل" outcome="/upload/index.xhtml" />
+                                </p:menuButton>   
+                            
+                            </f:view>
+                            <span class="ui-separator">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                            </span>
+                            <h:outputLabel for="advanced" value="انتخاب قالب"/>
+                            
+                            <p:themeSwitcher  id="advanced" value="#{currentTheme.theme}" style="width:190px;vertical-align: middle;padding-left: .7em;" effect="fade" var="t" >
+                                <f:selectItems value="#{themeSwitcherView.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}" />
+                                
+                                <p:column>
+                                    <h:outputText styleClass="ui-theme ui-theme-#{t.name}" style="display-block" />
+                                </p:column>
+
+                                <p:column>
+                                    #{t.displayName}
+                                </p:column>
+                                <p:ajax listener="#{themeSwitcherView.handleThemeName}" update="growl" />
+                            </p:themeSwitcher>
+
+                        </f:facet>
+                        <f:facet name="left">
+                            <f:view>
+
+                            </f:view>
+                        </f:facet>
+
+                    </p:toolbar>
+
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="90" header="ابزارهای مهم">
+                <ui:insert name="footer"/>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" style="overflow-x: hidden">
+                 
+                <ui:insert name="body"/>
+            </p:layoutUnit>
+
+        </p:layout>
+
+    </h:body>
+
+</html>

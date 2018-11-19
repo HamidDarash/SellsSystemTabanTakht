@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="PersonEditDlg" dynamic="true" dir="rtl" height="600px"
+                  widgetVar="PersonEditDialog" modal="true" resizable="true"  appendTo="@(body)" header="#{bundle.EditPersonTitle}">
+            <h:form id="PersonEditForm">
+                <p:growl id="msgs" showDetail="true"/>
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" rendered="#{personController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditPersonLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{personController.selected.name}" title="#{bundle.EditPersonTitle_name}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_name}" style="width: 99%"/>
+                        <p:outputLabel value="#{bundle.EditPersonLabel_internationalCode}" for="internationalCode" />
+                        <p:inputText id="internationalCode" value="#{personController.selected.internationalCode}"  title="#{bundle.EditPersonTitle_internationalCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_internationalCode}" style="width: 99%"/>
+                        <p:outputLabel value="#{bundle.EditPersonLabel_email}" for="email" />
+                        <p:inputText id="email" value="#{personController.selected.email}" title="#{bundle.EditPersonTitle_email}" />
+                        <p:outputLabel value="#{bundle.EditPersonLabel_company}" for="company" />
+                        <p:inputText id="company" value="#{personController.selected.company}" title="#{bundle.EditPersonTitle_company}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_company}" style="width: 99%"/>
+                        <p:outputLabel value="#{bundle.EditPersonLabel_companyCode}" for="companyCode" />
+                        <p:inputText id="companyCode" value="#{personController.selected.companyCode}" title="#{bundle.EditPersonTitle_companyCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_companyCode}"/>
+                        <p:outputLabel value="#{bundle.EditPersonLabel_address}" for="address" />
+                        <p:inputTextarea rows="4" cols="30" id="address" value="#{personController.selected.address}" title="#{bundle.EditPersonTitle_address}" />
+                        <p:outputLabel value="#{bundle.EditPersonLabel_mobile}" for="mobile" />
+                        <p:inputText id="mobile" value="#{personController.selected.mobile}" title="#{bundle.EditPersonTitle_mobile}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_mobile}"/>
+                        <p:outputLabel value="#{bundle.EditPersonLabel_description}" for="description" />
+                        <p:inputText id="description" value="#{personController.selected.description}" title="#{bundle.EditPersonTitle_description}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_description}"/>
+
+                    </p:panelGrid>
+                    <p:panel id="display2">
+                        <p:outputLabel value="اعتبارات" for="display2" />
+                        <p:dataTable id="credits" widgetVar="credits" 
+                                     emptyMessage=""
+                                     scrollHeight="100"
+                                     var="creditRow" 
+                                     dir="rtl"
+                                     value="#{personController.selected.credits}" 
+                                     rowIndexVar="rowId"
+                                     rowKey="#{creditRow.id}"
+                                     editable="true" style="margin-bottom:20px">
+                            <f:facet name="header">
+                                کنترل اعتبارات شخص در سیستم
+                            </f:facet>
+
+                            <p:ajax event="rowEdit" listener="#{personController.onRowEdit}" update=":PersonEditForm:msgs" />
+                            <p:ajax event="rowEditCancel" listener="#{personController.onRowCancel}" update=":PersonEditForm:msgs" />
+                            <p:ajax event="rowSelect" listener="#{personController.onRowSelect}" update=":PersonEditForm:msgs" />
+                            <p:ajax event="rowUnselect" listener="#{personController.onRowUnselect}" update=":PersonEditForm:msgs" />
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="ردیف" />
+                                </f:facet>
+                                <h:outputText value="#{rowId + 1}" />
+                            </p:column>
+                            <p:column headerText="مقدار اعتبار">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{creditRow.credit}" /></f:facet>
+                                    <f:facet name="input"><p:inputText id="modelInput" value="#{creditRow.credit}" style="width:100%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="تاریخ اضافه شدن">
+                                <h:outputText value="#{personController.getShamsiDate(creditRow.createAt)}" />
+                            </p:column>ّ
+                            <p:column headerText="حذف" style="width:32px">
+                                <p:commandButton actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
+                            </p:column>ّ
+
+                            <p:column headerText="ویرایش" style="width:32px">
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                      
+                        <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk" styleClass="">
+                            <f:actionListener binding="#{rowId + 1}" />
+                        </p:commandButton>
+                    </p:panel>
+                    <p:commandButton actionListener="#{personController.update}" value="#{bundle.Save}" update="display,:PersonListForm:datalist,:growl" oncomplete="handleSubmit(args, 'PersonEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="PersonEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

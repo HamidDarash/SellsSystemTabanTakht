@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListPersonTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="PersonListForm">
+                <p:panel header="#{bundle.ListPersonTitle}">
+                            
+                    <p:dataTable id="datalist" value="#{personController.items}" var="item" dir="rtl"
+                                 selectionMode="single" selection="#{personController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rowIndexVar="rowIdPerson"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 widgetVar="personTable"
+                                 emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                 resizableColumns="true"
+                                 liveResize="true"
+                                 scrollable="true"
+                                 lazy="true"
+                                 >
+                        <f:facet name="header">
+                            <p:outputPanel>
+                                <h:outputText value="جستجوی فرد مورد نظر:" />
+                                <p:remoteCommand name="rc" delay="500" update="PersonListForm" actionListener="#{personController.findByInternationalOrNameOrCompanyCode}" />
+                                <p:inputText id="globalFilter" value="#{personController.search}" onkeyup="rc()" style="width:150px"  placeholder="کلمه جستجو" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{rowIdPerson + 1}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.name}" headerText="name" footerText="" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_name}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_internationalCode}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.internationalCode}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_email}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_company}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.company}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_companyCode}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.companyCode}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_address}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.address}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_mobile}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.mobile == 0 || item.mobile == null?'موبایل ندارد':item.mobile}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListPersonTitle_description}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.description}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="جمع اعتبار"/>
+                            </f:facet>
+                            <h:outputText value="#{personController.getCreditSum(item.credits)}"/>
+                        </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="تاریخ آخرین ورود اعتبار"/>
+                            </f:facet>
+                            <h:outputText value="#{personController.getLastCreditDate(item)}"/>
+                        </p:column>
+
+
+
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{personController.prepareCreate}" update=":PersonCreateForm" oncomplete="PF('PersonCreateDialog').show()"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":PersonViewForm" oncomplete="PF('PersonViewDialog').show()" disabled="#{empty personController.selected}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":PersonEditForm" oncomplete="PF('PersonEditDialog').show()" disabled="#{empty personController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{personController.destroy}" update=":growl,datalist" disabled="#{empty personController.selected}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

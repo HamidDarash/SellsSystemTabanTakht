@@ -1,0 +1,57 @@
+
+@font-face {
+    font-family: Vazir;
+    src: url("#{resource['css:Vazir.eot']}");
+    src: url("#{resource['css:Vazir.ttf']}") format('embedded-opentype'),
+        url("#{resource['css:Vazir.woff2']}") format('woff2'),
+        url("#{resource['css:Vazir.woff']}") format('woff'),
+        url("#{resource['css:Vazir.ttf']}") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ui-widget {
+    font-size: 15px !important;
+}
+.ui-layout-north {
+    z-index: 22 !important;
+    overflow: visible !important;;
+}
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+.ui-widget-header {
+    text-align: right;
+    text-transform: uppercase;
+}
+/*.ui-button {
+    margin-top: 10px !important;
+}*/
+
+/* This will be applied to all HTML in the page and not just PrimeFaces components*/
+
+root {
+    font-size: 12px;
+    font-family: Vazir, Arial, sans-serif;
+}
+/* We can adjust the font-size value if we wish to make PrimeFaces components stand out by making them larger or smaller so that they don't take up as much space on the page */
+
+.ui-widget {
+    font-family: Vazir , Arial, sans-serif;
+    font-size: 1em;
+}
+.ui-widget .ui-widget {
+    font-size: 1em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    font-family: Vazir , Arial, sans-serif;
+    font-size: 0.8em;
+}
+ 
+.ui-paginator.ui-paginator-top , .ui-paginator.ui-paginator-bottom{
+    direction: ltr !important;
+}
+ 
