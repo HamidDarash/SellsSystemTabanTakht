@@ -7,7 +7,6 @@ package com.darash.salemaven.controller;
 
 import com.darash.salemaven.entities.Credit;
 import com.darash.salemaven.entities.Person;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,16 +25,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Asynchronous;
-import javax.ejb.EJBException;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
-import org.eclipse.persistence.exceptions.DatabaseException;
 
 @ManagedBean(name = "fileUploadController")
 @SessionScoped
