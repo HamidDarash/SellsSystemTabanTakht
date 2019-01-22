@@ -12,10 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-/**
- *
- * @author daresh
- */
 @Stateless
 public class PersonFacade extends AbstractFacade<Person> {
 
@@ -27,19 +23,24 @@ public class PersonFacade extends AbstractFacade<Person> {
         return em;
     }
 
+    public List<Person> findAllByLimit(int first, int pageSize) {
+        TypedQuery<Person> typedQuery = em.createNamedQuery("Person.findAll", Person.class)
+                .setFirstResult(first)
+                .setMaxResults(pageSize);
+        return typedQuery.getResultList();
+    }
+
     public List<Person> findByInternationalOrNameOrCompanyCode(String string) {
         TypedQuery<Person> typedQuery = em.createNamedQuery("Person.findByNameOrInternationalOrCompanyCode", Person.class)
                 .setParameter("internationalCode", "%" + string + "%")
                 .setParameter("name", "%" + string + "%")
                 .setParameter("companyCode", "%" + string + "%");
         return typedQuery.getResultList();
-
     }
 
     public List<Person> findByInternationalCode(String Code) {
         TypedQuery<Person> typedQuery = em.createNamedQuery("Person.findByInternationalCode", Person.class)
                 .setParameter("internationalCode", Code);
-
         return typedQuery.getResultList();
     }
 

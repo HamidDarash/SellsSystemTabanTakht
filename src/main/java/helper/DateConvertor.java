@@ -1,7 +1,6 @@
 package helper;
 
 public class DateConvertor {
-
     public static int[] gregorian_to_jalali(int gy, int gm, int gd) {
         int[] g_d_m = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
         int jy;

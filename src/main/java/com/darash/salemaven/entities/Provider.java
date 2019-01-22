@@ -103,23 +103,19 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(Integer id) {
-        this.id = id;
-    }
-
-    public Provider(Integer id, String fullname, String internationalCode, String codeEghtesadi) {
-        this.id = id;
+    public Provider(String fullname, String internationalCode, String codeEghtesadi, String address, String email, String mobile, String shopName, String code) {
         this.fullname = fullname;
         this.internationalCode = internationalCode;
         this.codeEghtesadi = codeEghtesadi;
+        this.address = address;
+        this.email = email;
+        this.mobile = mobile;
+        this.shopName = shopName;
+        this.code = code;
     }
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getFullname() {

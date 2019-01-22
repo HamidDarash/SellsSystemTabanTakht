@@ -152,7 +152,6 @@ public class PersonController implements Serializable {
             try {
                 if (persistAction != PersistAction.DELETE) {
                     getFacade().edit(selected);
-
                 } else {
                     getFacade().remove(selected);
                 }
@@ -266,5 +265,5 @@ public class PersonController implements Serializable {
         FacesMessage msg = new FacesMessage("حذف آیتم مورد نظر");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-
+    
 }

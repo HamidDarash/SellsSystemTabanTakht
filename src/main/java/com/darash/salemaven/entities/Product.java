@@ -89,25 +89,19 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Integer id) {
-        this.id = id;
-    }
-
-    public Product(Integer id, String productName, String model, String color, String unit, String price) {
-        this.id = id;
+    public Product(String productName, String model, String color, String unit, String description, Float wage, String price, Provider provider) {
         this.productName = productName;
         this.model = model;
         this.color = color;
         this.unit = unit;
+        this.description = description;
+        this.wage = wage;
         this.price = price;
+        this.provider = provider;
     }
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getProductName() {

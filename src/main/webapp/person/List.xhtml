@@ -17,8 +17,8 @@
             <h:form id="PersonListForm">
                 <p:panel header="#{bundle.ListPersonTitle}">
                             
-                    <p:dataTable id="datalist" value="#{personController.items}" var="item" dir="ltr"
-                                 selectionMode="single" selection="#{personController.selected}"
+                    <p:dataTable id="datalist" value="#{lzViewPerson.lazyDataPersonModel}" var="item" dir="ltr"
+                                 selectionMode="single" selection="#{lzViewPerson.selected}"
                                  paginator="true"
                                  rowKey="#{item.id}"
                                  rowIndexVar="rowIdPerson"
@@ -34,8 +34,8 @@
                         <f:facet name="header">
                             <p:outputPanel>
                                 <h:outputText value="جستجوی فرد مورد نظر:" />
-                                <p:remoteCommand name="rc" delay="500" update="PersonListForm" actionListener="#{personController.findByInternationalOrNameOrCompanyCode}" />
-                                <p:inputText id="globalFilter" value="#{personController.search}" onkeyup="rc()" style="width:150px"  placeholder="کلمه جستجو" />
+                                <p:remoteCommand name="rc" delay="500" update="PersonListForm"  />
+                                <p:inputText id="globalFilter" value="" onkeyup="rc()" style="width:150px"  placeholder="کلمه جستجو" />
                             </p:outputPanel>
                         </f:facet>
 
@@ -100,14 +100,14 @@
                             <f:facet name="header">
                                 <h:outputText value="جمع اعتبار"/>
                             </f:facet>
-                            <h:outputText value="#{personController.getCreditSum(item.credits)}"/>
+                            <h:outputText value="#{lzViewPerson.getCreditSum(item.credits)}"/>
                         </p:column>
                         
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تاریخ آخرین ورود اعتبار"/>
                             </f:facet>
-                            <h:outputText value="#{personController.getLastCreditDate(item)}"/>
+                            <h:outputText value="#{lzViewPerson.getLastCreditDate(item)}"/>
                         </p:column>
 
 
