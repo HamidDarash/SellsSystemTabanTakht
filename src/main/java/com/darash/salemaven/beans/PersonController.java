@@ -46,9 +46,6 @@ public class PersonController implements Serializable {
 
     private Person selected;
     private Credit selectedCredit;
-//    private JalaliCalendar jalaliCalendar;
-
-    private String Search = "";
 
     public LazyDataModel<Person> getItems() {
         return items;
@@ -64,7 +61,6 @@ public class PersonController implements Serializable {
             @Override
             public List<Person> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                 List<Person> list = ejbFacade.filter(first, pageSize, filters);
-                System.out.println(list.isEmpty());
                 if (filters != null && filters.size() > 0) {
                     this.setRowCount(ejbFacade.getFilteredRowCount(filters));
                 }
@@ -120,14 +116,7 @@ public class PersonController implements Serializable {
             return e.getMessage();
         }
     }
-
-    public String getSearch() {
-        return Search;
-    }
-
-    public void setSearch(String Search) {
-        this.Search = Search;
-    }
+ 
 
     public Credit getSelectedCredit() {
         return selectedCredit;
@@ -178,7 +167,6 @@ public class PersonController implements Serializable {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("PersonDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
@@ -191,16 +179,7 @@ public class PersonController implements Serializable {
         }
         return sum;
     }
-
-    public void findByInternationalOrNameOrCompanyCode() {
-//        if (!Search.isEmpty()) {
-//            items = ejbFacade.findByInternationalOrNameOrCompanyCode(Search);
-//        } else {
-//            items = getFacade().findAll();
-//        }
-        JsfUtil.addSuccessMessage("جستجو");
-    }
-
+ 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
@@ -321,5 +300,7 @@ public class PersonController implements Serializable {
         FacesMessage msg = new FacesMessage("حذف آیتم مورد نظر");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
+    
+  
 
 }

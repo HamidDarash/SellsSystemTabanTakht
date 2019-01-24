@@ -196,19 +196,19 @@ public class FileUploadController {
 
     private void rowCheckSheet(Sheet sheet) {
         int i = 0;
+        int max = sheet.getPhysicalNumberOfRows()-1;
         setProgress(0);
-        showProgressbar = true;
+       showProgressbar = true;
         listErrorImport.clear();
         List<String> tempError = new ArrayList<>();
         for (Row row : sheet) {
             if (i > 0) {
                 rowInserter(row);
             }
-            progress = (int) Math.round((i * 100) / sheet.getPhysicalNumberOfRows());
+            setProgress((int) Math.round((i * 100) / max));
             i++;
-            System.out.println(progress);
         }
-        setProgress(100);
+//        setProgress(100);
         showProgressbar = false;
     }
 

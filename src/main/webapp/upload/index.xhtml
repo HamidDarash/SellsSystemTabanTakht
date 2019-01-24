@@ -33,6 +33,7 @@
                     <p:progressBar id="progressbar" widgetVar="pbAjax" ajax="true" value="#{fileUploadController.progress}"  labelTemplate="{value}%" global="false">
                         <p:ajax event="complete" listener="#{fileUploadController.onComplete}" update="growl ,progressbar , listError ,panelUpload"/>
                     </p:progressBar>
+                    
                     <ui:repeat  id="listError" value="#{fileUploadController.listErrorImport}" var="item" varStatus="loop">
                         <p style="color: red;font-weight: bolder"><span style="color: green">خطای فایل : </span> #{item}</p> 
                     </ui:repeat>  
