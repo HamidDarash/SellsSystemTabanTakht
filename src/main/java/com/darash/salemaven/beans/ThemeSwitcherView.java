@@ -1,4 +1,4 @@
-package com.darash.salemaven.controller;
+package com.darash.salemaven.beans;
 
 import java.util.List;
 import javax.annotation.PostConstruct;

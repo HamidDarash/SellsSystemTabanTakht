@@ -1,4 +1,4 @@
-package com.darash.salemaven.controller;
+package com.darash.salemaven.beans;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -6,7 +6,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 import com.darash.salemaven.entities.Theme;
-import com.darash.salemaven.controller.ThemeService;
+import com.darash.salemaven.beans.ThemeService;
 import javax.faces.application.FacesMessage;
 import javax.faces.convert.ConverterException;
 

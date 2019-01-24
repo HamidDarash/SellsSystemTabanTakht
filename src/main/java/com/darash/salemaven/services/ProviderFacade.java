@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.darash.salemaven.beans;
+package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Provider;
 import javax.ejb.Stateless;

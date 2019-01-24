@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.darash.salemaven.controller;
+package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Credit;
 import com.darash.salemaven.entities.Person;
@@ -37,7 +37,7 @@ import javax.persistence.PersistenceException;
 public class FileUploadController {
 
     @EJB
-    private com.darash.salemaven.beans.PersonFacade ejbFacade;
+    private com.darash.salemaven.services.PersonFacade ejbFacade;
 
     private Integer progress;
     private boolean showProgressbar = false;

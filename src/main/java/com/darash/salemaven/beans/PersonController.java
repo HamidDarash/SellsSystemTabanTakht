@@ -1,62 +1,124 @@
-package com.darash.salemaven.controller;
+package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Person;
-import com.darash.salemaven.controller.util.JsfUtil;
-import com.darash.salemaven.controller.util.JsfUtil.PersistAction;
-import com.darash.salemaven.beans.PersonFacade;
+import com.darash.salemaven.beans.util.JsfUtil;
+import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
+import com.darash.salemaven.services.PersonFacade;
 import com.darash.salemaven.entities.Credit;
 import helper.DateConvertor;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @Named("personController")
-@SessionScoped
+@ViewScoped
 public class PersonController implements Serializable {
 
-    @EJB
-    private com.darash.salemaven.beans.PersonFacade ejbFacade;
+    @Inject
+    private PersonFacade ejbFacade;
 
-    private List<Person> items = null;
+    private LazyDataModel<Person> items;
+
     private Person selected;
     private Credit selectedCredit;
 //    private JalaliCalendar jalaliCalendar;
 
     private String Search = "";
 
-    public String getShamsiDate(Date d) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(d);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
+    public LazyDataModel<Person> getItems() {
+        return items;
+    }
+
+    public void setItems(LazyDataModel<Person> items) {
+        this.items = items;
+    }
+
+    @PostConstruct
+    public void initDataModel() {
+        items = new LazyDataModel<Person>() {
+            @Override
+            public List<Person> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                List<Person> list = ejbFacade.filter(first, pageSize, filters);
+                System.out.println(list.isEmpty());
+                if (filters != null && filters.size() > 0) {
+                    this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                }
+                return list;
+            }
+
+            @Override
+            public int getRowCount() {
+                return ejbFacade.count();
+            }
+
+            @Override
+            public Person getRowData(String key) {
+                return ejbFacade.find(new Integer(key));
+            }
+
+        };
+    }
+
+    public PersonFacade getEjbFacade() {
+        return ejbFacade;
+    }
+
+    public void setEjbFacade(PersonFacade ejbFacade) {
+        this.ejbFacade = ejbFacade;
+    }
+
+    public String getShamsiDate(String date) {
+        if (date.isEmpty()) {
+            return "none";
+        }
+        String[] array = date.split("\\-", -1);
+        int year = Integer.valueOf(array[0]);
+        int month = Integer.valueOf(array[1]);
+        int day = Integer.valueOf(array[2]);
         int[] tarikh_out = DateConvertor.gregorian_to_jalali(year, month, day);
         return String.valueOf(tarikh_out[0]) + "/" + String.valueOf(tarikh_out[1]) + "/" + String.valueOf(tarikh_out[2]);
     }
 
+    public String convertDateToString(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = format.format(date);
+        return dateString;
+    }
+
     public String getLastCreditDate(Person p) {
-        Date createdAt = p.getCredits().get(p.getCredits().size() - 1).getCreateAt();
-        return getShamsiDate(createdAt);
+        try {
+            Date createdAt = p.getCredits().get(p.getCredits().size() - 1).getCreateAt();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = format.format(createdAt);
+            return getShamsiDate(dateString);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     public String getSearch() {
@@ -120,13 +182,6 @@ public class PersonController implements Serializable {
         }
     }
 
-    public List<Person> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        return items;
-    }
-
     public long getCreditSum(List<Credit> credits) {
         Iterator it = credits.iterator();
         long sum = 0;
@@ -138,11 +193,11 @@ public class PersonController implements Serializable {
     }
 
     public void findByInternationalOrNameOrCompanyCode() {
-        if (!Search.isEmpty()) {
-            items = ejbFacade.findByInternationalOrNameOrCompanyCode(Search);
-        } else {
-            items = getFacade().findAll();
-        }
+//        if (!Search.isEmpty()) {
+//            items = ejbFacade.findByInternationalOrNameOrCompanyCode(Search);
+//        } else {
+//            items = getFacade().findAll();
+//        }
         JsfUtil.addSuccessMessage("جستجو");
     }
 
@@ -251,7 +306,8 @@ public class PersonController implements Serializable {
     }
 
     public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("انتخاب اعتبار ", String.valueOf(((Credit) event.getObject()).getCredit()));
+        System.out.println("Hello");
+        FacesMessage msg = new FacesMessage("اعتبار فعلی : " + String.valueOf(this.getCreditSum(((Person) event.getObject()).getCredits())));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
@@ -265,5 +321,5 @@ public class PersonController implements Serializable {
         FacesMessage msg = new FacesMessage("حذف آیتم مورد نظر");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
+
 }

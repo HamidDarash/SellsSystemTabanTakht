@@ -17,8 +17,9 @@
             <h:form id="PersonListForm">
                 <p:panel header="#{bundle.ListPersonTitle}">
                             
-                    <p:dataTable id="datalist" value="#{lzViewPerson.lazyDataPersonModel}" var="item" dir="ltr"
-                                 selectionMode="single" selection="#{lzViewPerson.selected}"
+                    <p:dataTable id="datalist" value="#{personController.items}" var="item" dir="rtl"
+                                 selectionMode="single" 
+                                 selection="#{personController.selected}"
                                  paginator="true"
                                  rowKey="#{item.id}"
                                  rowIndexVar="rowIdPerson"
@@ -35,14 +36,14 @@
                             <p:outputPanel>
                                 <h:outputText value="جستجوی فرد مورد نظر:" />
                                 <p:remoteCommand name="rc" delay="500" update="PersonListForm"  />
-                                <p:inputText id="globalFilter" value="" onkeyup="rc()" style="width:150px"  placeholder="کلمه جستجو" />
+                                <!--<p:inputText id="globalFilter" value="" onkeyup="rc()" style="width:150px"  placeholder="کلمه جستجو" />-->
                             </p:outputPanel>
                         </f:facet>
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect" listener="#{personController.onRowSelect}"   update="growl createButton viewButton editButton deleteButton"/>
+                        <!--<p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>-->
 
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListPersonTitle_id}"/>
                             </f:facet>
@@ -100,14 +101,14 @@
                             <f:facet name="header">
                                 <h:outputText value="جمع اعتبار"/>
                             </f:facet>
-                            <h:outputText value="#{lzViewPerson.getCreditSum(item.credits)}"/>
+                            <h:outputText value="#{personController.getCreditSum(item.credits)}"/>
                         </p:column>
                         
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تاریخ آخرین ورود اعتبار"/>
                             </f:facet>
-                            <h:outputText value="#{lzViewPerson.getLastCreditDate(item)}"/>
+                            <h:outputText value="#{personController.getLastCreditDate(item)}"/>
                         </p:column>
 
 

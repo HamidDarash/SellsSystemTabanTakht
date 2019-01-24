@@ -1,4 +1,4 @@
-package com.darash.salemaven.beans.util;
+package com.darash.salemaven.services.util;
 
 import java.util.List;
 import javax.faces.application.FacesMessage;
