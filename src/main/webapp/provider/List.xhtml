@@ -7,21 +7,26 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition template="/template.xhtml">
-
-
         <ui:define name="title">
-            <h:outputText value="#{bundle.ListProviderTitle}"></h:outputText>
+            <h:outputText value="لیست تامین کنندگان محصولات"></h:outputText>
         </ui:define>
 
         <ui:define name="body">
             <h:form id="ProviderListForm">
-                <p:panel header="#{bundle.ListProviderTitle}">
+                <p:panel header="لیست تامین کنندگان">
                     <p:dataTable id="datalist" value="#{providerController.items}" var="item"
                                  selectionMode="single" selection="#{providerController.selected}"
                                  paginator="true"
+                                 rowIndexVar="rowIdProvider"
                                  rowKey="#{item.id}"
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50"
+                                 widgetVar="providerTable"
+                                 emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                 resizableColumns="true"
+                                 liveResize="true"
+                                 scrollable="true"
+                                 lazy="true"
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
@@ -29,9 +34,9 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProviderTitle_id}"/>
+                                <h:outputText value="ردیف"/>
                             </f:facet>
-                            <h:outputText value="#{item.id}"/>
+                            <h:outputText value="#{rowIdProvider + 1}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">

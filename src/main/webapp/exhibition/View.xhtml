@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ExhibitionViewDlg" widgetVar="ExhibitionViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.ViewExhibitionTitle}">
+            <h:form id="ExhibitionViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_id}"/>
+                        <h:outputText value="#{exhibitionController.selected.id}" title="#{bundleExibition.ViewExhibitionTitle_id}"/>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_nameExhibition}"/>
+                        <h:outputText value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.ViewExhibitionTitle_nameExhibition}"/>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_dateStart}"/>
+                        <h:outputText value="#{exhibitionController.selected.dateStart}" title="#{bundleExibition.ViewExhibitionTitle_dateStart}">
+                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_dateEnd}"/>
+                        <h:outputText value="#{exhibitionController.selected.dateEnd}" title="#{bundleExibition.ViewExhibitionTitle_dateEnd}">
+                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_managerName}"/>
+                        <h:outputText value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.ViewExhibitionTitle_managerName}"/>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_desciption}"/>
+                        <h:outputText value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.ViewExhibitionTitle_desciption}"/>
+                        <h:outputText value="#{bundleExibition.ViewExhibitionLabel_activate}"/>
+                        <p:selectBooleanCheckbox value="#{exhibitionController.selected.activate}" disabled="true"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleExibition.Close}" onclick="ExhibitionViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

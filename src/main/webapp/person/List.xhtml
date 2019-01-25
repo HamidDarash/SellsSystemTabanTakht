@@ -16,7 +16,7 @@
         <ui:define name="body">
             <h:form id="PersonListForm">
                 <p:panel header="#{bundle.ListPersonTitle}">
-                            
+
                     <p:dataTable id="datalist" value="#{personController.items}" var="item" dir="rtl"
                                  selectionMode="single" 
                                  selection="#{personController.selected}"
@@ -35,7 +35,7 @@
 
                         <p:ajax event="rowSelect" listener="#{personController.onRowSelect}"   update="growl createButton viewButton editButton deleteButton"/>
                         <!--<p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>-->
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListPersonTitle_id}"/>
@@ -96,15 +96,15 @@
                             </f:facet>
                             <h:outputText value="#{personController.getCreditSum(item.credits)}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تاریخ آخرین ورود اعتبار"/>
                             </f:facet>
-                            <h:outputText value="#{personController.getLastCreditDate(item)}"/>
+                            <h:outputText value="#{personController.getLastCreditDate(item)}">
+                                <f:converter converterId="persian_date" />
+                            </h:outputText>
                         </p:column>
-
-
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="ایجاد" actionListener="#{personController.prepareCreate}" update=":PersonCreateForm" oncomplete="PF('PersonCreateDialog').show()"/>

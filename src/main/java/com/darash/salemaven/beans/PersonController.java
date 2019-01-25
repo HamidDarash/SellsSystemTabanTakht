@@ -106,17 +106,15 @@ public class PersonController implements Serializable {
         return dateString;
     }
 
-    public String getLastCreditDate(Person p) {
+    public Date getLastCreditDate(Person p) {
         try {
             Date createdAt = p.getCredits().get(p.getCredits().size() - 1).getCreateAt();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String dateString = format.format(createdAt);
-            return getShamsiDate(dateString);
+            return createdAt;
         } catch (Exception e) {
-            return e.getMessage();
+            System.out.println(e.getMessage());
         }
+        return new Date();
     }
- 
 
     public Credit getSelectedCredit() {
         return selectedCredit;
@@ -179,7 +177,7 @@ public class PersonController implements Serializable {
         }
         return sum;
     }
- 
+
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
@@ -300,7 +298,5 @@ public class PersonController implements Serializable {
         FacesMessage msg = new FacesMessage("حذف آیتم مورد نظر");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
-  
 
 }

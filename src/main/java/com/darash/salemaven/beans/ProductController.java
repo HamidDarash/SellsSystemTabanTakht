@@ -4,13 +4,13 @@ import com.darash.salemaven.entities.Product;
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
 import com.darash.salemaven.services.ProductFacade;
-
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -18,15 +18,43 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @Named("productController")
 @SessionScoped
 public class ProductController implements Serializable {
 
-    @EJB
+    @Inject
     private com.darash.salemaven.services.ProductFacade ejbFacade;
-    private List<Product> items = null;
+    private LazyDataModel<Product> items;
     private Product selected;
+
+    @PostConstruct
+    public void initDataModel() {
+        items = new LazyDataModel<Product>() {
+            @Override
+            public List<Product> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                List<Product> list = ejbFacade.filter(first, pageSize, filters);
+                if (filters != null && filters.size() > 0) {
+                    this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                }
+                return list;
+            }
+
+            @Override
+            public int getRowCount() {
+                return ejbFacade.count();
+            }
+
+            @Override
+            public Product getRowData(String key) {
+                return ejbFacade.find(new Integer(key));
+            }
+
+        };
+    }
 
     public ProductController() {
     }
@@ -74,11 +102,20 @@ public class ProductController implements Serializable {
         }
     }
 
-    public List<Product> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
+    public ProductFacade getEjbFacade() {
+        return ejbFacade;
+    }
+
+    public void setEjbFacade(ProductFacade ejbFacade) {
+        this.ejbFacade = ejbFacade;
+    }
+
+    public LazyDataModel<Product> getItems() {
         return items;
+    }
+
+    public void setItems(LazyDataModel<Product> items) {
+        this.items = items;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {

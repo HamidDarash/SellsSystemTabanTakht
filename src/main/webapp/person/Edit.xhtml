@@ -30,8 +30,7 @@
                         <p:outputLabel value="#{bundle.EditPersonLabel_mobile}" for="mobile" />
                         <p:inputText id="mobile" value="#{personController.selected.mobile}" title="#{bundle.EditPersonTitle_mobile}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_mobile}"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_description}" for="description" />
-                        <p:inputText id="description" value="#{personController.selected.description}" title="#{bundle.EditPersonTitle_description}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_description}"/>
-
+                        <p:inputText id="description" value="#{personController.selected.description}" title="#{bundle.EditPersonTitle_description}" requiredMessage="#{bundle.EditPersonRequiredMessage_description}"/>
                     </p:panelGrid>
                     <p:panel id="display2">
                         <p:outputLabel value="اعتبارات" for="display2" />
@@ -66,7 +65,9 @@
                             </p:column>
 
                             <p:column headerText="تاریخ اضافه شدن">
-                                <h:outputText value="#{personController.getShamsiDate(personController.convertDateToString(creditRow.createAt))}" />
+                                <h:outputText value="#{creditRow.createAt}">
+                                    <f:converter converterId="persian_date" />
+                                </h:outputText>
                             </p:column>ّ
                             <p:column headerText="حذف" style="width:32px">
                                 <p:commandButton actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
@@ -75,8 +76,9 @@
                             <p:column headerText="ویرایش" style="width:32px">
                                 <p:rowEditor />
                             </p:column>
+                            
                         </p:dataTable>
-                      
+
                         <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk" styleClass="">
                             <f:actionListener binding="#{rowId + 1}" />
                         </p:commandButton>

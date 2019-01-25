@@ -9,9 +9,10 @@
 
     <h:head>
         <title><ui:insert name="title">Default Title</ui:insert></title>
-        <!--<h:outputStylesheet library="primefaces-" name="theme.css" />--> 
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputStylesheet library="css" name="picker/kamadatepicker.css"/>
         <h:outputScript library="js" name="jsfcrud.js"/>
+        <h:outputScript library="js" name="kamadatepicker.min.js"/>
 
     </h:head>
 
@@ -32,6 +33,7 @@
                             <f:view locale="Arabic">
                                 <p:menuButton value="اطلاعات برنامه">
                                     <p:menuitem containerStyle="text-align: right" value="اطلاعات اشخاص" outcome="/person/List.xhtml" />
+                                     <p:menuitem containerStyle="text-align: right" value="اطلاعات نمایشگاه ها" outcome="/exhibition/List.xhtml" /> 
                                     <p:menuitem containerStyle="text-align: right" value="اطلاعات تامین کنندگان" outcome="/provider/List.xhtml" />
                                     <p:menuitem containerStyle="text-align: right" value="اطلاعات محصولات" outcome="/product/List.xhtml" /> 
                                     <p:separator />
@@ -74,12 +76,12 @@
             </p:layoutUnit>
 
             <p:layoutUnit position="center" style="overflow-x: hidden">
-                 
                 <ui:insert name="body"/>
+                <ui:insert name="javascript" />
             </p:layoutUnit>
 
         </p:layout>
-
+        
     </h:body>
-
+   
 </html>

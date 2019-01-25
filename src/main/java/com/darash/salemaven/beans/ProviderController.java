@@ -3,31 +3,61 @@ package com.darash.salemaven.beans;
 import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
+import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.services.ProviderFacade;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @Named("providerController")
-@SessionScoped
+@ViewScoped
 public class ProviderController implements Serializable {
 
-    @EJB
+    @Inject
     private com.darash.salemaven.services.ProviderFacade ejbFacade;
-    private List<Provider> items = null;
+    private LazyDataModel<Provider> items;
     private Provider selected;
 
+    @PostConstruct
+    public void initDataModel() {
+        items = new LazyDataModel<Provider>() {
+            @Override
+            public List<Provider> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                List<Provider> list = ejbFacade.filter(first, pageSize, filters);
+                if (filters != null && filters.size() > 0) {
+                    this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                }
+                return list;
+            }
+
+            @Override
+            public int getRowCount() {
+                return ejbFacade.count();
+            }
+
+            @Override
+            public Provider getRowData(String key) {
+                return ejbFacade.find(new Integer(key));
+            }
+
+        };
+    }
+    
     public ProviderController() {
     }
 
@@ -37,6 +67,22 @@ public class ProviderController implements Serializable {
 
     public void setSelected(Provider selected) {
         this.selected = selected;
+    }
+
+    public ProviderFacade getEjbFacade() {
+        return ejbFacade;
+    }
+
+    public void setEjbFacade(ProviderFacade ejbFacade) {
+        this.ejbFacade = ejbFacade;
+    }
+
+    public LazyDataModel<Provider> getItems() {
+        return items;
+    }
+
+    public void setItems(LazyDataModel<Provider> items) {
+        this.items = items;
     }
 
     protected void setEmbeddableKeys() {
@@ -73,14 +119,7 @@ public class ProviderController implements Serializable {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
-
-    public List<Provider> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        return items;
-    }
-
+ 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ExhibitionEditDlg" widgetVar="ExhibitionEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.EditExhibitionTitle}">
+            <h:form id="ExhibitionEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_nameExhibition}" for="nameExhibition" />
+                        <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.EditExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_nameExhibition}"/>
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateStart}" for="dateStart" />
+                        <p:calendar id="dateStart" pattern="MM/dd/yyyy" value="#{exhibitionController.selected.dateStart}" title="#{bundleExibition.EditExhibitionTitle_dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}" showOn="button"/>
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateEnd}" for="dateEnd" />
+                        <p:calendar id="dateEnd" pattern="MM/dd/yyyy" value="#{exhibitionController.selected.dateEnd}" title="#{bundleExibition.EditExhibitionTitle_dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateEnd}" showOn="button"/>
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_managerName}" for="managerName" />
+                        <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.EditExhibitionTitle_managerName}" />
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_desciption}" for="desciption" />
+                        <p:inputTextarea rows="4" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.EditExhibitionTitle_desciption}" />
+                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_activate}" for="activate" />
+                        <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{exhibitionController.update}" value="#{bundleExibition.Save}" update="display,:ExhibitionListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ExhibitionEditDialog');"/>
+                    <p:commandButton value="#{bundleExibition.Cancel}" onclick="ExhibitionEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

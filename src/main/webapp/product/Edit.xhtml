@@ -12,8 +12,6 @@
             <h:form id="ProductEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{productController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditProductLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{productController.selected.id}" title="#{bundle.EditProductTitle_id}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_id}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_productName}" for="productName" />
                         <p:inputTextarea rows="4" cols="30" id="productName" value="#{productController.selected.productName}" title="#{bundle.EditProductTitle_productName}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_productName}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_model}" for="model" />

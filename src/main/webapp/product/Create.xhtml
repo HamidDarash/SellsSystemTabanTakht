@@ -12,9 +12,7 @@
             <h:form id="ProductCreateForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{productController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateProductLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{productController.selected.id}" title="#{bundle.CreateProductTitle_id}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_id}"/>
-                        <p:outputLabel value="#{bundle.CreateProductLabel_productName}" for="productName" />
+                       <p:outputLabel value="#{bundle.CreateProductLabel_productName}" for="productName" />
                         <p:inputTextarea rows="4" cols="30" id="productName" value="#{productController.selected.productName}" title="#{bundle.CreateProductTitle_productName}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_productName}"/>
                         <p:outputLabel value="#{bundle.CreateProductLabel_model}" for="model" />
                         <p:inputText id="model" value="#{productController.selected.model}" title="#{bundle.CreateProductTitle_model}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_model}"/>
