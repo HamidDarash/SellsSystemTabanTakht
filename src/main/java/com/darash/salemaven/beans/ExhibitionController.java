@@ -1,15 +1,18 @@
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Exhibition;
+import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.services.util.JsfUtil;
 import com.darash.salemaven.services.util.JsfUtil.PersistAction;
 import com.darash.salemaven.services.ExhibitionFacade;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
@@ -18,6 +21,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @Named("exhibitionController")
 @SessionScoped
@@ -25,8 +30,51 @@ public class ExhibitionController implements Serializable {
 
     @EJB
     private com.darash.salemaven.services.ExhibitionFacade ejbFacade;
-    private List<Exhibition> items = null;
+    private LazyDataModel<Exhibition> items;
     private Exhibition selected;
+
+    public ExhibitionFacade getEjbFacade() {
+        return ejbFacade;
+    }
+
+    public void setEjbFacade(ExhibitionFacade ejbFacade) {
+        this.ejbFacade = ejbFacade;
+    }
+
+    public LazyDataModel<Exhibition> getItems() {
+        return items;
+    }
+
+    public void setItems(LazyDataModel<Exhibition> items) {
+        this.items = items;
+    }
+    
+    
+
+    @PostConstruct
+    public void initDataModel() {
+        items = new LazyDataModel<Exhibition>() {
+            @Override
+            public List<Exhibition> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                List<Exhibition> list = ejbFacade.filter(first, pageSize, filters);
+                if (filters != null && filters.size() > 0) {
+                    this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                }
+                return list;
+            }
+
+            @Override
+            public int getRowCount() {
+                return ejbFacade.count();
+            }
+
+            @Override
+            public Exhibition getRowData(String key) {
+                return ejbFacade.find(new Integer(key));
+            }
+
+        };
+    }
 
     public ExhibitionController() {
     }
@@ -72,13 +120,6 @@ public class ExhibitionController implements Serializable {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
-    }
-
-    public List<Exhibition> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        return items;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -161,9 +202,9 @@ public class ExhibitionController implements Serializable {
         }
 
     }
-    
-    public void convertDateStringToDate(){
-        
+
+    public void convertDateStringToDate() {
+
     }
 
 }

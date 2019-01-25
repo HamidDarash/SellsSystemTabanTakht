@@ -14,10 +14,22 @@
                     <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
                         <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_nameExhibition}" for="nameExhibition" />
                         <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.EditExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_nameExhibition}"/>
+                        <p:outputLabel value="تاریخ شروع رکورد فعلی" for="displayDateStart" />
+                        <p:outputLabel id="displayDateStart" value="#{exhibitionController.selected.dateStart}" style="color:red">
+                            <f:converter converterId="persian_date"/>
+                        </p:outputLabel>
                         <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateStart}" for="dateStart" />
-                        <p:calendar id="dateStart" pattern="MM/dd/yyyy" value="#{exhibitionController.selected.dateStart}" title="#{bundleExibition.EditExhibitionTitle_dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}" showOn="button"/>
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateEnd}" for="dateEnd" />
-                        <p:calendar id="dateEnd" pattern="MM/dd/yyyy" value="#{exhibitionController.selected.dateEnd}" title="#{bundleExibition.EditExhibitionTitle_dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateEnd}" showOn="button"/>
+                        <p:inputMask id="dateStart" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
+                            <f:converter converterId="persian_date"/>
+                        </p:inputMask> 
+                         <p:outputLabel value="تاریخ پایان رکورد فعلی" for="displayDateEnd" />
+                        <p:outputLabel id="displayDateEnd" value="#{exhibitionController.selected.dateEnd}" style="color:red">
+                            <f:converter converterId="persian_date"/>
+                        </p:outputLabel>
+                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
+                        <p:inputMask id="dateEnd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
+                            <f:converter converterId="persian_date" />
+                        </p:inputMask> 
                         <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_managerName}" for="managerName" />
                         <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.EditExhibitionTitle_managerName}" />
                         <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_desciption}" for="desciption" />
@@ -30,6 +42,10 @@
                 </h:panelGroup>
             </h:form>
         </p:dialog>
+        <script>
+            jQuery(document).ready(function () {
 
+            });
+        </script>
     </ui:composition>
 </html>

@@ -5,12 +5,10 @@
  */
 package com.darash.salemaven.services;
 
-import com.darash.salemaven.beans.PersonController;
 import com.darash.salemaven.entities.Person;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javafx.beans.binding.When;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,8 +18,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.primefaces.model.SortMeta;
-import org.primefaces.model.SortOrder;
 import org.slf4j.LoggerFactory;
 
 @Stateless
