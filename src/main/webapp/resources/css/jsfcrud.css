@@ -10,7 +10,7 @@
     font-style: normal;
 }
 
-.ui-widget {
+/*.ui-widget {
     font-size: 15px !important;
 }
 .ui-layout-north {
@@ -23,7 +23,7 @@
 .ui-widget-header {
     text-align: right;
     text-transform: uppercase;
-}
+}*/
 /*.ui-button {
     margin-top: 10px !important;
 }*/
@@ -31,13 +31,13 @@
 /* This will be applied to all HTML in the page and not just PrimeFaces components*/
 
 root {
-    font-size: 12px;
-    font-family: Vazir, Arial, sans-serif;
+    /*font-size: 12px;*/
+    font-family:  Arial, sans-serif;
 }
 /* We can adjust the font-size value if we wish to make PrimeFaces components stand out by making them larger or smaller so that they don't take up as much space on the page */
 
-.ui-widget {
-    font-family: Vazir , Arial, sans-serif;
+/*.ui-widget {
+    font-family:  Arial, sans-serif;
     font-size: 1em;
 }
 .ui-widget .ui-widget {
@@ -49,9 +49,18 @@ root {
 .ui-widget button {
     font-family: Vazir , Arial, sans-serif;
     font-size: 0.8em;
-}
- 
-.ui-paginator.ui-paginator-top , .ui-paginator.ui-paginator-bottom{
+}*/
+
+/*.ui-paginator.ui-paginator-top , .ui-paginator.ui-paginator-bottom{
     direction: ltr !important;
+}*/
+table, p , select , label {
+    font-family: Vazir , Arial, sans-serif;
 }
- 
+.ui-corner-left{
+    border-radius: 0 ;
+}
+
+.ui-toolbar{
+    padding: 1px;
+}

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.darash_salemaven_war_1.0-SNAPSHOTPU" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>java:app/x</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>UNSPECIFIED</shared-cache-mode>
     <properties>
-      <!--      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
       <property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>
       <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>
       <property name="eclipselink.ddl-generation.output-mode" value="both"/>
@@ -14,7 +15,8 @@
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
       <property name="eclipselink.logging.timestamp" value="true"/>
-      <property name="eclipselink.logging.exceptions" value="true"/>-->
+      <property name="eclipselink.logging.exceptions" value="true"/>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
 </persistence>

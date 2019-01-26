@@ -9,7 +9,6 @@
       >
 
     <ui:composition>
-
         <p:dialog id="ExhibitionCreateDlg" widgetVar="ExhibitionCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.CreateExhibitionTitle}">
             <h:form id="ExhibitionCreateForm">
                 <h:panelGroup id="display">
@@ -29,7 +28,7 @@
                         <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_desciption}" for="desciption" />
                         <p:inputTextarea rows="4" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.CreateExhibitionTitle_desciption}" />
                         <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_activate}" for="activate" />
-                        <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
+                        <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{exhibitionController.create}" value="#{bundleExibition.Save}" update="display,:ExhibitionListForm:datalist,:growl" oncomplete="handleSubmit(args,'ExhibitionCreateDialog');"/>
                     <p:commandButton value="#{bundleExibition.Cancel}" onclick="ExhibitionCreateDialog.hide()"/>

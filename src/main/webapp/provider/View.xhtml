@@ -31,7 +31,7 @@
                         <h:outputText value="#{bundle.ViewProviderLabel_code}"/>
                         <h:outputText value="#{providerController.selected.code}" title="#{bundle.ViewProviderTitle_code}"/>
                     </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="ProviderViewDialog.hide()"/>
+                    <p:commandButton value="#{bundle.Close}" onclick="PF('ProviderViewDialog').hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

@@ -48,8 +48,6 @@ public class ExhibitionController implements Serializable {
     public void setItems(LazyDataModel<Exhibition> items) {
         this.items = items;
     }
-    
-    
 
     @PostConstruct
     public void initDataModel() {
@@ -72,11 +70,11 @@ public class ExhibitionController implements Serializable {
             public Exhibition getRowData(String key) {
                 return ejbFacade.find(new Integer(key));
             }
-
         };
     }
 
     public ExhibitionController() {
+
     }
 
     public Exhibition getSelected() {
@@ -105,9 +103,6 @@ public class ExhibitionController implements Serializable {
 
     public void create() {
         persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleExibition").getString("ExhibitionCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     public void update() {
@@ -116,10 +111,6 @@ public class ExhibitionController implements Serializable {
 
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleExibition").getString("ExhibitionDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     private void persist(PersistAction persistAction, String successMessage) {

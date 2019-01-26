@@ -124,7 +124,6 @@ public class PersonController implements Serializable {
     }
 
     public Person getSelected() {
-
         return selected;
     }
 
@@ -151,9 +150,9 @@ public class PersonController implements Serializable {
 
     public void create() {
         persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("PersonCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
+//        if (!JsfUtil.isValidationFailed()) {
+//            items = null;    // Invalidate list of items to trigger re-query.
+//        }
     }
 
     public void update() {
@@ -162,9 +161,9 @@ public class PersonController implements Serializable {
 
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("PersonDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-        }
+//        if (!JsfUtil.isValidationFailed()) {
+//            selected = null; // Remove selection
+//        }
     }
 
     public long getCreditSum(List<Credit> credits) {
@@ -219,7 +218,6 @@ public class PersonController implements Serializable {
 
     @FacesConverter(forClass = Person.class)
     public static class PersonControllerConverter implements Converter {
-
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {

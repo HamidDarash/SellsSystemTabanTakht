@@ -6,20 +6,29 @@
 package com.darash.salemaven.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,13 +40,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "exhibition")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Exhibition.findAll", query = "SELECT e FROM Exhibition e")
-    , @NamedQuery(name = "Exhibition.findById", query = "SELECT e FROM Exhibition e WHERE e.id = :id")
-    , @NamedQuery(name = "Exhibition.findByNameExhibition", query = "SELECT e FROM Exhibition e WHERE e.nameExhibition = :nameExhibition")
-    , @NamedQuery(name = "Exhibition.findByDateStart", query = "SELECT e FROM Exhibition e WHERE e.dateStart = :dateStart")
-    , @NamedQuery(name = "Exhibition.findByDateEnd", query = "SELECT e FROM Exhibition e WHERE e.dateEnd = :dateEnd")
-    , @NamedQuery(name = "Exhibition.findByManagerName", query = "SELECT e FROM Exhibition e WHERE e.managerName = :managerName")
-    , @NamedQuery(name = "Exhibition.findByActivate", query = "SELECT e FROM Exhibition e WHERE e.activate = :activate")})
+    @NamedQuery(name = "Exhibition.findAll", query = "SELECT e FROM Exhibition e"),
+    @NamedQuery(name = "Exhibition.findById", query = "SELECT e FROM Exhibition e WHERE e.id = :id"),
+    @NamedQuery(name = "Exhibition.findByNameExhibition", query = "SELECT e FROM Exhibition e WHERE e.nameExhibition = :nameExhibition"),
+    @NamedQuery(name = "Exhibition.findByDateStart", query = "SELECT e FROM Exhibition e WHERE e.dateStart = :dateStart"),
+    @NamedQuery(name = "Exhibition.findByDateEnd", query = "SELECT e FROM Exhibition e WHERE e.dateEnd = :dateEnd"),
+    @NamedQuery(name = "Exhibition.findByManagerName", query = "SELECT e FROM Exhibition e WHERE e.managerName = :managerName"),
+    @NamedQuery(name = "Exhibition.findByActivate", query = "SELECT e FROM Exhibition e WHERE e.activate = :activate")})
 public class Exhibition implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,9 +78,36 @@ public class Exhibition implements Serializable {
     @Column(name = "desciption")
     private String desciption;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "activate")
-    private boolean activate;
+    private boolean activate = false;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "exhibition_factor", joinColumns = @JoinColumn(name = "exhibition_id",
+            referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "factor_id", referencedColumnName = "id"))
+    private List<Factor> factors = new ArrayList<>();
+
+    public List<Factor> getFactors() {
+        return factors;
+    }
+
+    public void setFactors(List<Factor> factors) {
+        this.factors = factors;
+    }
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "exhibition_provider", joinColumns = @JoinColumn(name = "exhibition_id",
+            referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "provider_id", referencedColumnName = "id"))
+    private List<Provider> providers = new ArrayList<>();
+
+    public List<Provider> getProviders() {
+        return providers;
+    }
+
+    public void setProviders(List<Provider> providers) {
+        this.providers = providers;
+    }
 
     public Exhibition() {
     }
@@ -86,6 +122,7 @@ public class Exhibition implements Serializable {
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.activate = activate;
+
     }
 
     public Integer getId() {
@@ -153,7 +190,6 @@ public class Exhibition implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Exhibition)) {
             return false;
         }
@@ -168,5 +204,5 @@ public class Exhibition implements Serializable {
     public String toString() {
         return "com.darash.salemaven.entities.Exhibition[ id=" + id + " ]";
     }
-    
+
 }

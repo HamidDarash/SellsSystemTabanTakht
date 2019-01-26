@@ -8,6 +8,7 @@ package com.darash.salemaven.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,10 +18,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -84,6 +85,35 @@ public class Provider implements Serializable {
     @Column(name = "code")
     private String code;
 
+    @ManyToMany(mappedBy = "providers")
+    private List<Exhibition> exhibitions;
+
+    public List<Exhibition> getExhibitions() {
+        return exhibitions;
+    }
+
+    public void setExhibitions(List<Exhibition> exhibitions) {
+        this.exhibitions = exhibitions;
+    }
+
+    //relational by factor
+    @OneToMany(
+            mappedBy = "provider",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "provider_id")
+    private List<Factor> factors = new ArrayList<>();
+
+    public List<Factor> getFactors() {
+        return factors;
+    }
+
+    public void setFactors(List<Factor> factors) {
+        this.factors = factors;
+    }
+
+    //relational by product
     @OneToMany(
             mappedBy = "provider",
             cascade = CascadeType.ALL,

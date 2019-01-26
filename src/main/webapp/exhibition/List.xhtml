@@ -31,8 +31,8 @@
                                  lazy="true"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton viewProvidersButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton viewProvidersButton"/>
 
                         <p:column>
                             <f:facet name="header">
@@ -80,11 +80,13 @@
                             </f:facet>
                             <p:selectBooleanCheckbox value="#{item.activate}" disabled="true"/>
                         </p:column>
+
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleExibition.Create}" actionListener="#{exhibitionController.prepareCreate}" update=":ExhibitionCreateForm" oncomplete="PF('ExhibitionCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleExibition.View}" update=":ExhibitionViewForm" oncomplete="PF('ExhibitionViewDialog').show()" disabled="#{empty exhibitionController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundleExibition.Edit}" update=":ExhibitionEditForm" oncomplete="PF('ExhibitionEditDialog').show()" disabled="#{empty exhibitionController.selected}"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleExibition.Delete}" actionListener="#{exhibitionController.destroy}" update=":growl,datalist" disabled="#{empty exhibitionController.selected}"/>
+                            <p:commandButton id="viewProvidersButton" icon="ui-icon-pencil" value="نمایش تامین کنندگان" update=":ExhibitionProvidersViewForm" oncomplete="PF('ExhibitionProvidersViewDialog').show()" disabled="#{!(exhibitionController.selected.providers.size() > 0)}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
@@ -93,6 +95,7 @@
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
+            <ui:include src="ListProviders.xhtml"/>
 
             <script>
                 PrimeFaces.widget.Dialog.prototype.applyFocus = function () {

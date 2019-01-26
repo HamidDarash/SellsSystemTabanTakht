@@ -7,8 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
-
-        <p:dialog id="ExhibitionEditDlg" widgetVar="ExhibitionEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.EditExhibitionTitle}">
+        <p:dialog id="ExhibitionEditDlg" widgetVar="ExhibitionEditDialog" maximizable="true" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.EditExhibitionTitle}">
             <h:form id="ExhibitionEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">

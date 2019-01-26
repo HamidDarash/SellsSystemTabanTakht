@@ -12,8 +12,6 @@
             <h:form id="ProviderEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{providerController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditProviderLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{providerController.selected.id}" title="#{bundle.EditProviderTitle_id}" required="true" requiredMessage="#{bundle.EditProviderRequiredMessage_id}"/>
                         <p:outputLabel value="#{bundle.EditProviderLabel_fullname}" for="fullname" />
                         <p:inputTextarea rows="4" cols="30" id="fullname" value="#{providerController.selected.fullname}" title="#{bundle.EditProviderTitle_fullname}" required="true" requiredMessage="#{bundle.EditProviderRequiredMessage_fullname}"/>
                         <p:outputLabel value="#{bundle.EditProviderLabel_internationalCode}" for="internationalCode" />
@@ -30,6 +28,7 @@
                         <p:inputTextarea rows="4" cols="30" id="shopName" value="#{providerController.selected.shopName}" title="#{bundle.EditProviderTitle_shopName}" />
                         <p:outputLabel value="#{bundle.EditProviderLabel_code}" for="code" />
                         <p:inputText id="code" value="#{providerController.selected.code}" title="#{bundle.EditProviderTitle_code}" />
+                        
                     </p:panelGrid>
                     <p:commandButton actionListener="#{providerController.update}" value="#{bundle.Save}" update="display,:ProviderListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ProviderEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ProviderEditDialog.hide()"/>
