@@ -2,6 +2,7 @@ package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Exhibition;
 import com.darash.salemaven.entities.Person;
+import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.services.util.JsfUtil;
 import com.darash.salemaven.services.util.JsfUtil.PersistAction;
 import com.darash.salemaven.services.ExhibitionFacade;
@@ -21,6 +22,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -32,6 +34,7 @@ public class ExhibitionController implements Serializable {
     private com.darash.salemaven.services.ExhibitionFacade ejbFacade;
     private LazyDataModel<Exhibition> items;
     private Exhibition selected;
+    private Provider selectedProvider;
 
     public ExhibitionFacade getEjbFacade() {
         return ejbFacade;
@@ -75,6 +78,14 @@ public class ExhibitionController implements Serializable {
 
     public ExhibitionController() {
 
+    }
+
+    public Provider getSelectedProvider() {
+        return selectedProvider;
+    }
+
+    public void setSelectedProvider(Provider selectedProvider) {
+        this.selectedProvider = selectedProvider;
     }
 
     public Exhibition getSelected() {
@@ -194,8 +205,14 @@ public class ExhibitionController implements Serializable {
 
     }
 
-    public void convertDateStringToDate() {
-
+    
+    public String headerProviderFactors(){
+        if (this.selectedProvider != null) {
+            return "فاکتورهای " + this.selectedProvider.getShopName() + "  |  " + this.selected.getNameExhibition();
+        }
+        return "فاکتورهای فروشگاه";
     }
-
+    public void rowSelectedDataTableProvider(SelectEvent event) {
+        
+    }
 }

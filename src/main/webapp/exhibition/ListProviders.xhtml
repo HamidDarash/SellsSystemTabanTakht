@@ -4,20 +4,23 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      >
 
     <ui:composition>
 
-        <p:dialog id="ExhibitionProvidersViewDlg" widgetVar="ExhibitionProvidersViewDialog" modal="true" resizable="false" appendTo="@(body)" header="جدول نمایش تامین کنندگان در این نمایشگاه">
+        <p:dialog id="ExhibitionProvidersViewDlg" widgetVar="ExhibitionProvidersViewDialog" modal="true" resizable="true" maximizable="true" appendTo="@(body)" header="جدول نمایش تامین کنندگان در این نمایشگاه">
             <h:form id="ExhibitionProvidersViewForm">
                 <p:panel header="لیست تامین کنندگان این نمایشگاه">
                     <p:dataTable id="datalistProviders" value="#{exhibitionController.selected.providers}" var="item"
                                  selectionMode="single"
+                                 selection="#{exhibitionController.selectedProvider}"
                                  paginator="true"
                                  rowKey="#{item.id}"
                                  rowIndexVar="rowProvidersExhibition"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rows="5"
+                                 rowsPerPageTemplate="3,5"
                                  widgetVar="listProvidersExhibition"
                                  emptyMessage="محتویاتی جهت نمایش وجود ندارد"
                                  resizableColumns="true"
@@ -25,11 +28,15 @@
                                  scrollable="true"
                                  >
                         
+                        <p:ajax event="rowSelect" update="@form" />
+                        <p:ajax event="rowUnselect" />
+                        
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
                             </f:facet>
                             <h:outputText value="#{rowProvidersExhibition + 1}"/>
+                            
                         </p:column>
                         
                         <p:column>
@@ -58,6 +65,7 @@
                                 <h:outputText value="#{bundle.ListProviderTitle_address}"/>
                             </f:facet>
                             <h:outputText value="#{item.address}"/>
+                            <p:tooltip  />
                         </p:column>
                         
                         <p:column>
@@ -88,7 +96,59 @@
                         </p:column>
                         
                     </p:dataTable>
+                    <pe:tooltip value="" for="@(#datalistProviders tr th)"  
+                       shared="true" atPosition="top center" myPosition="bottom center" styleClass="qtip-default"/> 
                 </p:panel>
+                <p:spacer height="12" />
+           
+                <p:panel header="#{exhibitionController.headerProviderFactors()}">
+                    <p:dataTable id="datalistFactors" value="#{exhibitionController.selectedProvider.factors}" var="item"
+                                 selectionMode="single"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rowIndexVar="rowProvidersFactors"
+                                 rows="5"
+                                 rowsPerPageTemplate="3,5"
+                                 widgetVar="listProvidersFactors"
+                                 emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                 resizableColumns="true"
+                                 liveResize="true"
+                                 scrollable="true"
+                                 >
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="ردیف"/>
+                            </f:facet>
+                            <h:outputText value="#{rowProvidersFactors + 1}"/>
+                        </p:column>
+ 
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="تاریخ فاکتور"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateFactor}">
+                                <f:converter converterId="persian_date" />
+                            </h:outputText>
+                        </p:column>
+                        
+                         <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="نوع فاکتور"/>
+                            </f:facet>
+                             <h:outputText value="#{item.condinationFactor}" />
+                        </p:column>
+                        
+                         <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="وضعیت مرجوعی فاکتور"/>
+                            </f:facet>
+                             <h:outputText value="#{item.returned}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </p:panel>
+              
             </h:form>
         </p:dialog>
 

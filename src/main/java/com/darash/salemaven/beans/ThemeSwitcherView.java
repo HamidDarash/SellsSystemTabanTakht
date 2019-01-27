@@ -5,7 +5,10 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import com.darash.salemaven.entities.Theme;
+import java.util.Map;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 @ManagedBean(name = "themeSwitcherView")
 @SessionScoped
@@ -30,10 +33,9 @@ public class ThemeSwitcherView {
     }
 
     public void handleThemeName() {
-//        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-//        System.out.println(params.containsKey("theme"));
-//        FacesMessage msg = new FacesMessage("عملیات موفق ", "استایل بدرستی تغییر کرد" );
-//        FacesContext.getCurrentInstance().addMessage(null, msg);
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        FacesMessage msg = new FacesMessage("استایل بدرستی تغییر کرد" );
+        FacesContext.getCurrentInstance().addMessage(null, msg);
 
     }
 

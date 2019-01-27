@@ -14,14 +14,12 @@
     </h:head>
 
     <h:body>
-
         <p:growl id="growl" life="3000" />
 
-        <p:layout fullPage="true"  >
-            <p:layoutUnit position="north" header="#{bundle.AppName}">
+        <p:layout fullPage="true" widgetVar="dialogTitlebar">
+            <p:layoutUnit position="north" header="#{bundle.AppName}" >
                 <h:form id="menuForm" dir="rtl">
-
-                    <p:toolbar >
+                    <p:toolbar id="toolbar">
                         <f:facet name="right">
                             <p:button outcome="/index"  value="صفحه اصلی" icon="ui-icon-home" />
                             <span class="ui-separator">
@@ -43,20 +41,20 @@
                                 <span class="ui-icon ui-icon-grip-dotted-vertical" />
                             </span>
 
-                            <h:outputLabel for="advanced" value="انتخاب قالب"/>
+                            <f:view>
+                                <h:outputLabel for="advanced" value="انتخاب قالب"/>
+                                <p:themeSwitcher  id="advanced" value="#{currentTheme.theme}" style="width:190px;vertical-align: middle;padding-left: .7em;" effect="fade" var="t" >
+                                    <f:selectItems value="#{themeSwitcherView.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}" />
+                                    <p:column>
+                                        <h:outputText styleClass="ui-theme ui-theme-#{t.name}" style="display-block" />
+                                    </p:column>
+                                    <p:column>
+                                        #{t.displayName}
+                                    </p:column>
+                                    <p:ajax listener="#{themeSwitcherView.handleThemeName}" update="growl" />
+                                </p:themeSwitcher> 
+                            </f:view>   
 
-                            <p:themeSwitcher  id="advanced" value="#{currentTheme.theme}" style="width:190px;vertical-align: middle;padding-left: .7em;" effect="fade" var="t" >
-                                <f:selectItems value="#{themeSwitcherView.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}" />
-
-                                <p:column>
-                                    <h:outputText styleClass="ui-theme ui-theme-#{t.name}" style="display-block" />
-                                </p:column>
-
-                                <p:column>
-                                    #{t.displayName}
-                                </p:column>
-                                <p:ajax listener="#{themeSwitcherView.handleThemeName}" update="growl" />
-                            </p:themeSwitcher>
 
                         </f:facet>
                         <f:facet name="left">
@@ -83,7 +81,15 @@
 
         <h:outputScript library="js" name="jsfcrud.js"/>
         <h:outputScript library="js" name="persianDatepicker.min.js"/>
-
+        <script>
+//        PF('dialogTitlebar').jq.find('')[0]
+            jQuery(document).ready(function () {
+                jQuery("#menuForm\\:toolbar").parent().parent().css({
+                    'height': 'auto',
+                    'overflow': 'hidden !important'
+                });
+            });
+        </script>
     </h:body>
 
 </html>

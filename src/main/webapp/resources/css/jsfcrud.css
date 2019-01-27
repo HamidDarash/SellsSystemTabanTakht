@@ -9,58 +9,39 @@
     font-weight: normal;
     font-style: normal;
 }
-
-/*.ui-widget {
-    font-size: 15px !important;
-}
-.ui-layout-north {
-    z-index: 22 !important;
-    overflow: visible !important;;
-}
-.ui-layout-north .ui-layout-unit-content {
-    overflow: visible !important;
-}
-.ui-widget-header {
-    text-align: right;
-    text-transform: uppercase;
-}*/
-/*.ui-button {
-    margin-top: 10px !important;
-}*/
-
-/* This will be applied to all HTML in the page and not just PrimeFaces components*/
-
-root {
-    /*font-size: 12px;*/
-    font-family:  Arial, sans-serif;
-}
-/* We can adjust the font-size value if we wish to make PrimeFaces components stand out by making them larger or smaller so that they don't take up as much space on the page */
-
-/*.ui-widget {
-    font-family:  Arial, sans-serif;
-    font-size: 1em;
-}
-.ui-widget .ui-widget {
-    font-size: 1em;
-}
-.ui-widget input,
-.ui-widget select,
-.ui-widget textarea,
-.ui-widget button {
+table, p , select , label , .ui-menuitem-text,
+.ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title {
     font-family: Vazir , Arial, sans-serif;
-    font-size: 0.8em;
-}*/
-
-/*.ui-paginator.ui-paginator-top , .ui-paginator.ui-paginator-bottom{
-    direction: ltr !important;
-}*/
-table, p , select , label {
+    font-size: .78em !important;
+}
+table span {
     font-family: Vazir , Arial, sans-serif;
+    font-size: .81em !important;
 }
 .ui-corner-left{
     border-radius: 0 ;
 }
 
-.ui-toolbar{
-    padding: 1px;
+.ui-toolbar.ui-widget{
+    padding: 0px !important;
+    overflow: hidden !important;
+}
+.content-no-scroll{
+    overflow: hidden !important
+}
+.ui-panelmenu , .ui-menuitem-text,.ui-panelmenu .ui-menuitem-text {
+    float: right !important;
+}
+ 
+.ui-panel .ui-panel-titlebar{
+    text-align: right !important;
+}
+.ui-layout-unit-header, .ui-layout-unit-footer{
+    text-align: right !important;
+}
+.ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-current{
+    font-size: 12px !important;
+}
+.ui-growl-title{
+    font-family: Vazir , Arial, sans-serif;
 }

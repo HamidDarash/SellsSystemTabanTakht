@@ -280,7 +280,7 @@ public class PersonController implements Serializable {
     }
 
     public void onRowSelect(SelectEvent event) {
-        System.out.println("Hello");
+         
         FacesMessage msg = new FacesMessage("اعتبار فعلی : " + String.valueOf(this.getCreditSum(((Person) event.getObject()).getCredits())));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
