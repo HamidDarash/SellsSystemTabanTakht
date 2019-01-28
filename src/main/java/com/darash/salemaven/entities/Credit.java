@@ -29,12 +29,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "credit")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Credit.findAll", query = "SELECT c FROM Credit c")
-    ,
-    @NamedQuery(name = "Credit.findById", query = "SELECT c FROM Credit c WHERE c.id = :id")
-    ,
-    @NamedQuery(name = "Credit.findByCredit", query = "SELECT c FROM Credit c WHERE c.credit = :credit")
-    ,
+    @NamedQuery(name = "Credit.findAll", query = "SELECT c FROM Credit c"),
+    @NamedQuery(name = "Credit.findById", query = "SELECT c FROM Credit c WHERE c.id = :id"),
+    @NamedQuery(name = "Credit.findByCredit", query = "SELECT c FROM Credit c WHERE c.credit = :credit"),
     @NamedQuery(name = "Credit.findByCreateAt", query = "SELECT c FROM Credit c WHERE c.createAt = :createAt")})
 public class Credit implements Serializable {
 

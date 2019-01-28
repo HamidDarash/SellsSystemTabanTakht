@@ -88,7 +88,13 @@ public class Person implements Serializable {
     @JoinColumn(name = "person_id")
     private List<Credit> credits = new ArrayList<>();
 
-    @Deprecated
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "person_id")
+    private List<Factor> factors = new ArrayList<>();
+
     public Person() {
     }
 
@@ -184,6 +190,14 @@ public class Person implements Serializable {
         } else {
             this.credits.add(credits);
         }
+    }
+
+    public List<Factor> getFactors() {
+        return factors;
+    }
+
+    public void setFactors(List<Factor> factors) {
+        this.factors = factors;
     }
 
     @Override

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="بخش فاکتورها"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="FactorListForm">
+                <p:panel header="نمایش آخرین فاکتورهای سیستم">
+
+                    <p:dataTable id="datalist" value="#{factorController.items}" var="item"
+                                 selectionMode="single" 
+                                 selection="#{factorController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rowIndexVar="rowIdFactor"
+                                 rows="5"
+                                 rowsPerPageTemplate="5,10,50"
+                                 widgetVar="factorTable"
+                                 emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                 resizableColumns="true"
+                                 liveResize="true"
+                                 scrollable="true"
+                                 lazy="true"
+                                 >
+
+                        <p:ajax event="rowSelect" />
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="ردیف"/>
+                            </f:facet>
+                            <h:outputText value="#{rowIdFactor + 1}"/>
+                        </p:column>
+
+                        <p:column >
+                            <f:facet name="filter">
+                                <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+                                    <f:converter converterId="javax.faces.Integer" />
+                                </p:spinner>
+                            </f:facet>
+                            <h:outputText value="#{car.year}" />
+                        </p:column>
+
+                        <p:column filterBy="#{item.dateFactor}" headerText="تاریخ فاکتور" footerText="تاریخ فاکتور" filterMatchMode="lte">
+                            <f:facet name="header" >
+                                <h:outputText value="تاریخ فاکتور"/>
+                              
+                            </f:facet>
+                            <h:outputText value="#{item.dateFactor}"> <f:converter converterId="persian_date"/></h:outputText>
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="نوع فاکتور"/>
+                            </f:facet>
+                            <h:outputText value="#{item.condinationFactor}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
