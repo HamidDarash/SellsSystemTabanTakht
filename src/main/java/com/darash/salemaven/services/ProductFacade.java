@@ -5,9 +5,7 @@
  */
 package com.darash.salemaven.services;
 
-import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.entities.Product;
-import static com.darash.salemaven.services.PersonFacade.logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +37,16 @@ public class ProductFacade extends AbstractFacade<Product> {
     public ProductFacade() {
         super(Product.class);
     }
-    
-     public List<Product> filter(int first, int pageSize, Map<String, Object> filters) {
+
+    public List<Product> findProductByIdOrModelOrProductName(String search) {
+        TypedQuery<Product> typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
+                .setParameter("productName", "%" + search + "%")
+                .setParameter("model", "%" + search + "%")
+                .setParameter("id", Integer.valueOf(search));
+        return typedQuery.getResultList();
+    }
+
+    public List<Product> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
@@ -67,7 +73,7 @@ public class ProductFacade extends AbstractFacade<Product> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Product> list = query.getResultList();
-      
+
         return list;
     }
 

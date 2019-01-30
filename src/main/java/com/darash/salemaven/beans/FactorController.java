@@ -1,39 +1,142 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.entities.Factor;
+import com.darash.salemaven.entities.FactorDetail;
+import com.darash.salemaven.entities.Person;
+import com.darash.salemaven.entities.Product;
+import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.services.FactorFacade;
+import com.darash.salemaven.services.PersonFacade;
+import com.darash.salemaven.services.ProductFacade;
+import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
 @Named("factorController")
 @ViewScoped
-public class FactorController implements Serializable{
-    @Inject
+public class FactorController implements Serializable {
+
+    @EJB
     private com.darash.salemaven.services.FactorFacade ejbFacade;
+    @EJB
+    private com.darash.salemaven.services.PersonFacade personFacade;
+    @EJB
+    private com.darash.salemaven.services.ProviderFacade providerFacade;
+    @EJB
+    private com.darash.salemaven.services.ProductFacade productFacade;
+
     private LazyDataModel<Factor> items;
     private Factor selected;
-    
+    private Person selectedPerson;
+    private Provider selectedProvider;
+    private List<FactorDetail> selectedFactorDetails = null;
+    private Product productSelectForInsert = null;
+
+    public void onSelectSaveFactor() {
+        if (selectedPerson != null && selectedProvider != null) {
+            selectedPerson.setFactors(selected);
+            selected.setPerson(selectedPerson);
+            selected.setProvider(selectedProvider); 
+            persist(JsfUtil.PersistAction.CREATE, "");
+        }
+    }
+
+    public Factor prepareCreate() {
+        selected = new Factor();
+        initializeEmbeddableKey();
+        return selected;
+    }
+
+    public Product getProductSelectForInsert() {
+        return productSelectForInsert;
+    }
+
+    public void setProductSelectForInsert(Product productSelectForInsert) {
+        this.productSelectForInsert = productSelectForInsert;
+    }
+
+    public ProductFacade getProductFacade() {
+        return productFacade;
+    }
+
+    public void setProductFacade(ProductFacade productFacade) {
+        this.productFacade = productFacade;
+    }
+
+    public List<FactorDetail> getSelectedFactorDetails() {
+        return selectedFactorDetails;
+    }
+
+    public void setSelectedFactorDetails(List<FactorDetail> selectedFactorDetails) {
+        this.selectedFactorDetails = selectedFactorDetails;
+    }
+
+    public ProviderFacade getProviderFacade() {
+        return providerFacade;
+    }
+
+    public void setProviderFacade(ProviderFacade providerFacade) {
+        this.providerFacade = providerFacade;
+    }
+
+    public Provider getSelectedProvider() {
+        return selectedProvider;
+    }
+
+    public void setSelectedProvider(Provider selectedProvider) {
+        this.selectedProvider = selectedProvider;
+    }
+
+    public Person getSelectedPerson() {
+        return selectedPerson;
+    }
+
+    public void setSelectedPerson(Person selectedPerson) {
+        this.selectedPerson = selectedPerson;
+    }
+
+    public PersonFacade getPersonFacade() {
+        return personFacade;
+    }
+
+    public void setPersonFacade(PersonFacade personFacade) {
+        this.personFacade = personFacade;
+    }
+
+    // find users autoComplete
+    public List<Person> findInAllUsersForAutoComplete(String search) {
+        return personFacade.findByInternationalOrNameOrCompanyCode(search);
+    }
+
+    // find provider autoComplete
+    public List<Provider> findInAllProviderForAutoComplete(String search) {
+        return providerFacade.findByNameOrCodeOrFullnameSearch(search);
+    }
+
+    // find product autoComplete
+    public List<Product> findInAllProductForAutoComplete(String search) {
+        return productFacade.findProductByIdOrModelOrProductName(search);
+    }
+
     @PostConstruct
     public void initDataModel() {
         items = new LazyDataModel<Factor>() {
@@ -85,7 +188,7 @@ public class FactorController implements Serializable{
     public void setSelected(Factor selected) {
         this.selected = selected;
     }
-    
+
     protected void setEmbeddableKeys() {
     }
 
@@ -93,18 +196,8 @@ public class FactorController implements Serializable{
     }
 
     //-------------------------------------------------------------------------------
-    
-     public Factor prepareCreate() {
-        selected = new Factor();
-        initializeEmbeddableKey();
-        return selected;
-    }
-
     public void create() {
-        persist(JsfUtil.PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("FactorCreated"));
-//        if (!JsfUtil.isValidationFailed()) {
-//            items = null;    // Invalidate list of items to trigger re-query.
-//        }
+        persist(JsfUtil.PersistAction.CREATE, "فاکتور بدرستی ساخته شد");
     }
 
     public void update() {
@@ -113,17 +206,14 @@ public class FactorController implements Serializable{
 
     public void destroy() {
         persist(JsfUtil.PersistAction.DELETE, "فاکتور بدرستی حذف شد");
-//        if (!JsfUtil.isValidationFailed()) {
-//            selected = null; // Remove selection
-//            items = null;    // Invalidate list of items to trigger re-query.
-//        }
     }
- 
+
     private void persist(JsfUtil.PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
                 if (persistAction != JsfUtil.PersistAction.DELETE) {
+
                     getEjbFacade().edit(selected);
                 } else {
                     getEjbFacade().remove(selected);
@@ -199,6 +289,17 @@ public class FactorController implements Serializable{
         }
 
     }
+
+    public void selectItemProduct(SelectEvent event) {
+        try {
+            this.selectedFactorDetails.get(((Product) event.getObject()).getId()).setProductName(((Product) event.getObject()).getProductName());
+
+            FacesMessage msg = new FacesMessage(((Product) event.getObject()).getId().toString());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        } catch (Exception e) {
+
+        }
+    }
+
 }
- 
- 

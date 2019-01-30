@@ -40,6 +40,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
     }
     
      public List<Factor> filter(int first, int pageSize, Map<String, Object> filters) {
+         
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Factor> criteriaQuery = cb.createQuery(Factor.class);
         Root<Factor> root = criteriaQuery.from(Factor.class);
@@ -48,6 +49,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
         if (filters != null && filters.size() > 0) {
             List<Predicate> predicates = new ArrayList<>();
             for (Map.Entry<String, Object> entry : filters.entrySet()) {
+                System.out.println(entry.getKey());
                 String field = entry.getKey();
                 Object value = entry.getValue();
                 if (value == null) {

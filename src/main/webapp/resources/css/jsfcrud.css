@@ -11,7 +11,7 @@
 }
 table, p , select , label , .ui-menuitem-text,
 .ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title {
-    font-family: Vazir , Arial, sans-serif;
+    font-family: Vazir , Arial, sans-serif !important;
     font-size: .78em !important;
 }
 table span {

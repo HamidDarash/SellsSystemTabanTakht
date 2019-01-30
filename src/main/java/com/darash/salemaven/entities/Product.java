@@ -37,7 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color"),
     @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit"),
     @NamedQuery(name = "Product.findByWage", query = "SELECT p FROM Product p WHERE p.wage = :wage"),
-    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")})
+    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
+    @NamedQuery(name = "Product.findByProductNameOrModelOrId",
+            query = "SELECT p FROM Product p WHERE p.productName LIKE :productName or p.id = :id or p.model LIKE :model")
+})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,14 +82,11 @@ public class Product implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "price")
     private String price;
-    
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
     private Provider provider;
 
-    
-    
     public Product() {
     }
 
@@ -193,5 +193,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.darash.salemaven.entities.Product[ id=" + id + " ]";
     }
-    
+
 }

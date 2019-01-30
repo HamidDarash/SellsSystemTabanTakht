@@ -4,8 +4,142 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      >
     <ui:composition>
-      
+        <p:dialog id="dialogInserFactorDlg"
+                  widgetVar="dialogInserFactorDialog"
+                  appendTo="@(body)" resizable="true" 
+                  closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
+            <h:form id="formInsertFactor">
+                <p:fieldset legend="اطلاعات پرسنل" style="margin-bottom:20px">
+                    <h:panelGrid id="panelPerson" columns="2" cellpadding="5">
+                        <p:outputLabel value="انتخاب پرسنل" for="searchPerson" />
+                        <p:autoComplete id="searchPerson" value="#{factorController.selectedPerson}"
+                                        completeMethod="#{factorController.findInAllUsersForAutoComplete}"
+                                        var="p" itemLabel="#{p.name}" itemValue="#{p}">
+                            <p:column headerText="کد پرسنلی">
+                                <h:outputText value="#{p.companyCode}" />
+                            </p:column>
+                            <p:column headerText="کد ملی">
+                                <h:outputText value="#{p.internationalCode}" />
+                            </p:column>
+                            <p:column headerText="نام کامل">
+                                <h:outputText value="#{p.name}" />
+                            </p:column>
+                            <p:column headerText="نام شرکت">
+                                <h:outputText value="#{p.company}" />
+                            </p:column>
+                            <p:ajax event="itemSelect" update="@form" process="@form"/> 
+                        </p:autoComplete>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="8" cellpadding="5" cellspacing="5">
+                        <p:outputLabel value="نام پرسنل" for="personName" />
+                        <h:outputText id="personName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.name}" />
+                        <p:outputLabel value="کد پرسنلی" for="personCompanyCode" />
+                        <h:outputText id="personCompanyCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.companyCode}" />
+                        <p:outputLabel value="شرکت پرسنل" for="personCompany" />
+                        <h:outputText id="personCompany" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.company}" />
+                        <p:outputLabel value="آدرس پرسنل" for="personAddress" />
+                        <h:outputText id="personAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.address}" />
+                        <p:outputLabel value="کد ملی پرسنل" for="personInternational" />
+                        <h:outputText id="personInternational" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.internationalCode}" />
+                        <p:outputLabel value="کد تلفن/موبایل" for="personMobile" />
+                        <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.mobile}" />
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset id="fieldSetProvider" legend="اطلاعات تامین کننده"  rendered="#{factorController.selectedPerson != null}">
+                    <h:panelGrid id="panelProvider" columns="2" cellpadding="5">
+                        <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
+                        <p:autoComplete id="searchProvider" value="#{factorController.selectedProvider}"
+                                        completeMethod="#{factorController.findInAllProviderForAutoComplete}"
+                                        var="t" itemLabel="#{t.shopName}" itemValue="#{t}">
+                            <p:column headerText="کد تامین کننده">
+                                <h:outputText value="#{t.code}" />
+                            </p:column>
+                            <p:column headerText="کد اقتصادی">
+                                <h:outputText value="#{t.codeEghtesadi}" />
+                            </p:column>
+                            <p:column headerText="نام فروشگاه">
+                                <h:outputText value="#{t.shopName}" />
+                            </p:column>
+                            <p:column headerText="کد ملی">
+                                <h:outputText value="#{t.internationalCode}" />
+                            </p:column>
+                            <p:ajax event="itemSelect" listener="" update="@form" process="@form"/> 
+                        </p:autoComplete>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelInfoProvider" rendered="#{factorController.selectedProvider != null}" columns="4" cellpadding="5" cellspacing="5">
+                        <p:outputLabel value="فروشگاه" for="providerShopName" />
+                        <h:outputText id="providerShopName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.shopName}" />
+                        <p:outputLabel value="کد اقتصادی" for="providerCodeEghtesadi" />
+                        <h:outputText id="providerCodeEghtesadi" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.codeEghtesadi}" />
+                        <p:outputLabel value="کد تامین کننده" for="providerCode" />
+                        <h:outputText id="providerCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.code}" />
+                        <p:outputLabel value="آدرس تامین کننده" for="providerAddress" />
+                        <h:outputText id="providerAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.address}" />
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="محتویات فاکتور">
+                    <p:panel id="factorDetailPanel">
+                        <p:dataTable id="tableInsertedFactorDetail" 
+                                     var="item" 
+                                     editable="true" emptyMessage="هیچ محتویاتی ندارد"
+                                     scrollHeight="200"
+                                     dir="rtl"
+                                     value="#{factorController.selectedFactorDetails}" 
+                                     rowIndexVar="rowIdFactorDetail"
+                                     rowKey="#{creditRow.id}"
+                                     editMode="cell"
+                                     a:table-inserted="true"
+                                     >
+
+                            <f:facet name="header">
+                                <h:outputText value="محتویات فاکتور" />
+                            </f:facet>
+
+                            <p:ajax event="rowEdit"  update="@form" />
+                            <p:ajax event="rowEditCancel"  update="@form" />
+                            <p:ajax event="rowEditInit" update="@form" />
+
+
+                            <p:column headerText="ردیف">
+                                <h:outputText value="#{rowIdFactorDetail + 1}" />
+                            </p:column>
+
+                            <p:column headerText="نام محصول" style="overflow:visible">
+                                <p:cellEditor > 
+                                    <f:facet name="output"><h:outputText value="#{item.productName}" /></f:facet>
+                                    <f:facet name="input">
+                                        <p:autoComplete id="searchProduct" value="#{factorController.productSelectForInsert}"
+                                                        completeMethod="#{factorController.findInAllProductForAutoComplete}"
+                                                        var="pr" itemLabel="#{pr.productName}" itemValue="#{pr}" forceSelection="true">
+                                            <p:column headerText="کد محصول">
+                                                <h:outputText value="#{pr.id}" />
+                                            </p:column>
+                                            <p:column headerText="مدل محصول">
+                                                <h:outputText value="#{pr.model}" />
+                                            </p:column>
+                                            <p:column headerText="رنگ محصول">
+                                                <h:outputText value="#{pr.color}" />
+                                            </p:column>
+                                            <p:column headerText="نام فروشگاه">
+                                                <h:outputText value="#{pr.provider.shopName}" />
+                                            </p:column>
+                                            <p:ajax event="itemSelect" listener="#{factorController.selectItemProduct}" update=":growl tableInsertedFactorDetail"/> 
+                                        </p:autoComplete>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column style="width:32px">
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:fieldset>
+            </h:form>
+        </p:dialog>
     </ui:composition>
 </html>

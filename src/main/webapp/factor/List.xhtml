@@ -4,7 +4,9 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:composition template="/template.xhtml">
 
@@ -17,7 +19,7 @@
             <h:form id="FactorListForm">
                 <p:panel header="نمایش آخرین فاکتورهای سیستم">
 
-                    <p:dataTable id="datalist" value="#{factorController.items}" var="item"
+                    <p:dataTable id="datalistFactors" value="#{factorController.items}" var="item"
                                  selectionMode="single" 
                                  selection="#{factorController.selected}"
                                  paginator="true"
@@ -34,7 +36,6 @@
                                  >
 
                         <p:ajax event="rowSelect" />
-
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
@@ -42,23 +43,46 @@
                             <h:outputText value="#{rowIdFactor + 1}"/>
                         </p:column>
 
-                        <p:column >
-                            <f:facet name="filter">
-                                <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
-                                    <f:converter converterId="javax.faces.Integer" />
-                                </p:spinner>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="شماره فاکتور"/>
                             </f:facet>
-                            <h:outputText value="#{car.year}" />
+                            <h:outputText value="#{item.id}"/>
                         </p:column>
 
-                        <p:column filterBy="#{item.dateFactor}" headerText="تاریخ فاکتور" footerText="تاریخ فاکتور" filterMatchMode="lte">
-                            <f:facet name="header" >
-                                <h:outputText value="تاریخ فاکتور"/>
-                              
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="تاریخ فاکتور" />
+                                <p:inputText a:shamsipicker="true" a:placeholder="yyyy/mm/dd" onchange="PF('datalistFactors').filter()">
+                                    <f:converter converterId="persian_date"/>
+                                </p:inputText>
                             </f:facet>
-                            <h:outputText value="#{item.dateFactor}"> <f:converter converterId="persian_date"/></h:outputText>
+                            <h:outputText value="#{item.dateFactor}"> 
+                                <f:converter converterId="persian_date"/>
+                            </h:outputText>
                         </p:column>
 
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="نام پرسنل"/>
+                            </f:facet>
+                            <h:outputText value="#{item.person.name}"/>
+                        </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="کد پرسنلی"/>
+                            </f:facet>
+                            <h:outputText value="#{item.person.companyCode}"/>
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="نام تامین کننده"/>
+                            </f:facet>
+                            <h:outputText value="#{item.provider.shopName}"/>
+                        </p:column>
+                        
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="نوع فاکتور"/>
@@ -66,12 +90,29 @@
                             <h:outputText value="#{item.condinationFactor}"/>
                         </p:column>
 
-                        <f:facet name="footer">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="وضعیت مرجوعی"/>
+                            </f:facet>
+                            <h:outputText rendered="#{item.returned == true}" value="فاکتور مرجوع شده است"/>
+                        </p:column>
 
+
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="وضعیت ثبت"/>
+                            </f:facet>
+                            <h:outputText rendered="#{item.finalRegistration == true}" value="ثبت نهایی"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
+            <ui:include src="Create.xhtml"/>
         </ui:define>
     </ui:composition>
 

@@ -12,5 +12,9 @@
             <base-name>/BundleExibition</base-name>
             <var>bundleExibition</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/Bundle_factor_detail</base-name>
+            <var>bundle_factor_detail</var>
+        </resource-bundle>
     </application>
 </faces-config>

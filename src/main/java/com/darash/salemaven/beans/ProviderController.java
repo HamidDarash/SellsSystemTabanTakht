@@ -3,7 +3,6 @@ package com.darash.salemaven.beans;
 import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
-import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.services.ProviderFacade;
 
 import java.io.Serializable;

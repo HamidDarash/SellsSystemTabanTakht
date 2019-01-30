@@ -6,9 +6,11 @@
 package com.darash.salemaven.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,7 +56,10 @@ public class Factor implements Serializable {
     @Column(name = "condination_factor")
     private String condinationFactor;
     @Column(name = "returned")
-    private Short returned;
+    private boolean returned = false;
+
+    @Column(name = "final_registration")
+    private boolean finalRegistration = false;
     
     @ManyToMany(mappedBy = "factors")
     private List<Exhibition> exhibitions;
@@ -65,10 +71,34 @@ public class Factor implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
     private Provider provider;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;
+
+    @OneToMany(
+            mappedBy = "factor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "factor_id")
+    private List<FactorDetail> factorDetails = new ArrayList<>();
+
+    public List<FactorDetail> getFactorDetails() {
+        return factorDetails;
+    }
+
+    public boolean isFinalRegistration() {
+        return finalRegistration;
+    }
+
+    public void setFinalRegistration(boolean finalRegistration) {
+        this.finalRegistration = finalRegistration;
+    }
+
+    public void setFactorDetails(List<FactorDetail> factorDetails) {
+        this.factorDetails = factorDetails;
+    }
 
     public Person getPerson() {
         return person;
@@ -77,7 +107,7 @@ public class Factor implements Serializable {
     public void setPerson(Person person) {
         this.person = person;
     }
-    
+
     public Provider getProvider() {
         return provider;
     }
@@ -85,11 +115,11 @@ public class Factor implements Serializable {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
-     
+
     public void setExhibitions(List<Exhibition> exhibitions) {
         this.exhibitions = exhibitions;
     }
-    
+
     public Factor() {
     }
 
@@ -127,11 +157,11 @@ public class Factor implements Serializable {
         this.condinationFactor = condinationFactor;
     }
 
-    public Short getReturned() {
+    public boolean getReturned() {
         return returned;
     }
 
-    public void setReturned(Short returned) {
+    public void setReturned(boolean returned) {
         this.returned = returned;
     }
 
@@ -159,5 +189,5 @@ public class Factor implements Serializable {
     public String toString() {
         return "com.darash.salemaven.entities.Factor[ id=" + id + " ]";
     }
-    
+
 }

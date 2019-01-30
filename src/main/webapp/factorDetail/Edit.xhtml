@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FactorDetailEditDlg" widgetVar="FactorDetailEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle_factor_detail.EditFactorDetailTitle}">
+            <h:form id="FactorDetailEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{factorDetailController.selected != null}">
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_productId}" for="productId" />
+                        <p:inputText id="productId" value="#{factorDetailController.selected.productId}" title="#{bundle_factor_detail.EditFactorDetailTitle_productId}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_productId}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_productName}" for="productName" />
+                        <p:inputTextarea rows="4" cols="30" id="productName" value="#{factorDetailController.selected.productName}" title="#{bundle_factor_detail.EditFactorDetailTitle_productName}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_productName}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_countProduct}" for="countProduct" />
+                        <p:inputText id="countProduct" value="#{factorDetailController.selected.countProduct}" title="#{bundle_factor_detail.EditFactorDetailTitle_countProduct}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_countProduct}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_unit}" for="unit" />
+                        <p:inputText id="unit" value="#{factorDetailController.selected.unit}" title="#{bundle_factor_detail.EditFactorDetailTitle_unit}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_unit}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_price}" for="price" />
+                        <p:inputText id="price" value="#{factorDetailController.selected.price}" title="#{bundle_factor_detail.EditFactorDetailTitle_price}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_price}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_discount}" for="discount" />
+                        <p:inputText id="discount" value="#{factorDetailController.selected.discount}" title="#{bundle_factor_detail.EditFactorDetailTitle_discount}" />
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_taxesAndTaxes}" for="taxesAndTaxes" />
+                        <p:inputText id="taxesAndTaxes" value="#{factorDetailController.selected.taxesAndTaxes}" title="#{bundle_factor_detail.EditFactorDetailTitle_taxesAndTaxes}" />
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_priceAfterDiscount}" for="priceAfterDiscount" />
+                        <p:inputText id="priceAfterDiscount" value="#{factorDetailController.selected.priceAfterDiscount}" title="#{bundle_factor_detail.EditFactorDetailTitle_priceAfterDiscount}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_priceAfterDiscount}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_pureFactot}" for="pureFactot" />
+                        <p:inputText id="pureFactot" value="#{factorDetailController.selected.pureFactot}" title="#{bundle_factor_detail.EditFactorDetailTitle_pureFactot}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_pureFactot}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_sumFactor}" for="sumFactor" />
+                        <p:inputText id="sumFactor" value="#{factorDetailController.selected.sumFactor}" title="#{bundle_factor_detail.EditFactorDetailTitle_sumFactor}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_sumFactor}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_sumDiscount}" for="sumDiscount" />
+                        <p:inputText id="sumDiscount" value="#{factorDetailController.selected.sumDiscount}" title="#{bundle_factor_detail.EditFactorDetailTitle_sumDiscount}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_sumDiscount}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.EditFactorDetailLabel_payable}" for="payable" />
+                        <p:inputText id="payable" value="#{factorDetailController.selected.payable}" title="#{bundle_factor_detail.EditFactorDetailTitle_payable}" required="true" requiredMessage="#{bundle_factor_detail.EditFactorDetailRequiredMessage_payable}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{factorDetailController.update}" value="#{bundle_factor_detail.Save}" update="display,:FactorDetailListForm:datalist,:growl" oncomplete="handleSubmit(args, 'FactorDetailEditDialog');"/>
+                    <p:commandButton value="#{bundle_factor_detail.Cancel}" onclick="FactorDetailEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

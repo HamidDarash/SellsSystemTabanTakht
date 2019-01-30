@@ -37,8 +37,17 @@ public class ProviderFacade extends AbstractFacade<Provider> {
     public ProviderFacade() {
         super(Provider.class);
     }
-    
-     public List<Provider> filter(int first, int pageSize, Map<String, Object> filters) {
+
+    public List<Provider> findByNameOrCodeOrFullnameSearch(String parameter) {
+        TypedQuery<Provider> typedQuery = em.createNamedQuery("Provider.findByNameOrCodeOrFullname", Provider.class)
+                .setParameter("shopName", "%" + parameter + "%")
+                .setParameter("internationalCode", "%" + parameter + "%")
+                .setParameter("code", "%" + parameter + "%")
+                .setParameter("fullname", "%" + parameter + "%");
+        return typedQuery.getResultList();
+    }
+
+    public List<Provider> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Provider> criteriaQuery = cb.createQuery(Provider.class);
         Root<Provider> root = criteriaQuery.from(Provider.class);
@@ -65,7 +74,7 @@ public class ProviderFacade extends AbstractFacade<Provider> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Provider> list = query.getResultList();
-      
+
         return list;
     }
 

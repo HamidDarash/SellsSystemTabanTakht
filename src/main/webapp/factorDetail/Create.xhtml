@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="FactorDetailCreateDlg" widgetVar="FactorDetailCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle_factor_detail.CreateFactorDetailTitle}">
+            <h:form id="FactorDetailCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{factorDetailController.selected != null}">
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_productId}" for="productId" />
+                        <p:inputText id="productId" value="#{factorDetailController.selected.productId}" title="#{bundle_factor_detail.CreateFactorDetailTitle_productId}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_productId}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_productName}" for="productName" />
+                        <p:inputTextarea rows="4" cols="30" id="productName" value="#{factorDetailController.selected.productName}" title="#{bundle_factor_detail.CreateFactorDetailTitle_productName}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_productName}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_countProduct}" for="countProduct" />
+                        <p:inputText id="countProduct" value="#{factorDetailController.selected.countProduct}" title="#{bundle_factor_detail.CreateFactorDetailTitle_countProduct}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_countProduct}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_unit}" for="unit" />
+                        <p:inputText id="unit" value="#{factorDetailController.selected.unit}" title="#{bundle_factor_detail.CreateFactorDetailTitle_unit}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_unit}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_price}" for="price" />
+                        <p:inputText id="price" value="#{factorDetailController.selected.price}" title="#{bundle_factor_detail.CreateFactorDetailTitle_price}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_price}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_discount}" for="discount" />
+                        <p:inputText id="discount" value="#{factorDetailController.selected.discount}" title="#{bundle_factor_detail.CreateFactorDetailTitle_discount}" />
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_taxesAndTaxes}" for="taxesAndTaxes" />
+                        <p:inputText id="taxesAndTaxes" value="#{factorDetailController.selected.taxesAndTaxes}" title="#{bundle_factor_detail.CreateFactorDetailTitle_taxesAndTaxes}" />
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_priceAfterDiscount}" for="priceAfterDiscount" />
+                        <p:inputText id="priceAfterDiscount" value="#{factorDetailController.selected.priceAfterDiscount}" title="#{bundle_factor_detail.CreateFactorDetailTitle_priceAfterDiscount}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_priceAfterDiscount}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_pureFactot}" for="pureFactot" />
+                        <p:inputText id="pureFactot" value="#{factorDetailController.selected.pureFactot}" title="#{bundle_factor_detail.CreateFactorDetailTitle_pureFactot}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_pureFactot}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_sumFactor}" for="sumFactor" />
+                        <p:inputText id="sumFactor" value="#{factorDetailController.selected.sumFactor}" title="#{bundle_factor_detail.CreateFactorDetailTitle_sumFactor}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_sumFactor}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_sumDiscount}" for="sumDiscount" />
+                        <p:inputText id="sumDiscount" value="#{factorDetailController.selected.sumDiscount}" title="#{bundle_factor_detail.CreateFactorDetailTitle_sumDiscount}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_sumDiscount}"/>
+                        <p:outputLabel value="#{bundle_factor_detail.CreateFactorDetailLabel_payable}" for="payable" />
+                        <p:inputText id="payable" value="#{factorDetailController.selected.payable}" title="#{bundle_factor_detail.CreateFactorDetailTitle_payable}" required="true" requiredMessage="#{bundle_factor_detail.CreateFactorDetailRequiredMessage_payable}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{factorDetailController.create}" value="#{bundle_factor_detail.Save}" update="display,:FactorDetailListForm:datalist,:growl" oncomplete="handleSubmit(args,'FactorDetailCreateDialog');"/>
+                    <p:commandButton value="#{bundle_factor_detail.Cancel}" onclick="FactorDetailCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

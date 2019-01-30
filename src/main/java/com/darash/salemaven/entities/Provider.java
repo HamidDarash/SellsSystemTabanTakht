@@ -8,7 +8,6 @@ package com.darash.salemaven.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,7 +40,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Provider.findByCodeEghtesadi", query = "SELECT p FROM Provider p WHERE p.codeEghtesadi = :codeEghtesadi"),
     @NamedQuery(name = "Provider.findByEmail", query = "SELECT p FROM Provider p WHERE p.email = :email"),
     @NamedQuery(name = "Provider.findByMobile", query = "SELECT p FROM Provider p WHERE p.mobile = :mobile"),
-    @NamedQuery(name = "Provider.findByCode", query = "SELECT p FROM Provider p WHERE p.code = :code")})
+    @NamedQuery(name = "Provider.findByCode", query = "SELECT p FROM Provider p WHERE p.code = :code"),
+    @NamedQuery(name = "Provider.findByNameOrCodeOrFullname", query = "SELECT p FROM Provider p WHERE p.code LIKE :code or p.shopName LIKE :shopName or p.fullname LIKE :fullname or p.internationalCode LIKE :internationalCode")})
 public class Provider implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -12,7 +12,6 @@
                   widgetVar="PersonEditDialog" modal="true" resizable="true"  appendTo="@(body)" header="#{bundle.EditPersonTitle}">
             <h:form id="PersonEditForm">
                 <p:growl id="msgs" showDetail="true"/>
-
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" layout="grid" rendered="#{personController.selected != null}">
                         <p:outputLabel value="#{bundle.EditPersonLabel_name}" for="name" />
@@ -35,7 +34,7 @@
                     <p:panel id="display2">
                         <p:outputLabel value="اعتبارات" for="display2" />
                         <p:dataTable id="credits" widgetVar="credits" 
-                                     emptyMessage=""
+                                     emptyMessage="اعتباری در پایگاه داده موجود نیست"
                                      scrollHeight="100"
                                      var="creditRow" 
                                      dir="rtl"

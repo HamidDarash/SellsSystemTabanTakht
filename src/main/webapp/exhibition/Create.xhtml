@@ -13,14 +13,14 @@
             <h:form id="ExhibitionCreateForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_nameExhibition}" for="nameExhibition" />
+                        <p:outputLabel  value="#{bundleExibition.CreateExhibitionLabel_nameExhibition}" for="nameExhibition" />
                         <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.CreateExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.CreateExhibitionRequiredMessage_nameExhibition}"/>
                         <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateStart}" for="dateStart"  />
-                        <p:inputMask id="dateStart" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
+                        <p:inputMask id="dateStart" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
                             <f:converter converterId="persian_date"/>
                         </p:inputMask> 
                         <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
-                        <p:inputMask id="dateEnd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
+                        <p:inputMask id="dateEnd" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
                             <f:converter converterId="persian_date" />
                         </p:inputMask> 
                         <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_managerName}" for="managerName" />
