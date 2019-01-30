@@ -113,6 +113,9 @@
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="حذف" actionListener="#{personController.destroy}" update=":growl,@form" disabled="#{empty personController.selected}"/>
                         </f:facet>
                     </p:dataTable>
+                    <p:blockUI block="datalist" trigger="datalist">
+                        <p:graphicImage name="img/loader.gif"/>
+                    </p:blockUI>
                 </p:panel>
             </h:form>
 

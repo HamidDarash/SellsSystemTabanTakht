@@ -32,7 +32,7 @@ table span {
 .ui-panelmenu , .ui-menuitem-text,.ui-panelmenu .ui-menuitem-text {
     float: right !important;
 }
- 
+
 .ui-panel .ui-panel-titlebar{
     text-align: right !important;
 }
@@ -45,3 +45,10 @@ table span {
 .ui-growl-title{
     font-family: Vazir , Arial, sans-serif;
 }
+.ui-widget-overlay {
+    opacity: .55;
+    filter: Alpha(Opacity=55);
+    background: transparent;
+    background-color: #6ca4d4 !important;
+}
+ 

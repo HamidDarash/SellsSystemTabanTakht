@@ -89,6 +89,9 @@
                             <p:commandButton id="viewProvidersButton" icon="ui-icon-pencil" value="نمایش تامین کنندگان" update=":ExhibitionProvidersViewForm" oncomplete="PF('ExhibitionProvidersViewDialog').show()" disabled="#{!(exhibitionController.selected.providers.size() > 0)}"/>
                         </f:facet>
                     </p:dataTable>
+                    <p:blockUI block="datalist" trigger="datalist">
+                        <p:graphicImage name="img/loader.gif"/>
+                    </p:blockUI>
                 </p:panel>
             </h:form>
 

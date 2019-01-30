@@ -1,6 +1,7 @@
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.beans.util.JsfUtil;
+import com.darash.salemaven.entities.Credit;
 import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.FactorDetail;
 import com.darash.salemaven.entities.Person;
@@ -27,6 +28,8 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -48,15 +51,19 @@ public class FactorController implements Serializable {
     private Factor selected;
     private Person selectedPerson;
     private Provider selectedProvider;
-    private List<FactorDetail> selectedFactorDetails = null;
+    private List<FactorDetail> selectedFactorDetails = new ArrayList<>();
     private Product productSelectForInsert = null;
+    private FactorDetail rowFactorDetail = null;
+    private boolean stateForInsertDetail = false;
 
     public void onSelectSaveFactor() {
         if (selectedPerson != null && selectedProvider != null) {
-            selectedPerson.setFactors(selected);
             selected.setPerson(selectedPerson);
-            selected.setProvider(selectedProvider); 
-            persist(JsfUtil.PersistAction.CREATE, "");
+            selected.setProvider(selectedProvider);
+            selected.setFinalRegistration(false);
+            selected.setReturned(false);
+            this.setStateForInsertDetail(true);
+            selectedFactorDetails.add(new FactorDetail());
         }
     }
 
@@ -64,6 +71,22 @@ public class FactorController implements Serializable {
         selected = new Factor();
         initializeEmbeddableKey();
         return selected;
+    }
+
+    public FactorDetail getRowFactorDetail() {
+        return rowFactorDetail;
+    }
+
+    public void setRowFactorDetail(FactorDetail rowFactorDetail) {
+        this.rowFactorDetail = rowFactorDetail;
+    }
+
+    public boolean isStateForInsertDetail() {
+        return stateForInsertDetail;
+    }
+
+    public void setStateForInsertDetail(boolean stateForInsertDetail) {
+        this.stateForInsertDetail = stateForInsertDetail;
     }
 
     public Product getProductSelectForInsert() {
@@ -290,16 +313,25 @@ public class FactorController implements Serializable {
 
     }
 
-    public void selectItemProduct(SelectEvent event) {
-        try {
-            this.selectedFactorDetails.get(((Product) event.getObject()).getId()).setProductName(((Product) event.getObject()).getProductName());
-
-            FacesMessage msg = new FacesMessage(((Product) event.getObject()).getId().toString());
+    
+//   public void onRowEdit(RowEditEvent event) {
+//        FacesMessage msg = new FacesMessage("Car Edited", ((Car) event.getObject()).getId());
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//    }
+//     
+//    public void onRowCancel(RowEditEvent event) {
+//        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Car) event.getObject()).getId());
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//    }
+     
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         
+        if(newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
             FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        } catch (Exception e) {
-
         }
     }
-
+   
 }

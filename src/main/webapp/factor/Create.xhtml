@@ -13,12 +13,13 @@
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
             <h:form id="formInsertFactor">
-                <p:fieldset legend="اطلاعات پرسنل" style="margin-bottom:20px">
+
+                <p:fieldset id="partPersonInfo" legend="اطلاعات پرسنل" style="margin-bottom:20px">
                     <h:panelGrid id="panelPerson" columns="2" cellpadding="5">
                         <p:outputLabel value="انتخاب پرسنل" for="searchPerson" />
                         <p:autoComplete id="searchPerson" value="#{factorController.selectedPerson}"
                                         completeMethod="#{factorController.findInAllUsersForAutoComplete}"
-                                        var="p" itemLabel="#{p.name}" itemValue="#{p}">
+                                        var="p" itemLabel="#{p.name}" itemValue="#{p}" disabled="#{factorController.stateForInsertDetail}">
                             <p:column headerText="کد پرسنلی">
                                 <h:outputText value="#{p.companyCode}" />
                             </p:column>
@@ -31,7 +32,7 @@
                             <p:column headerText="نام شرکت">
                                 <h:outputText value="#{p.company}" />
                             </p:column>
-                            <p:ajax event="itemSelect" update="@form" process="@form"/> 
+                            <p:ajax event="itemSelect" update="@form" process="panelPerson"  /> 
                         </p:autoComplete>
                     </h:panelGrid>
                     <h:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="8" cellpadding="5" cellspacing="5">
@@ -49,12 +50,13 @@
                         <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.mobile}" />
                     </h:panelGrid>
                 </p:fieldset>
+                <p:blockUI block="partPersonInfo" widgetVar="bui"/>
                 <p:fieldset id="fieldSetProvider" legend="اطلاعات تامین کننده"  rendered="#{factorController.selectedPerson != null}">
                     <h:panelGrid id="panelProvider" columns="2" cellpadding="5">
                         <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
                         <p:autoComplete id="searchProvider" value="#{factorController.selectedProvider}"
                                         completeMethod="#{factorController.findInAllProviderForAutoComplete}"
-                                        var="t" itemLabel="#{t.shopName}" itemValue="#{t}">
+                                        var="t" itemLabel="#{t.shopName}" itemValue="#{t}" onfocus="PF('bui').show()">
                             <p:column headerText="کد تامین کننده">
                                 <h:outputText value="#{t.code}" />
                             </p:column>
@@ -67,9 +69,10 @@
                             <p:column headerText="کد ملی">
                                 <h:outputText value="#{t.internationalCode}" />
                             </p:column>
-                            <p:ajax event="itemSelect" listener="" update="@form" process="@form"/> 
+                            <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form" process="@form" /> 
                         </p:autoComplete>
                     </h:panelGrid>
+                    <p:blockUI block="fieldSetProvider" widgetVar="bui2"/>
                     <h:panelGrid id="panelInfoProvider" rendered="#{factorController.selectedProvider != null}" columns="4" cellpadding="5" cellspacing="5">
                         <p:outputLabel value="فروشگاه" for="providerShopName" />
                         <h:outputText id="providerShopName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.shopName}" />
@@ -85,36 +88,33 @@
                     <p:panel id="factorDetailPanel">
                         <p:dataTable id="tableInsertedFactorDetail" 
                                      var="item" 
-                                     editable="true" emptyMessage="هیچ محتویاتی ندارد"
+                                     editable="true" 
+                                     emptyMessage="هیچ محتویاتی ندارد"
                                      scrollHeight="200"
                                      dir="rtl"
                                      value="#{factorController.selectedFactorDetails}" 
                                      rowIndexVar="rowIdFactorDetail"
-                                     rowKey="#{creditRow.id}"
                                      editMode="cell"
-                                     a:table-inserted="true"
+                                     widgetVar="InsertedFactorDetailWidget"
+                                     selection="#{factorController.rowFactorDetail}"
                                      >
 
                             <f:facet name="header">
                                 <h:outputText value="محتویات فاکتور" />
                             </f:facet>
 
-                            <p:ajax event="rowEdit"  update="@form" />
-                            <p:ajax event="rowEditCancel"  update="@form" />
-                            <p:ajax event="rowEditInit" update="@form" />
-
-
+                            <p:ajax event="cellEdit" listener="#{factorController.onCellEdit}"  update="tableInsertedFactorDetail" />
                             <p:column headerText="ردیف">
                                 <h:outputText value="#{rowIdFactorDetail + 1}" />
                             </p:column>
 
-                            <p:column headerText="نام محصول" style="overflow:visible">
-                                <p:cellEditor > 
+                            <p:column headerText="نام محصول">
+                                <p:cellEditor> 
                                     <f:facet name="output"><h:outputText value="#{item.productName}" /></f:facet>
                                     <f:facet name="input">
-                                        <p:autoComplete id="searchProduct" value="#{factorController.productSelectForInsert}"
+                                        <p:autoComplete id="searchProduct" value="#{item.productName}"
                                                         completeMethod="#{factorController.findInAllProductForAutoComplete}"
-                                                        var="pr" itemLabel="#{pr.productName}" itemValue="#{pr}" forceSelection="true">
+                                                        var="pr" itemLabel="#{pr.productName}" itemValue="#{pr.toString()}" forceSelection="true" onfocus="PF('bui2').show()">
                                             <p:column headerText="کد محصول">
                                                 <h:outputText value="#{pr.id}" />
                                             </p:column>
@@ -127,15 +127,15 @@
                                             <p:column headerText="نام فروشگاه">
                                                 <h:outputText value="#{pr.provider.shopName}" />
                                             </p:column>
-                                            <p:ajax event="itemSelect" listener="#{factorController.selectItemProduct}" update=":growl tableInsertedFactorDetail"/> 
+                                             
                                         </p:autoComplete>
                                     </f:facet>
                                 </p:cellEditor>
                             </p:column>
-
-                            <p:column style="width:32px">
-                                <p:rowEditor />
+                            <p:column headerText="کد محصول">
+                                <h:outputText value="#{factorController.productSelectForInsert.id}" />
                             </p:column>
+
                         </p:dataTable>
                     </p:panel>
                 </p:fieldset>

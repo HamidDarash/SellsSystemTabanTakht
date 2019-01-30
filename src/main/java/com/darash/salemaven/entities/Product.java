@@ -31,13 +31,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "product")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
-    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
-    @NamedQuery(name = "Product.findByModel", query = "SELECT p FROM Product p WHERE p.model = :model"),
-    @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color"),
-    @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit"),
-    @NamedQuery(name = "Product.findByWage", query = "SELECT p FROM Product p WHERE p.wage = :wage"),
-    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
+    ,
+    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id")
+    ,
+    @NamedQuery(name = "Product.findByModel", query = "SELECT p FROM Product p WHERE p.model = :model")
+    ,
+    @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color")
+    ,
+    @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit")
+    ,
+    @NamedQuery(name = "Product.findByWage", query = "SELECT p FROM Product p WHERE p.wage = :wage")
+    ,
+    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
+    ,
     @NamedQuery(name = "Product.findByProductNameOrModelOrId",
             query = "SELECT p FROM Product p WHERE p.productName LIKE :productName or p.id = :id or p.model LIKE :model")
 })
@@ -191,7 +198,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.darash.salemaven.entities.Product[ id=" + id + " ]";
+        return this.productName + " - " + this.model + " - " + this.provider.getShopName();
     }
 
 }
