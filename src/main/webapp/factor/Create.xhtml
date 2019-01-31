@@ -69,7 +69,7 @@
                             <p:column headerText="کد ملی">
                                 <h:outputText value="#{t.internationalCode}" />
                             </p:column>
-                            <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form" process="@form" /> 
+                            <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form" process="@this" /> 
                         </p:autoComplete>
                     </h:panelGrid>
                     <p:blockUI block="fieldSetProvider" widgetVar="bui2"/>
@@ -86,15 +86,42 @@
                 </p:fieldset>
                 <p:fieldset legend="محتویات فاکتور">
                     <p:panel id="factorDetailPanel">
+                        <p:panelGrid columns="8">
+                            <p:outputLabel for="searchProduct" value="جستجوی محصول"/>
+                            <p:autoComplete id="searchProduct" value="#{factorController.productSelectForInsert}"
+                                            completeMethod="#{factorController.findInAllProductForAutoComplete}"
+                                            var="pr" itemLabel="#{pr.productName}" itemValue="#{pr}" forceSelection="true" onfocus="PF('bui2').show()">
+                                <p:column headerText="کد محصول">
+                                    <h:outputText value="#{pr.id}" />
+                                </p:column>
+                                <p:column headerText="مدل محصول">
+                                    <h:outputText value="#{pr.model}" />
+                                </p:column>
+                                <p:column headerText="رنگ محصول">
+                                    <h:outputText value="#{pr.color}" />
+                                </p:column>
+                                <p:column headerText="نام فروشگاه">
+                                    <h:outputText value="#{pr.provider.shopName}" />
+                                </p:column>
+                                <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                            </p:autoComplete>
+                            <p:outputLabel for="countProduct"/>
+                            <p:inputText id="countProduct" value="#{factorController.rowFactorDetail.countProduct}"/>
+                            
+                            <p:outputLabel for="price"/>
+                            <p:inputText id="price" value="#{factorController.productSelectForInsert.price}"/>
+                           
+                        </p:panelGrid>
+                        <p:panelGrid columns="1">
+                            
+                        </p:panelGrid>
                         <p:dataTable id="tableInsertedFactorDetail" 
                                      var="item" 
-                                     editable="true" 
                                      emptyMessage="هیچ محتویاتی ندارد"
                                      scrollHeight="200"
                                      dir="rtl"
                                      value="#{factorController.selectedFactorDetails}" 
                                      rowIndexVar="rowIdFactorDetail"
-                                     editMode="cell"
                                      widgetVar="InsertedFactorDetailWidget"
                                      selection="#{factorController.rowFactorDetail}"
                                      >
@@ -102,38 +129,18 @@
                             <f:facet name="header">
                                 <h:outputText value="محتویات فاکتور" />
                             </f:facet>
-
-                            <p:ajax event="cellEdit" listener="#{factorController.onCellEdit}"  update="tableInsertedFactorDetail" />
+ 
+                            <p:ajax event="rowSelect"  update=":growl" />
                             <p:column headerText="ردیف">
                                 <h:outputText value="#{rowIdFactorDetail + 1}" />
                             </p:column>
 
                             <p:column headerText="نام محصول">
-                                <p:cellEditor> 
-                                    <f:facet name="output"><h:outputText value="#{item.productName}" /></f:facet>
-                                    <f:facet name="input">
-                                        <p:autoComplete id="searchProduct" value="#{item.productName}"
-                                                        completeMethod="#{factorController.findInAllProductForAutoComplete}"
-                                                        var="pr" itemLabel="#{pr.productName}" itemValue="#{pr.toString()}" forceSelection="true" onfocus="PF('bui2').show()">
-                                            <p:column headerText="کد محصول">
-                                                <h:outputText value="#{pr.id}" />
-                                            </p:column>
-                                            <p:column headerText="مدل محصول">
-                                                <h:outputText value="#{pr.model}" />
-                                            </p:column>
-                                            <p:column headerText="رنگ محصول">
-                                                <h:outputText value="#{pr.color}" />
-                                            </p:column>
-                                            <p:column headerText="نام فروشگاه">
-                                                <h:outputText value="#{pr.provider.shopName}" />
-                                            </p:column>
-                                             
-                                        </p:autoComplete>
-                                    </f:facet>
-                                </p:cellEditor>
+                                <h:outputText value="#{item.productName}" />
                             </p:column>
+                            
                             <p:column headerText="کد محصول">
-                                <h:outputText value="#{factorController.productSelectForInsert.id}" />
+                                <h:outputText value="#{item.productId}" />
                             </p:column>
 
                         </p:dataTable>

@@ -333,5 +333,12 @@ public class FactorController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-   
+    
+   public void setSelectedProductToListItem(SelectEvent event){
+       
+       
+       
+       FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", this.productSelectForInsert.getProductName());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+   }
 }
