@@ -23,6 +23,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,12 +39,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "exhibition")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Exhibition.findAll", query = "SELECT e FROM Exhibition e"),
-    @NamedQuery(name = "Exhibition.findById", query = "SELECT e FROM Exhibition e WHERE e.id = :id"),
-    @NamedQuery(name = "Exhibition.findByNameExhibition", query = "SELECT e FROM Exhibition e WHERE e.nameExhibition = :nameExhibition"),
-    @NamedQuery(name = "Exhibition.findByDateStart", query = "SELECT e FROM Exhibition e WHERE e.dateStart = :dateStart"),
-    @NamedQuery(name = "Exhibition.findByDateEnd", query = "SELECT e FROM Exhibition e WHERE e.dateEnd = :dateEnd"),
-    @NamedQuery(name = "Exhibition.findByManagerName", query = "SELECT e FROM Exhibition e WHERE e.managerName = :managerName"),
+    @NamedQuery(name = "Exhibition.findAll", query = "SELECT e FROM Exhibition e")
+    ,
+    @NamedQuery(name = "Exhibition.findById", query = "SELECT e FROM Exhibition e WHERE e.id = :id")
+    ,
+    @NamedQuery(name = "Exhibition.findByNameExhibition", query = "SELECT e FROM Exhibition e WHERE e.nameExhibition = :nameExhibition")
+    ,
+    @NamedQuery(name = "Exhibition.findByDateStart", query = "SELECT e FROM Exhibition e WHERE e.dateStart = :dateStart")
+    ,
+    @NamedQuery(name = "Exhibition.findByDateEnd", query = "SELECT e FROM Exhibition e WHERE e.dateEnd = :dateEnd")
+    ,
+    @NamedQuery(name = "Exhibition.findByManagerName", query = "SELECT e FROM Exhibition e WHERE e.managerName = :managerName")
+    ,
     @NamedQuery(name = "Exhibition.findByActivate", query = "SELECT e FROM Exhibition e WHERE e.activate = :activate")})
 public class Exhibition implements Serializable {
 
@@ -79,10 +86,12 @@ public class Exhibition implements Serializable {
     @Column(name = "activate")
     private boolean activate = false;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "exhibition_factor", joinColumns = @JoinColumn(name = "exhibition_id",
-            referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "factor_id", referencedColumnName = "id"))
+    @OneToMany(
+            mappedBy = "exhibition",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "exhibition_id")
     private List<Factor> factors = new ArrayList<>();
 
     public List<Factor> getFactors() {
@@ -200,7 +209,7 @@ public class Exhibition implements Serializable {
 
     @Override
     public String toString() {
-        return "com.darash.salemaven.entities.Exhibition[ id=" + id + " ]";
+        return this.nameExhibition + "با مدیریت " + this.managerName;
     }
 
 }

@@ -32,10 +32,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "factor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Factor.findAll", query = "SELECT f FROM Factor f"),
-    @NamedQuery(name = "Factor.findById", query = "SELECT f FROM Factor f WHERE f.id = :id"),
-    @NamedQuery(name = "Factor.findByDateFactor", query = "SELECT f FROM Factor f WHERE f.dateFactor = :dateFactor"),
-    @NamedQuery(name = "Factor.findByCondinationFactor", query = "SELECT f FROM Factor f WHERE f.condinationFactor = :condinationFactor"),
+    @NamedQuery(name = "Factor.findAll", query = "SELECT f FROM Factor f")
+    ,
+    @NamedQuery(name = "Factor.findById", query = "SELECT f FROM Factor f WHERE f.id = :id")
+    ,
+    @NamedQuery(name = "Factor.findByDateFactor", query = "SELECT f FROM Factor f WHERE f.dateFactor = :dateFactor")
+    ,
+    @NamedQuery(name = "Factor.findByCondinationFactor", query = "SELECT f FROM Factor f WHERE f.condinationFactor = :condinationFactor")
+    ,
     @NamedQuery(name = "Factor.findByReturned", query = "SELECT f FROM Factor f WHERE f.returned = :returned")})
 public class Factor implements Serializable {
 
@@ -60,13 +64,28 @@ public class Factor implements Serializable {
 
     @Column(name = "final_registration")
     private boolean finalRegistration = false;
-    
-    @ManyToMany(mappedBy = "factors")
-    private List<Exhibition> exhibitions;
 
-    public List<Exhibition> getExhibitions() {
-        return exhibitions;
-    }
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "sum_factor")
+    private String sumFactor;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "sum_discount")
+    private String sumDiscount;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "payable")
+    private String payable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exhibition_id")
+    private Exhibition exhibition;
+ 
+    
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
@@ -88,6 +107,40 @@ public class Factor implements Serializable {
         return factorDetails;
     }
 
+    public Exhibition getExhibition() {
+        return exhibition;
+    }
+
+    public void setExhibition(Exhibition exhibition) {
+        this.exhibition = exhibition;
+    }
+
+    
+    public String getSumFactor() {
+        return sumFactor;
+    }
+
+    public void setSumFactor(String sumFactor) {
+        this.sumFactor = sumFactor;
+    }
+
+    public String getSumDiscount() {
+        return sumDiscount;
+    }
+
+    public void setSumDiscount(String sumDiscount) {
+        this.sumDiscount = sumDiscount;
+    }
+
+    public String getPayable() {
+        return payable;
+    }
+
+    public void setPayable(String payable) {
+        this.payable = payable;
+    }
+
+    
     public boolean isFinalRegistration() {
         return finalRegistration;
     }
@@ -115,11 +168,7 @@ public class Factor implements Serializable {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
-
-    public void setExhibitions(List<Exhibition> exhibitions) {
-        this.exhibitions = exhibitions;
-    }
-
+ 
     public Factor() {
     }
 

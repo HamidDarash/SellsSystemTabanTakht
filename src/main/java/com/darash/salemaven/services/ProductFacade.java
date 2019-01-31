@@ -38,11 +38,28 @@ public class ProductFacade extends AbstractFacade<Product> {
         super(Product.class);
     }
 
+    public static boolean isNumeric(String strNum) {
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException | NullPointerException nfe) {
+            return false;
+        }
+        return true;
+    }
+
     public List<Product> findProductByIdOrModelOrProductName(String search) {
-        TypedQuery<Product> typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
-                .setParameter("productName", "%" + search + "%")
-                .setParameter("model", "%" + search + "%")
-                .setParameter("id", Integer.valueOf(search));
+        TypedQuery<Product> typedQuery;
+        if (isNumeric(search)) {
+            typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
+                     .setParameter("productName", "")
+                    .setParameter("model", "")
+                    .setParameter("id", Integer.valueOf(search));
+        } else {
+            typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
+                    .setParameter("productName", "%" + search + "%")
+                    .setParameter("model", "%" + search + "%")
+                    .setParameter("id", null);
+        }
         return typedQuery.getResultList();
     }
 

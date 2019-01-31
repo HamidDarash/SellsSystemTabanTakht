@@ -2,6 +2,7 @@ package com.darash.salemaven.beans;
 
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.entities.Credit;
+import com.darash.salemaven.entities.Exhibition;
 import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.FactorDetail;
 import com.darash.salemaven.entities.Person;
@@ -29,7 +30,6 @@ import javax.faces.convert.FacesConverter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -49,12 +49,36 @@ public class FactorController implements Serializable {
 
     private LazyDataModel<Factor> items;
     private Factor selected;
-    private Person selectedPerson;
-    private Provider selectedProvider;
-    private List<FactorDetail> selectedFactorDetails = new ArrayList<>();
+    private Person selectedPerson = null;
+    private Provider selectedProvider = null;
+    private List<FactorDetail> selectedFactorDetails;
     private Product productSelectForInsert = null;
-    private FactorDetail rowFactorDetail = null;
+    private Exhibition selectedExhibitionProvider;
+    private FactorDetail rowFactorDetail;
     private boolean stateForInsertDetail = false;
+
+    //-------------------------------------------
+    //                 fillable
+    //    
+    //-------------------------------------------
+    private int countProduct = 0;
+    private String discountProduct = "";
+
+    public int getCountProduct() {
+        return countProduct;
+    }
+
+    public void setCountProduct(int countProduct) {
+        this.countProduct = countProduct;
+    }
+
+    public String getDiscountProduct() {
+        return discountProduct;
+    }
+
+    public void setDiscountProduct(String discountProduct) {
+        this.discountProduct = discountProduct;
+    }
 
     public void onSelectSaveFactor() {
         if (selectedPerson != null && selectedProvider != null) {
@@ -62,15 +86,72 @@ public class FactorController implements Serializable {
             selected.setProvider(selectedProvider);
             selected.setFinalRegistration(false);
             selected.setReturned(false);
-            this.setStateForInsertDetail(true);
-            selectedFactorDetails.add(new FactorDetail());
+            //selected.setExhibition(selectedExhibitionProvider);
+//            this.setStateForInsertDetail(true);
         }
+    }
+
+    public List<Exhibition> filterOnlyActive(List<Exhibition> exhibitions) {
+        try {
+            if (exhibitions == null) {
+                return new ArrayList<>();
+            }
+            if (exhibitions.isEmpty()) {
+                return new ArrayList<>();
+            }
+            List<Exhibition> es = new ArrayList<>();
+            for (Exhibition exhibition : exhibitions) {
+                if (exhibition.getActivate()) {
+                    es.add(exhibition);
+                }
+            }
+            return es;
+        } catch (Exception e) {
+        }
+        return new ArrayList<>();
+    }
+
+    public void onAddToFactorDetail() {
+        rowFactorDetail = new FactorDetail();
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.productSelectForInsert.getProductName() + " | "
+                + this.productSelectForInsert.getModel() + " | "
+                + this.productSelectForInsert.getUnit() + "  " + "اضافه شد به لیست",
+                "Cell Changed");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        rowFactorDetail.setUnit(productSelectForInsert.getUnit());
+        rowFactorDetail.setPrice(productSelectForInsert.getPrice());
+        rowFactorDetail.setProductName(productSelectForInsert.getProductName());
+        rowFactorDetail.setProductId(productSelectForInsert.getId());
+        this.rowFactorDetail.setDiscount(discountProduct);
+        this.rowFactorDetail.setCountProduct(countProduct);
+        this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
+        this.selectedFactorDetails.add(this.rowFactorDetail);
+        this.setDiscountProduct("0");
+        this.setCountProduct(0);
+        this.productSelectForInsert = null;
     }
 
     public Factor prepareCreate() {
         selected = new Factor();
+//        selectedPerson = new Person();
+//        selectedProvider = new Provider();
+//        rowFactorDetail = new FactorDetail();
+//        selectedExhibitionProvider = new Exhibition();
+        selectedFactorDetails = new ArrayList<>();
+//        productSelectForInsert = new Product();
+
+        setDiscountProduct("0");
+        setCountProduct(0);
         initializeEmbeddableKey();
         return selected;
+    }
+
+    public Exhibition getSelectedExhibitionProvider() {
+        return selectedExhibitionProvider;
+    }
+
+    public void setSelectedExhibitionProvider(Exhibition selectedExhibitionProvider) {
+        this.selectedExhibitionProvider = selectedExhibitionProvider;
     }
 
     public FactorDetail getRowFactorDetail() {
@@ -220,6 +301,7 @@ public class FactorController implements Serializable {
 
     //-------------------------------------------------------------------------------
     public void create() {
+        onAddToFactorDetail();
         persist(JsfUtil.PersistAction.CREATE, "فاکتور بدرستی ساخته شد");
     }
 
@@ -236,7 +318,7 @@ public class FactorController implements Serializable {
             setEmbeddableKeys();
             try {
                 if (persistAction != JsfUtil.PersistAction.DELETE) {
-
+                    selected.setFactorDetails(selectedFactorDetails);
                     getEjbFacade().edit(selected);
                 } else {
                     getEjbFacade().remove(selected);
@@ -313,7 +395,6 @@ public class FactorController implements Serializable {
 
     }
 
-    
 //   public void onRowEdit(RowEditEvent event) {
 //        FacesMessage msg = new FacesMessage("Car Edited", ((Car) event.getObject()).getId());
 //        FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -323,22 +404,18 @@ public class FactorController implements Serializable {
 //        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Car) event.getObject()).getId());
 //        FacesContext.getCurrentInstance().addMessage(null, msg);
 //    }
-     
-    public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-         
-        if(newValue != null && !newValue.equals(oldValue)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-    }
-    
-   public void setSelectedProductToListItem(SelectEvent event){
-       
-       
-       
-       FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", this.productSelectForInsert.getProductName());
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-   }
+//    public void onCellEdit(CellEditEvent event) {
+//        Object oldValue = event.getOldValue();
+//        Object newValue = event.getNewValue();
+//        
+//        if (newValue != null && !newValue.equals(oldValue)) {
+//            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+//            FacesContext.getCurrentInstance().addMessage(null, msg);
+//        }
+//    }
+//    public void setSelectedProductToListItem(SelectEvent event) {
+//        
+//        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", this.productSelectForInsert.getProductName());
+//        FacesContext.getCurrentInstance().addMessage(null, msg);
+//    }
 }

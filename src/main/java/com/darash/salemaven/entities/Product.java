@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
     ,
     @NamedQuery(name = "Product.findByProductNameOrModelOrId",
-            query = "SELECT p FROM Product p WHERE p.productName LIKE :productName or p.id = :id or p.model LIKE :model")
+            query = "SELECT p FROM Product p WHERE (p.productName LIKE :productName or p.model LIKE :model) or p.id = :id")
 })
 public class Product implements Serializable {
 
@@ -198,7 +198,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return this.productName + " - " + this.model + " - " + this.provider.getShopName();
+        return this.productName + " | " + this.model + " | " + this.color + " | " + this.provider.getShopName();
     }
 
 }

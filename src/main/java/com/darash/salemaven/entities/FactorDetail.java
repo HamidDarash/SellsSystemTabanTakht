@@ -31,19 +31,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "factor_detail")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f"),
-    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id"),
-    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId"),
-    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct"),
-    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit"),
-    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price"),
-    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount"),
-    @NamedQuery(name = "FactorDetail.findByTaxesAndTaxes", query = "SELECT f FROM FactorDetail f WHERE f.taxesAndTaxes = :taxesAndTaxes"),
-    @NamedQuery(name = "FactorDetail.findByPriceAfterDiscount", query = "SELECT f FROM FactorDetail f WHERE f.priceAfterDiscount = :priceAfterDiscount"),
-    @NamedQuery(name = "FactorDetail.findByPureFactot", query = "SELECT f FROM FactorDetail f WHERE f.pureFactot = :pureFactot"),
-    @NamedQuery(name = "FactorDetail.findBySumFactor", query = "SELECT f FROM FactorDetail f WHERE f.sumFactor = :sumFactor"),
-    @NamedQuery(name = "FactorDetail.findBySumDiscount", query = "SELECT f FROM FactorDetail f WHERE f.sumDiscount = :sumDiscount"),
-    @NamedQuery(name = "FactorDetail.findByPayable", query = "SELECT f FROM FactorDetail f WHERE f.payable = :payable")})
+    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f")
+    ,
+    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id")
+    ,
+    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId")
+    ,
+    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct")
+    ,
+    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit")
+    ,
+    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price")
+    ,
+    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount")
+    ,
+    @NamedQuery(name = "FactorDetail.findByPriceAfterDiscount", query = "SELECT f FROM FactorDetail f WHERE f.priceAfterDiscount = :priceAfterDiscount")
+})
 public class FactorDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,36 +81,14 @@ public class FactorDetail implements Serializable {
     private String price;
     @Size(max = 255)
     @Column(name = "discount")
-    private String discount;
-    @Size(max = 255)
-    @Column(name = "taxes_and_taxes")
-    private String taxesAndTaxes;
+    private String discount = "0";
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "price_after_discount")
     private String priceAfterDiscount;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "pure_factot")
-    private String pureFactot;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "sum_factor")
-    private String sumFactor;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "sum_discount")
-    private String sumDiscount;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "payable")
-    private String payable;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factor_id")
     private Factor factor;
@@ -119,7 +100,7 @@ public class FactorDetail implements Serializable {
     public void setFactor(Factor factor) {
         this.factor = factor;
     }
- 
+
     public FactorDetail() {
     }
 
@@ -127,18 +108,16 @@ public class FactorDetail implements Serializable {
         this.id = id;
     }
 
-    public FactorDetail(Long id, int productId, String productName, int countProduct, String unit, String price, String priceAfterDiscount, String pureFactot, String sumFactor, String sumDiscount, String payable) {
+    public FactorDetail(Long id, int productId, String productName, int countProduct, String unit, String price, String discount, String priceAfterDiscount) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
         this.countProduct = countProduct;
         this.unit = unit;
         this.price = price;
+        this.discount = discount;
+
         this.priceAfterDiscount = priceAfterDiscount;
-        this.pureFactot = pureFactot;
-        this.sumFactor = sumFactor;
-        this.sumDiscount = sumDiscount;
-        this.payable = payable;
     }
 
     public Long getId() {
@@ -197,52 +176,12 @@ public class FactorDetail implements Serializable {
         this.discount = discount;
     }
 
-    public String getTaxesAndTaxes() {
-        return taxesAndTaxes;
-    }
-
-    public void setTaxesAndTaxes(String taxesAndTaxes) {
-        this.taxesAndTaxes = taxesAndTaxes;
-    }
-
     public String getPriceAfterDiscount() {
         return priceAfterDiscount;
     }
 
     public void setPriceAfterDiscount(String priceAfterDiscount) {
         this.priceAfterDiscount = priceAfterDiscount;
-    }
-
-    public String getPureFactot() {
-        return pureFactot;
-    }
-
-    public void setPureFactot(String pureFactot) {
-        this.pureFactot = pureFactot;
-    }
-
-    public String getSumFactor() {
-        return sumFactor;
-    }
-
-    public void setSumFactor(String sumFactor) {
-        this.sumFactor = sumFactor;
-    }
-
-    public String getSumDiscount() {
-        return sumDiscount;
-    }
-
-    public void setSumDiscount(String sumDiscount) {
-        this.sumDiscount = sumDiscount;
-    }
-
-    public String getPayable() {
-        return payable;
-    }
-
-    public void setPayable(String payable) {
-        this.payable = payable;
     }
 
     @Override
@@ -269,5 +208,5 @@ public class FactorDetail implements Serializable {
     public String toString() {
         return "com.darash.salemaven.entities.FactorDetail[ id=" + id + " ]";
     }
-    
+
 }

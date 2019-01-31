@@ -37,8 +37,9 @@ public class ExhibitionFacade extends AbstractFacade<Exhibition> {
     public ExhibitionFacade() {
         super(Exhibition.class);
     }
+
     
-     public List<Exhibition> filter(int first, int pageSize, Map<String, Object> filters) {
+    public List<Exhibition> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Exhibition> criteriaQuery = cb.createQuery(Exhibition.class);
         Root<Exhibition> root = criteriaQuery.from(Exhibition.class);
@@ -65,7 +66,7 @@ public class ExhibitionFacade extends AbstractFacade<Exhibition> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Exhibition> list = query.getResultList();
-      
+
         return list;
     }
 
