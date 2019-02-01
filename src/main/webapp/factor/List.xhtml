@@ -53,9 +53,6 @@
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تاریخ فاکتور" />
-                                <p:inputText a:shamsipicker="true" a:placeholder="yyyy/mm/dd" onchange="PF('datalistFactors').filter()">
-                                    <f:converter converterId="persian_date"/>
-                                </p:inputText>
                             </f:facet>
                             <h:outputText value="#{item.dateFactor}"> 
                                 <f:converter converterId="persian_date"/>
@@ -68,7 +65,7 @@
                             </f:facet>
                             <h:outputText value="#{item.person.name}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="کد پرسنلی"/>
@@ -82,7 +79,7 @@
                             </f:facet>
                             <h:outputText value="#{item.provider.shopName}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="نوع فاکتور"/>
@@ -97,8 +94,6 @@
                             <h:outputText rendered="#{item.returned == true}" value="فاکتور مرجوع شده است"/>
                         </p:column>
 
-
-
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="وضعیت ثبت"/>
@@ -107,12 +102,14 @@
                         </p:column>
 
                         <f:facet name="footer">
+                           
                             <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
             <ui:include src="Create.xhtml"/>
+           
         </ui:define>
     </ui:composition>
 

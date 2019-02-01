@@ -14,9 +14,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -45,8 +46,8 @@ public class Factor implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Long id;
     @Basic(optional = false)
@@ -84,8 +85,6 @@ public class Factor implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
     private Exhibition exhibition;
- 
-    
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
@@ -98,7 +97,7 @@ public class Factor implements Serializable {
     @OneToMany(
             mappedBy = "factor",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = false
     )
     @JoinColumn(name = "factor_id")
     private List<FactorDetail> factorDetails = new ArrayList<>();
@@ -115,7 +114,6 @@ public class Factor implements Serializable {
         this.exhibition = exhibition;
     }
 
-    
     public String getSumFactor() {
         return sumFactor;
     }
@@ -140,7 +138,6 @@ public class Factor implements Serializable {
         this.payable = payable;
     }
 
-    
     public boolean isFinalRegistration() {
         return finalRegistration;
     }
@@ -168,16 +165,11 @@ public class Factor implements Serializable {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
- 
+
     public Factor() {
     }
-
-    public Factor(Long id) {
-        this.id = id;
-    }
-
-    public Factor(Long id, Date dateFactor, String condinationFactor) {
-        this.id = id;
+ 
+    public Factor(Date dateFactor, String condinationFactor) {
         this.dateFactor = dateFactor;
         this.condinationFactor = condinationFactor;
     }
@@ -185,11 +177,7 @@ public class Factor implements Serializable {
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+ 
     public Date getDateFactor() {
         return dateFactor;
     }

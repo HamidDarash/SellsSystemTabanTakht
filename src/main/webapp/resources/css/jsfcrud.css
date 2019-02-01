@@ -10,9 +10,14 @@
     font-style: normal;
 }
 table, p , select , label , .ui-menuitem-text,
-.ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title {
+.ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
     font-family: Vazir , Arial, sans-serif !important;
-    font-size: .78em !important;
+    font-size: 1 !important;
+}
+input{
+    font-family: Vazir , Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: bolder !important;
 }
 table span {
     font-family: Vazir , Arial, sans-serif;
@@ -42,7 +47,7 @@ table span {
 .ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-current{
     font-size: 12px !important;
 }
-.ui-growl-title{
+.ui-growl-title , .ui-datatable-header{
     font-family: Vazir , Arial, sans-serif;
 }
 .ui-widget-overlay {
@@ -51,4 +56,7 @@ table span {
     background: transparent;
     background-color: #6ca4d4 !important;
 }
- 
+
+.columnFull{
+    width: auto;
+}

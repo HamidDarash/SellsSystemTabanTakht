@@ -6,179 +6,278 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-          
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      >
     <ui:composition>
         <p:dialog id="dialogInserFactorDlg"
                   widgetVar="dialogInserFactorDialog"
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
-            <h:form id="formInsertFactor">
-
-                <p:fieldset id="partPersonInfo" legend="اطلاعات پرسنل" style="margin-bottom:20px">
-                    <h:panelGrid id="panelPerson" columns="2" cellpadding="5">
-                        <p:outputLabel value="انتخاب پرسنل" for="searchPerson" />
-                        <p:autoComplete id="searchPerson" value="#{factorController.selectedPerson}"
-                                        completeMethod="#{factorController.findInAllUsersForAutoComplete}"
-                                        var="p" itemLabel="#{p.name}" itemValue="#{p}">
-                            <p:column headerText="کد پرسنلی">
-                                <h:outputText value="#{p.companyCode}" />
-                            </p:column>
-                            <p:column headerText="کد ملی">
-                                <h:outputText value="#{p.internationalCode}" />
-                            </p:column>
-                            <p:column headerText="نام کامل">
-                                <h:outputText value="#{p.name}" />
-                            </p:column>
-                            <p:column headerText="نام شرکت">
-                                <h:outputText value="#{p.company}" />
-                            </p:column>
-                            <p:ajax event="itemSelect" update="@form"   /> 
-                        </p:autoComplete>
-                    </h:panelGrid>
-                    <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="12" style="padding: 10px">
-                        <p:outputLabel value="نام پرسنل" for="personName" />
-                        <h:outputText id="personName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.name}" />
-                        <p:outputLabel value="کد پرسنلی" for="personCompanyCode" />
-                        <h:outputText id="personCompanyCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.companyCode}" />
-                        <p:outputLabel value="شرکت پرسنل" for="personCompany" />
-                        <h:outputText id="personCompany" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.company}" />
-                        <p:outputLabel value="آدرس پرسنل" for="personAddress" />
-                        <h:outputText id="personAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.address}" />
-                        <p:outputLabel value="کد ملی پرسنل" for="personInternational" />
-                        <h:outputText id="personInternational" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.internationalCode}" />
-                        <p:outputLabel value="کد تلفن/موبایل" for="personMobile" />
-                        <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.mobile}" />
-                    </p:panelGrid>
-                </p:fieldset>
-                <p:blockUI block="partPersonInfo" widgetVar="bui"/>
-                <p:fieldset id="fieldSetProvider" legend="اطلاعات تامین کننده"  rendered="#{factorController.selectedPerson != null}">
-                    <h:panelGrid id="panelProvider"  columns="4" cellpadding="5" >
-                        <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
-                        <p:autoComplete id="searchProvider" value="#{factorController.selectedProvider}"
-                                        completeMethod="#{factorController.findInAllProviderForAutoComplete}"
-                                        var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
-                                        onfocus="PF('bui').show()">
-                            <p:column headerText="کد تامین کننده">
-                                <h:outputText value="#{t.code}" />
-                            </p:column>
-                            <p:column headerText="کد اقتصادی">
-                                <h:outputText value="#{t.codeEghtesadi}" />
-                            </p:column>
-                            <p:column headerText="نام فروشگاه">
-                                <h:outputText value="#{t.shopName}" />
-                            </p:column>
-                            <p:column headerText="کد ملی">
-                                <h:outputText value="#{t.internationalCode}" />
-                            </p:column>
-                            <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form" process="@this" /> 
-                        </p:autoComplete>
-                        <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProvider" />
-                        <p:selectOneMenu disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
-                            <f:selectItems value="#{factorController.filterOnlyActive(factorController.selectedProvider.exhibitions)}" />
+            <h:form id="dateFactorForm">
+                <p:panelGrid columns="3" layout="grid">
+                    <p:panel id="displayDate">
+                        <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
+                        <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDate" 
+                                     a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
+                                     value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
+                            <f:converter converterId="persian_date"  />
+                        </p:inputMask>
+                        <p:spacer width="20px" />
+                        <h:outputText id="textDate" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
+                            <f:converter converterId="persian_date" />
+                        </h:outputText>
+                    </p:panel> 
+                    <p:panel>
+                        <p:outputLabel for="typeFactor" value="نوع فاکتور"/>
+                        <p:selectOneMenu id="typeFactor" value="#{factorController.selected.condinationFactor}">
+                            <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
+                            <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
                         </p:selectOneMenu>
-                    </h:panelGrid>
-                    <p:blockUI block="fieldSetProvider" widgetVar="bui2"/>
-                    <p:panelGrid id="panelInfoProvider" rendered="#{factorController.selectedProvider != null}" columns="4">
-                        <p:outputLabel value="فروشگاه" for="providerShopName" />
-                        <h:outputText id="providerShopName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.shopName}" />
-                        <p:outputLabel value="کد اقتصادی" for="providerCodeEghtesadi" />
-                        <h:outputText id="providerCodeEghtesadi" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.codeEghtesadi}" />
-                        <p:outputLabel value="کد تامین کننده" for="providerCode" />
-                        <h:outputText id="providerCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.code}" />
-                        <p:outputLabel value="آدرس تامین کننده" for="providerAddress" />
-                        <h:outputText id="providerAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.address}" />
-                    </p:panelGrid>
-                </p:fieldset>
-                <p:fieldset legend="محتویات فاکتور" style="margin-top: 10px">
-                    <p:panel id="factorDetailPanel">
-                        <p:panelGrid columns="8" layout="grid">
-                            <p:outputLabel for="searchProduct" value="جستجوی محصول"/>
-                            <p:autoComplete id="searchProduct" value="#{factorController.productSelectForInsert}"
-                                            completeMethod="#{factorController.findInAllProductForAutoComplete}"
-                                            var="pr" itemLabel="#{pr.toString()}" itemValue="#{pr}" onfocus="PF('bui2').show()">
-                                <p:column headerText="کد محصول">
-                                    <h:outputText value="#{pr.id}" />
-                                </p:column>
-                                <p:column headerText="مدل محصول">
-                                    <h:outputText value="#{pr.model}" />
-                                </p:column>
-                                <p:column headerText="رنگ محصول">
-                                    <h:outputText value="#{pr.color}" />
-                                </p:column>
-                                <p:column headerText="نام محصول">
-                                    <h:outputText value="#{pr.productName}" />
-                                </p:column>
-                                <p:column headerText="نام فروشگاه">
-                                    <h:outputText value="#{pr.provider.shopName}" />
-                                </p:column>
-                                <p:ajax event="itemSelect" update="@form" process="@parent" /> 
-                            </p:autoComplete>
-                            
-                            <p:outputLabel for="insertCountProduct" value="تعداد"/>
-                            <p:inputText id="insertCountProduct" value="#{factorController.countProduct}"/>
+                        <p:spacer width="20px" />
+                        <h:outputText id="typeFactorText" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
 
-                            <p:outputLabel for="insertPrice" value="قیمت محصول"/>
-                            <p:inputText id="insertPrice"  value="#{factorController.productSelectForInsert.price}"  readonly="true"/>
+                        </h:outputText>
+                    </p:panel>
+                    <p:panel>
+                        <p:commandButton id="btnRegisterDate" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form" />
+                    </p:panel>
+                </p:panelGrid>
+            </h:form>
+            <h:form id="formInsertFactor">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panel id="panelInfoPersonGroup">
+                        <p:fieldset id="partPersonInfo" legend="اطلاعات پرسنل" style="margin-bottom:20px">
+                            <h:panelGrid id="panelPerson" columns="2" cellpadding="5">
+                                <p:outputLabel value="انتخاب پرسنل" for="searchPerson" />
+                                <p:autoComplete id="searchPerson" value="#{factorController.selectedPerson}"
+                                                completeMethod="#{factorController.findInAllUsersForAutoComplete}"
+                                                var="p" itemLabel="#{p.name}" itemValue="#{p}">
+                                    <p:column headerText="کد پرسنلی">
+                                        <h:outputText value="#{p.companyCode}" />
+                                    </p:column>
+                                    <p:column headerText="کد ملی">
+                                        <h:outputText value="#{p.internationalCode}" />
+                                    </p:column>
+                                    <p:column headerText="نام کامل">
+                                        <h:outputText value="#{p.name}" />
+                                    </p:column>
+                                    <p:column headerText="نام شرکت">
+                                        <h:outputText value="#{p.company}" />
+                                    </p:column>
+                                    <p:ajax event="itemSelect" update="@form"  process="@form" /> 
 
-                            <p:outputLabel for="insertDiscount" value="تخفیف محصول"/>
-                            <p:inputText id="insertDiscount" value="#{factorController.discountProduct}" />
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="4" layout="grid" >
+                                <p:outputLabel value="نام پرسنل" for="personName" />
+                                <h:outputText id="personName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.name}" />
+                                <p:outputLabel value="کد پرسنلی" for="personCompanyCode" />
+                                <h:outputText id="personCompanyCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.companyCode}" />
+                                <p:outputLabel value="شرکت پرسنل" for="personCompany" />
+                                <h:outputText id="personCompany" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.company}" />
+                                <p:outputLabel value="آدرس پرسنل" for="personAddress" />
+                                <h:outputText id="personAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.address}" />
+                                <p:outputLabel value="کد ملی پرسنل" for="personInternational" />
+                                <h:outputText id="personInternational" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.internationalCode}" />
+                                <p:outputLabel value="تلفن/موبایل" for="personMobile" />
+                                <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.mobile}" />
+                            </p:panelGrid>
+                        </p:fieldset>
 
-                            <p:outputLabel for="insertToDetail" value="اضافه تو لیست"/>
-                            <p:commandButton id="insertToDetail" 
-                                             actionListener="#{factorController.onAddToFactorDetail}" 
-                                             value="محاسبه" 
-                                             disabled="#{factorController.productSelectForInsert == null}"
-                                             update="tableInsertedFactorDetail factorDetailPanel insertToDetail :growl"
-                                             process="@form"
-                                             />
-                     
-                            <p:keyFilter for="insertCountProduct" mask="num"/>
-                            <p:keyFilter for="insertPrice" mask="num"/>
-                            <p:keyFilter for="insertDiscount" mask="num"/>
+                    </p:panel>
+                    <p:panel id="panelInfoProviderGroup"  visible="#{factorController.selectedPerson != null}">
+                        <p:fieldset id="fieldSetProvider" legend="اطلاعات تامین کننده"  >
+                            <h:panelGrid id="panelProvider"  columns="4"  >
+                                <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
+                                <p:autoComplete id="searchProvider" value="#{factorController.selectedProvider}"
+                                                completeMethod="#{factorController.findInAllProviderForAutoComplete}"
+                                                var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                                >
+                                    <p:column headerText="کد تامین کننده">
+                                        <h:outputText value="#{t.code}" />
+                                    </p:column>
+                                    <p:column headerText="کد اقتصادی">
+                                        <h:outputText value="#{t.codeEghtesadi}" />
+                                    </p:column>
+                                    <p:column headerText="نام فروشگاه">
+                                        <h:outputText value="#{t.shopName}" />
+                                    </p:column>
+                                    <p:column headerText="کد ملی">
+                                        <h:outputText value="#{t.internationalCode}" />
+                                    </p:column>
+                                    <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form :growl" process="@form" /> 
+                                </p:autoComplete>
+                                <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProvider" />
+                                <p:selectOneMenu rendered="#{factorController.selectedProvider != null}" disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
+                                    <f:selectItems value="#{factorController.filterOnlyActive(factorController.selectedProvider.exhibitions)}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <p:panelGrid id="panelInfoProvider" rendered="#{factorController.selectedProvider != null}" columns="4" layout="grid" style="margin-top: 10px">
+                                <p:outputLabel value="فروشگاه" for="providerShopName" />
+                                <h:outputText id="providerShopName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.shopName}" />
+                                <p:outputLabel value="کد اقتصادی" for="providerCodeEghtesadi" />
+                                <h:outputText id="providerCodeEghtesadi" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.codeEghtesadi}" />
+                                <p:outputLabel value="کد تامین کننده" for="providerCode" />
+                                <h:outputText id="providerCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.code}" />
+                                <p:outputLabel value="آدرس تامین کننده" for="providerAddress" />
+                                <h:outputText id="providerAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedProvider.address}" />
+                            </p:panelGrid>
+                        </p:fieldset>
+
+                    </p:panel>
+                </p:panelGrid>
+
+                <p:fieldset legend="محتویات فاکتور" style="margin-top: 20px">
+                    <p:panel id="factorDetailPanel" header="ورود کالاهای خریداری شده">
+                        <p:panelGrid columns="2">
+                            <p:panel>
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel for="searchProduct" value="جستجوی محصول"/>
+                                    <p:autoComplete id="searchProduct" value="#{factorController.productSelectForInsert}"
+                                                    completeMethod="#{factorController.findInAllProductForAutoComplete}"
+                                                    var="pr" itemLabel="#{pr.toString()}" itemValue="#{pr}">
+                                        <p:column headerText="کد محصول">
+                                            <h:outputText value="#{pr.id}" />
+                                        </p:column>
+                                        <p:column headerText="مدل محصول">
+                                            <h:outputText value="#{pr.model}" />
+                                        </p:column>
+                                        <p:column headerText="رنگ محصول">
+                                            <h:outputText value="#{pr.color}" />
+                                        </p:column>
+                                        <p:column headerText="نام محصول">
+                                            <h:outputText value="#{pr.productName}" />
+                                        </p:column>
+                                        <p:column headerText="نام فروشگاه">
+                                            <h:outputText value="#{pr.provider.shopName}" />
+                                        </p:column>
+                                        <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                                    </p:autoComplete>
+                                    <p:outputLabel for="insertPrice" value="قیمت محصول"/>
+                                    <p:inputText id="insertPrice"  value="#{factorController.productSelectForInsert.price}"  readonly="true"/>
+                                    <p:outputLabel for="insertCountProduct" value="تعداد"/>
+                                    <p:inputText id="insertCountProduct" value="#{factorController.countProduct}"/>
+
+                                    <p:outputLabel for="insertDiscount" value="تخفیف محصول"/>
+                                    <p:inputText id="insertDiscount" value="#{factorController.discountProduct}" />
+
+                                    <p:outputLabel for="insertToDetail" value="اضافه تو لیست"/>
+                                    <p:commandButton id="insertToDetail" style="width: 100%;"
+                                                     actionListener="#{factorController.onAddToFactorDetail}" 
+                                                     value="محاسبه" 
+                                                     disabled="#{factorController.productSelectForInsert == null}"
+                                                     update="tableInsertedFactorDetail factorDetailPanel insertToDetail :growl"
+                                                     process="@form"
+                                                     />
+                                    <p:outputLabel for="saveFactor" value="اتمام ثبت"/>
+                                    <p:commandButton id="saveFactor" style="width: 100%;" disabled="#{empty factorController.rowFactorDetail}"
+                                                     actionListener="#{factorController.create}" 
+                                                     value="ثبت و تایید نهایی" 
+                                                     update=":dateFactorForm tableInsertedFactorDetail factorDetailPanel insertToDetail :growl ,:FactorListForm:datalistFactors"
+                                                     oncomplete="handleSubmit(args,'dialogInserFactorDialog');"
+                                                     >
+                                    </p:commandButton>
+                                    <p:keyFilter for="insertCountProduct" mask="num"/>
+                                    <p:keyFilter for="insertPrice" mask="num"/>
+                                    <p:keyFilter for="insertDiscount" mask="num"/>
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel id="displayFactorDetailListPanel">
+                                <p:toolbar id="toolbarTableDetial">
+                                    <f:facet name="left">
+                                        <p:commandButton type="button" value="حذف" update="tableInsertedFactorDetail" actionListener="#{factorController.deleteFactorDetailList}" disabled="#{empty factorController.selectedFactorDetails}" icon="pi pi-times" />
+                                    </f:facet>
+                                </p:toolbar>
+                                <p:dataTable id="tableInsertedFactorDetail" 
+                                             var="item" 
+                                             emptyMessage="هیچ محتویاتی ندارد"
+                                             scrollHeight="150"
+                                             dir="rtl"
+                                             value="#{factorController.selectedFactorDetails}" 
+                                             selection="#{factorController.rowFactorDetailSelect}"
+                                             rowKey="#{rowIdFactorDetail}"
+                                             rowIndexVar="rowIdFactorDetail"
+                                             widgetVar="InsertedFactorDetailWidget"
+                                             selectionMode="single"
+                                             >
+
+                                    <f:facet name="header">
+                                        <h:outputText value="محتویات فاکتور" />
+                                    </f:facet>
+ 
+                                    <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="formInsertFactor:toolbarTableDetial :growl" />
+
+                                    <p:column headerText="ردیف">
+                                        <h:outputText value="#{rowIdFactorDetail + 1}" />
+                                    </p:column>
+                                    <p:column headerText="کد محصول">
+                                        <h:outputText value="#{item.productId}" />
+                                    </p:column>
+                                    <p:column headerText="نام محصول">
+                                        <h:outputText value="#{item.productName}" />
+                                    </p:column>
+                                    <p:column headerText="قیمت محصول">
+                                        <h:outputText value="#{item.price}" />
+                                    </p:column>
+                                    <p:column headerText="تعداد">
+                                        <h:outputText value="#{item.countProduct}" />
+                                    </p:column>
+                                    <p:column headerText="واحد">
+                                        <h:outputText value="#{item.unit}" />
+                                    </p:column>
+                                    <p:column headerText="تخفیف">
+                                        <h:outputText value="#{item.discount}" />
+                                    </p:column>
+                                    <p:column headerText="جمع این سطر">
+                                        <h:outputText value="#{item.priceAfterDiscount}" />
+                                    </p:column> 
+                                </p:dataTable>
+                            </p:panel>
                         </p:panelGrid>
 
-                        <p:dataTable id="tableInsertedFactorDetail" 
-                                     var="item" 
-                                     emptyMessage="هیچ محتویاتی ندارد"
-                                     scrollHeight="200"
-                                     dir="rtl"
-                                     value="#{factorController.selectedFactorDetails}" 
-                                     selection="#{factorController.rowFactorDetail}"
-                                     rowIndexVar="rowIdFactorDetail"
-                                     widgetVar="InsertedFactorDetailWidget"
-                                     >
 
-                            <f:facet name="header">
-                                <h:outputText value="محتویات فاکتور" />
-                            </f:facet>
-
-                            <p:ajax event="rowSelect"  update=":growl" />
-                            <p:column headerText="ردیف">
-                                <h:outputText value="#{rowIdFactorDetail + 1}" />
-                            </p:column>
-                            <p:column headerText="کد محصول">
-                                <h:outputText value="#{item.productId}" />
-                            </p:column>
-                            <p:column headerText="نام محصول">
-                                <h:outputText value="#{item.productName}" />
-                            </p:column>
-                            <p:column headerText="قیمت محصول">
-                                <h:outputText value="#{item.price}" />
-                            </p:column>
-                            <p:column headerText="تعداد">
-                                <h:outputText value="#{item.countProduct}" />
-                            </p:column>
-                            <p:column headerText="تخفیف">
-                                <h:outputText value="#{item.discount}" />
-                            </p:column>
-                            <p:column headerText="جمع این سطر">
-                                <h:outputText value="#{item.priceAfterDiscount}" />
-                            </p:column> 
-                        </p:dataTable>
                     </p:panel>
                 </p:fieldset>
             </h:form>
         </p:dialog>
+        <script type="text/javascript">
+            function onStatusChange(data) {
+
+                jQuery("input[shamsipicker='true']").persianDatepicker({
+                    months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
+                    dowTitle: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه"],
+                    shortDowTitle: ["ش", "ی", "د", "س", "چ", "پ", "ج"],
+                    showGregorianDate: !1,
+                    persianNumbers: !0,
+                    formatDate: "YYYY/MM/DD",
+                    selectedBefore: !1,
+                    selectedDate: null,
+                    startDate: null,
+                    endDate: null,
+                    prevArrow: '\u25c4',
+                    nextArrow: '\u25ba',
+                    theme: 'default',
+                    alwaysShow: !1,
+                    selectableYears: null,
+                    selectableMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    cellWidth: 25, // by px
+                    cellHeight: 20, // by px
+                    fontSize: 13, // by px                
+                    isRTL: !1,
+                    calendarPosition: {
+                        x: 0,
+                        y: 0
+                    },
+                    onShow: function () {},
+                    onHide: function () {},
+                    onSelect: function () {
+
+                    }
+                });
+
+
+
+            }
+        </script>
     </ui:composition>
 </html>

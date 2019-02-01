@@ -51,7 +51,7 @@ public class FactorDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
     @Column(name = "id")
     private Long id;
@@ -104,28 +104,18 @@ public class FactorDetail implements Serializable {
     public FactorDetail() {
     }
 
-    public FactorDetail(Long id) {
-        this.id = id;
-    }
-
-    public FactorDetail(Long id, int productId, String productName, int countProduct, String unit, String price, String discount, String priceAfterDiscount) {
-        this.id = id;
+    public FactorDetail(int productId, String productName, int countProduct, String unit, String price, String discount, String priceAfterDiscount) {
         this.productId = productId;
         this.productName = productName;
         this.countProduct = countProduct;
         this.unit = unit;
         this.price = price;
         this.discount = discount;
-
         this.priceAfterDiscount = priceAfterDiscount;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getProductId() {

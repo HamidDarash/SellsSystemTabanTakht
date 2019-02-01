@@ -11,6 +11,7 @@
         <title><ui:insert name="title">Default Title</ui:insert></title>
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
         <h:outputStylesheet library="css" name="persianDatepicker-default.css"/>
+
     </h:head>
 
     <h:body>
@@ -21,17 +22,17 @@
                 <h:form id="menuForm" dir="rtl">
                     <p:toolbar id="toolbar">
                         <f:facet name="right">
-                            <p:button outcome="/index"  value="صفحه اصلی" icon="ui-icon-home" />
+                            <p:button   value="صفحه اصلی" icon="ui-icon-home" />
                             <span class="ui-separator">
                                 <span class="ui-icon ui-icon-grip-dotted-vertical" />
                             </span>
 
                             <f:view locale="Arabic">
                                 <p:menuButton value="اطلاعات برنامه">
-                                    <p:menuitem containerStyle="text-align: right" value="اطلاعات پرسنل" outcome="/person/List.xhtml" />
-                                    <p:menuitem containerStyle="text-align: right" value="اطلاعات نمایشگاه های شرکت" outcome="/exhibition/List.xhtml" /> 
-                                    <p:menuitem containerStyle="text-align: right" value="اطلاعات تامین کنندگان شرکت" outcome="/provider/List.xhtml" />
-                                    <p:menuitem containerStyle="text-align: right" value="اطلاعات محصولات تامین کنندگان" outcome="/product/List.xhtml" /> 
+                                    <p:menuitem containerStyle="text-align: right" value="پرسنل" outcome="/person/List.xhtml" />
+                                    <p:menuitem containerStyle="text-align: right" value="نمایشگاه های شرکت" outcome="/exhibition/List.xhtml" /> 
+                                    <p:menuitem containerStyle="text-align: right" value="تامین کنندگان شرکت" outcome="/provider/List.xhtml" />
+                                    <p:menuitem containerStyle="text-align: right" value="محصولات تامین کنندگان" outcome="/product/List.xhtml" /> 
                                     <p:separator />
                                     <p:menuitem containerStyle="text-align: right" value="اطلاعات کل فاکتورها" outcome="/factor/List.xhtml" />
                                     <p:separator />
@@ -83,15 +84,15 @@
 
         <h:outputScript library="js" name="jsfcrud.js"/>
         <h:outputScript library="js" name="persianDatepicker.min.js"/>
-        <script>
-//        PF('dialogTitlebar').jq.find('')[0]
+        
+        <script type="text/javascript">
+
             jQuery(document).ready(function () {
+
                 jQuery("#menuForm\\:toolbar").parent().parent().css({
                     'height': 'auto',
                     'overflow': 'hidden !important'
                 });
-
-
                 jQuery("input[shamsipicker='true']").persianDatepicker({
                     months: ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"],
                     dowTitle: ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنج شنبه", "جمعه"],
@@ -106,24 +107,25 @@
                     prevArrow: '\u25c4',
                     nextArrow: '\u25ba',
                     theme: 'default',
-                    alwaysShow: !1,
+                    alwaysShow: 0,
                     selectableYears: null,
                     selectableMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     cellWidth: 25, // by px
                     cellHeight: 20, // by px
                     fontSize: 13, // by px                
-                    isRTL: !1,
+                    isRTL: 0,
                     calendarPosition: {
                         x: 0,
-                        y: 0,
+                        y: 0
                     },
-                    onShow: function () { },
-                    onHide: function () { },
-                    onSelect: function () { }
+                    onShow: function () {},
+                    onHide: function () {},
+                    onSelect: function () {
+
+                    }
                 });
 
-
-
+            
             });
         </script>
     </h:body>
