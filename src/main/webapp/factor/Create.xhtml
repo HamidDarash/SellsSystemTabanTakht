@@ -13,32 +13,57 @@
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
             <h:form id="dateFactorForm">
-                <p:panelGrid columns="3" layout="grid">
-                    <p:panel id="displayDate">
-                        <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
-                        <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDate" 
-                                     a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
-                                     value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
-                            <f:converter converterId="persian_date"  />
-                        </p:inputMask>
-                        <p:spacer width="20px" />
-                        <h:outputText id="textDate" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
-                            <f:converter converterId="persian_date" />
-                        </h:outputText>
-                    </p:panel> 
-                    <p:panel>
-                        <p:outputLabel for="typeFactor" value="نوع فاکتور"/>
-                        <p:selectOneMenu id="typeFactor" value="#{factorController.selected.condinationFactor}">
-                            <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
-                            <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
-                        </p:selectOneMenu>
-                        <p:spacer width="20px" />
-                        <h:outputText id="typeFactorText" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
-
-                        </h:outputText>
+                <p:panelGrid columns="4" layout="grid">
+                    <p:panel header="نوع فاکتور">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel for="typeFactor" value="نوع فاکتور"/>
+                            <p:selectOneMenu autoWidth="true"  id="typeFactor" value="#{factorController.selected.condinationFactor}">
+                                <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
+                                <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
+                                <p:ajax listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="typeFactorText" value="نوع فاکتور انتخابی"/>
+                            <h:outputText id="typeFactorText" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
+                            </h:outputText>
+                        </p:panelGrid>
                     </p:panel>
-                    <p:panel>
-                        <p:commandButton id="btnRegisterDate" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form" />
+
+                    <p:panel id="displayDate">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
+                            <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDate" 
+                                         a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
+                                         value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
+                                <f:converter converterId="persian_date"  />
+                            </p:inputMask>
+                            <p:outputLabel value="تاریخ انتخابی" for="textDate"/>
+                            <h:outputText id="textDate" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
+                                <f:converter converterId="persian_date" />
+                            </h:outputText>
+                        </p:panelGrid>
+                    </p:panel> 
+                    <p:panel id="installmentPanel" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="پیش پرداخت" for="prepayment" />
+                            <p:inputText value="#{factorController.selected.prepayable}" id="prepayment" />
+
+                            <p:outputLabel for="installmentCount" value="تعداد اقساط"/>
+                            <p:selectOneMenu style="width: 80%" id="installmentCount" value="#{factorController.selected.installmentCount}">
+                                <f:selectItem itemLabel="2" itemValue="2" />
+                                <f:selectItem itemLabel="4" itemValue="4" />
+                                <f:selectItem itemLabel="6" itemValue="6" />
+                                <f:selectItem itemLabel="8" itemValue="8" />
+                                <f:selectItem itemLabel="10" itemValue="10" />
+                                <f:selectItem itemLabel="12" itemValue="12" />
+                            </p:selectOneMenu>  
+                            
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="تاییده">
+                        <p:panelGrid columns="1">
+                            <p:outputLabel value="ثبت تاریخ و تنظیمات فاکتور" for="btnRegisterDate"/>
+                            <p:commandButton id="btnRegisterDate" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form :growl" />
+                        </p:panelGrid>
                     </p:panel>
                 </p:panelGrid>
             </h:form>
@@ -128,6 +153,7 @@
                 </p:panelGrid>
 
                 <p:fieldset legend="محتویات فاکتور" style="margin-top: 20px">
+
                     <p:panel id="factorDetailPanel" header="ورود کالاهای خریداری شده">
                         <p:panelGrid columns="2">
                             <p:panel>
@@ -170,24 +196,21 @@
                                                      process="@form"
                                                      />
                                     <p:outputLabel for="saveFactor" value="اتمام ثبت"/>
-                                    <p:commandButton id="saveFactor" style="width: 100%;" disabled="#{empty factorController.rowFactorDetail}"
+                                    <p:commandButton id="saveFactor" style="width: 100%;" disabled="#{empty factorController.selectedFactorDetails}"
                                                      actionListener="#{factorController.create}" 
                                                      value="ثبت و تایید نهایی" 
-                                                     update=":dateFactorForm tableInsertedFactorDetail factorDetailPanel insertToDetail :growl ,:FactorListForm:datalistFactors"
+                                                     update=":dateFactorForm , tableInsertedFactorDetail, factorDetailPanel, insertToDetail ,:growl ,dialogInserFactorDlg ,:FactorListForm:datalistFactors"
                                                      oncomplete="handleSubmit(args,'dialogInserFactorDialog');"
                                                      >
                                     </p:commandButton>
+                                    <p:outputLabel for="cancelBtn"/>
+                                    <p:commandButton id="cancelBtn" style="width: 100%" value="انصراف" onclick="PersonCreateDialog.hide()"/>
                                     <p:keyFilter for="insertCountProduct" mask="num"/>
                                     <p:keyFilter for="insertPrice" mask="num"/>
                                     <p:keyFilter for="insertDiscount" mask="num"/>
                                 </p:panelGrid>
                             </p:panel>
                             <p:panel id="displayFactorDetailListPanel">
-                                <p:toolbar id="toolbarTableDetial">
-                                    <f:facet name="left">
-                                        <p:commandButton type="button" value="حذف" update="tableInsertedFactorDetail" actionListener="#{factorController.deleteFactorDetailList}" disabled="#{empty factorController.selectedFactorDetails}" icon="pi pi-times" />
-                                    </f:facet>
-                                </p:toolbar>
                                 <p:dataTable id="tableInsertedFactorDetail" 
                                              var="item" 
                                              emptyMessage="هیچ محتویاتی ندارد"
@@ -204,8 +227,8 @@
                                     <f:facet name="header">
                                         <h:outputText value="محتویات فاکتور" />
                                     </f:facet>
- 
-                                    <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="formInsertFactor:toolbarTableDetial :growl" />
+
+                                    <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update=":growl" />
 
                                     <p:column headerText="ردیف">
                                         <h:outputText value="#{rowIdFactorDetail + 1}" />
@@ -231,11 +254,13 @@
                                     <p:column headerText="جمع این سطر">
                                         <h:outputText value="#{item.priceAfterDiscount}" />
                                     </p:column> 
+                                    <p:column headerText="حذف" style="width:32px">
+                                        <p:commandButton actionListener="#{factorController.deleteFactorDetailList(item)}" icon="ui-icon-trash" 
+                                                         update="formInsertFactor:tableInsertedFactorDetail formInsertFactor:saveFactor :growl"   />
+                                    </p:column>ّ
                                 </p:dataTable>
                             </p:panel>
                         </p:panelGrid>
-
-
                     </p:panel>
                 </p:fieldset>
             </h:form>

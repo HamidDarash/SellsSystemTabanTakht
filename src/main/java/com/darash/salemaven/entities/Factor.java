@@ -33,14 +33,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "factor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Factor.findAll", query = "SELECT f FROM Factor f")
-    ,
-    @NamedQuery(name = "Factor.findById", query = "SELECT f FROM Factor f WHERE f.id = :id")
-    ,
-    @NamedQuery(name = "Factor.findByDateFactor", query = "SELECT f FROM Factor f WHERE f.dateFactor = :dateFactor")
-    ,
-    @NamedQuery(name = "Factor.findByCondinationFactor", query = "SELECT f FROM Factor f WHERE f.condinationFactor = :condinationFactor")
-    ,
+    @NamedQuery(name = "Factor.findAll", query = "SELECT f FROM Factor f"),
+    @NamedQuery(name = "Factor.findById", query = "SELECT f FROM Factor f WHERE f.id = :id"),
+    @NamedQuery(name = "Factor.findByDateFactor", query = "SELECT f FROM Factor f WHERE f.dateFactor = :dateFactor"),
+    @NamedQuery(name = "Factor.findByCondinationFactor", query = "SELECT f FROM Factor f WHERE f.condinationFactor = :condinationFactor"),
     @NamedQuery(name = "Factor.findByReturned", query = "SELECT f FROM Factor f WHERE f.returned = :returned")})
 public class Factor implements Serializable {
 
@@ -82,6 +78,34 @@ public class Factor implements Serializable {
     @Column(name = "payable")
     private String payable;
 
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "prepayable")
+    private String prepayable = "0";
+
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "Installment_count")
+    private String installmentCount = "10";
+
+    @Column(name = "percentage")
+    private double percentage = 0.0;
+
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "installment_value")
+    private String installmentValue = "0";
+
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "sum_installment_value")
+    private String sumInstallmentValue = "0";
+
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "sum_wage")
+    private double sumWage = 0.0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
     private Exhibition exhibition;
@@ -101,6 +125,54 @@ public class Factor implements Serializable {
     )
     @JoinColumn(name = "factor_id")
     private List<FactorDetail> factorDetails = new ArrayList<>();
+
+    public double getSumWage() {
+        return sumWage;
+    }
+
+    public void setSumWage(double sumWage) {
+        this.sumWage = sumWage;
+    }
+
+    public String getSumInstallmentValue() {
+        return sumInstallmentValue;
+    }
+
+    public void setSumInstallmentValue(String sumInstallmentValue) {
+        this.sumInstallmentValue = sumInstallmentValue;
+    }
+
+    public String getPrepayable() {
+        return prepayable;
+    }
+
+    public void setPrepayable(String prepayable) {
+        this.prepayable = prepayable;
+    }
+
+    public String getInstallmentCount() {
+        return installmentCount;
+    }
+
+    public void setInstallmentCount(String installmentCount) {
+        this.installmentCount = installmentCount;
+    }
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(double percentage) {
+        this.percentage = percentage;
+    }
+
+    public String getInstallmentValue() {
+        return installmentValue;
+    }
+
+    public void setInstallmentValue(String installmentValue) {
+        this.installmentValue = installmentValue;
+    }
 
     public List<FactorDetail> getFactorDetails() {
         return factorDetails;
@@ -168,7 +240,7 @@ public class Factor implements Serializable {
 
     public Factor() {
     }
- 
+
     public Factor(Date dateFactor, String condinationFactor) {
         this.dateFactor = dateFactor;
         this.condinationFactor = condinationFactor;
@@ -177,7 +249,7 @@ public class Factor implements Serializable {
     public Long getId() {
         return id;
     }
- 
+
     public Date getDateFactor() {
         return dateFactor;
     }

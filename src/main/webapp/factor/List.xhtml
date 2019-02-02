@@ -32,6 +32,7 @@
                                  resizableColumns="true"
                                  liveResize="true"
                                  scrollable="true"
+                                 scrollWidth="100%"
                                  lazy="true"
                                  >
 
@@ -84,26 +85,57 @@
                             <f:facet name="header">
                                 <h:outputText value="نوع فاکتور"/>
                             </f:facet>
-                            <h:outputText value="#{item.condinationFactor}"/>
+                            <h:outputText style="color:green" rendered="#{item.condinationFactor == 'نقدی'}" value="#{item.condinationFactor}"/>
+                            <h:outputText style="color: chocolate" rendered="#{item.condinationFactor == 'اقساط'}" value="#{item.condinationFactor}"/>
+                        </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="تعداد قسط"/>
+                            </f:facet>
+                            <h:outputText value="#{item.installmentCount}"/>
+                        </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="مبلغ قسط"/>
+                            </f:facet>
+                            <h:outputText value="#{item.installmentValue}"/>
+                        </p:column>
+                      
+                         <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="پیش پرداخت"/>
+                            </f:facet>
+                             <h:outputText value="#{item.prepayable}"/>
+                        </p:column>
+                        
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="درصد اقساط"/>
+                            </f:facet>
+                            <h:outputText value="#{item.percentage}"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="وضعیت مرجوعی"/>
                             </f:facet>
-                            <h:outputText rendered="#{item.returned == true}" value="فاکتور مرجوع شده است"/>
+                            <h:outputText rendered="#{item.returned == true}" value="مرجوعی"/>
+                            <h:outputText rendered="#{item.returned == false}" value="خیر"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="وضعیت ثبت"/>
                             </f:facet>
+                            <h:outputText rendered="#{item.finalRegistration == false}" value="تایید نشده"/>
                             <h:outputText rendered="#{item.finalRegistration == true}" value="ثبت نهایی"/>
                         </p:column>
 
                         <f:facet name="footer">
-                           
                             <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
+                            <p:commandButton id="showFactorButton" icon=""/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

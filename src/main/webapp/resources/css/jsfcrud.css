@@ -12,7 +12,7 @@
 table, p , select , label , .ui-menuitem-text,
 .ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
     font-family: Vazir , Arial, sans-serif !important;
-    font-size: 1 !important;
+/*    font-size: .8em !important;*/
 }
 input{
     font-family: Vazir , Arial, sans-serif !important;
@@ -21,7 +21,7 @@ input{
 }
 table span {
     font-family: Vazir , Arial, sans-serif;
-    font-size: .81em !important;
+    font-size: 15px  !important;
 }
 .ui-corner-left{
     border-radius: 0 ;
@@ -44,6 +44,10 @@ table span {
 .ui-layout-unit-header, .ui-layout-unit-footer{
     text-align: right !important;
 }
+.ui-panel-content.ui-widget-content{
+     font-family: Vazir , Arial, sans-serif;
+    font-size: 15px !important; 
+}
 .ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-current{
     font-size: 12px !important;
 }
@@ -59,4 +63,8 @@ table span {
 
 .columnFull{
     width: auto;
+}
+
+.ui-inputfield {
+    padding: 4px 0px !important;
 }
