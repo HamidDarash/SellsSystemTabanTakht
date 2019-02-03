@@ -4,19 +4,146 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:composition>
-        <p:dialog id="ProductViewDlg" widgetVar="ProductViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewProductTitle}">
+        <p:dialog id="ProductViewDlg"  widgetVar="ProductViewDialog" maximizable="true" modal="true" resizable="true" appendTo="@(body)" header="نمایش فاکتور" dir="rtl">
             <h:form id="ProductViewForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{productController.selected != null}">
-                      
-                    </p:panelGrid>
+                <p:panelGrid columns="3" layout="grid" rendered="#{factorController.selected != null}">
+                    <p:panel  header="اطلاعات نمایشگاه">
+                        <p:outputPanel style="border: none">
+                            <strong style="color: #FF7700;margin: 0;">نام نمایشگاه:</strong><p:spacer width="20px"/>
+                            <h:outputText style="" value="#{factorController.selected.exhibition.nameExhibition}" id="exhibitionName" />
+                             <strong style="color: #FF7700;margin: 0;">وضعیت فاکتور در نمایشگاه:</strong><p:spacer width="20px"/>
+                             <h:outputText   rendered="#{factorController.selected.finalRegistration == true}" value="ثبت نهایی" id="finalRegistrationFactor" />
+                             <h:outputText   rendered="#{factorController.selected.finalRegistration == false}" value="تایید نشده" id="finalRegistrationFactor2" />
+                        </p:outputPanel>
+                    </p:panel>
+                    <p:panel header="اطلاعات فاکتور">
+                        <p:outputPanel style="border: none">
+                            <strong style="color: #FF7700;margin: 0;">شماره فاکتور:</strong><p:spacer width="20px"/>
+                            <h:outputText style="" value="#{factorController.selected.id}" id="idFactor" />
+                            <br/>
+                            <strong style="color: #FF7700;margin: 0;">تاریخ فاکتور:</strong><p:spacer width="20px"/>
+                            <h:outputText style="" value="#{factorController.selected.dateFactor}" id="dateFactorText">
+                                <f:converter converterId="persian_date"/>
+                            </h:outputText>
+                        </p:outputPanel>
+                    </p:panel>
+                    <p:panel header="نقدی/اقساطی" >
+                        <strong style="color: #FF7700;margin: 0;">نوع فاکتور:</strong><p:spacer width="20px"/>
+                        <h:outputText style="" value="#{factorController.selected.condinationFactor}" id="condinationFactor" />
+                        <br/>
+                        <c:if test="#{factorController.selected.condinationFactor eq 'اقساط'}">
+                            <strong style="color: #FF7700;margin: 0;">تعداد اقساط:</strong><p:spacer width="20px"/>
+                            <h:outputText style="" value="#{factorController.selected.installmentCount}" id="installmentCount" />
+                        </c:if>
+                    </p:panel>
+                </p:panelGrid>
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panel header="اطلاعات پرسنل/فرد">
+                        <p:panelGrid id="panelInfoPersonView" rendered="#{factorController.selected != null}" columns="4"  >
+                            <p:outputLabel value="نام پرسنل" for="personNameView" />
+                            <h:outputText id="personNameView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.name}" />
+                            <p:outputLabel value="کد پرسنلی" for="personCompanyCodeView" />
+                            <h:outputText id="personCompanyCodeView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.companyCode}" />
+                            <p:outputLabel value="شرکت پرسنل" for="personCompanyView" />
+                            <h:outputText id="personCompanyView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.company}" />
+                            <p:outputLabel value="آدرس پرسنل" for="personAddressView" />
+                            <h:outputText id="personAddressView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.address}" />
+                            <p:outputLabel value="کد ملی پرسنل" for="personInternationalView" />
+                            <h:outputText id="personInternationalView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.internationalCode}" />
+                            <p:outputLabel value="تلفن/موبایل" for="personMobileView" />
+                            <h:outputText id="personMobileView" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.mobile}" />
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="اطلاعات تامین کننده">
+                        <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selected != null}" columns="4" >
+                            <p:outputLabel value="نام پرسنل" for="personName" />
+                            <h:outputText id="personName" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.name}" />
+                            <p:outputLabel value="کد پرسنلی" for="personCompanyCode" />
+                            <h:outputText id="personCompanyCode" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.companyCode}" />
+                            <p:outputLabel value="شرکت پرسنل" for="personCompany" />
+                            <h:outputText id="personCompany" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.company}" />
+                            <p:outputLabel value="آدرس پرسنل" for="personAddress" />
+                            <h:outputText id="personAddress" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.address}" />
+                            <p:outputLabel value="کد ملی پرسنل" for="personInternational" />
+                            <h:outputText id="personInternational" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.internationalCode}" />
+                            <p:outputLabel value="تلفن/موبایل" for="personMobile" />
+                            <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.mobile}" />
+                        </p:panelGrid>
+                    </p:panel>
+                </p:panelGrid>
+                <p:panelGrid layout="grid" columns="1" style="font-size: 14px;text-align: center">
+                    <p:outputPanel>
+                        <strong style="color: #FF7700;margin: 0;">جمع کل تخفیف:</strong>
+                        <h:outputText value="#{factorController.selected.sumDiscount}" id="sumDiscountFactor" /><p:spacer width="10px;"/><span>ریال</span> 
+                        <p:spacer width="10px;"/>
+                        <c:if test="#{factorController.selected.condinationFactor eq 'اقساط'}">
+                            <strong style="color: #FF7700;margin: 0;">مبلغ پیش پرداخت:</strong> 
+                            <h:outputText value="#{factorController.selected.prepayable}" id="prepayableValueFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                            <strong style="color: #FF7700;margin: 0;">مبلغ هر قسط:</strong> 
+                            <h:outputText value="#{factorController.selected.installmentValue}" id="installmentValueFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        </c:if>
+                        <strong style="color: #FF7700;margin: 0;">مبلغ کل فاکتور:</strong>
+                        <h:outputText value="#{factorController.selected.sumFactor}" id="sumFactorFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        <strong style="color: #FF7700;margin: 0;">مبلغ قابل پرداخت:</strong>
+                        <h:outputText value="#{factorController.selected.payable}" id="payableFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        <strong style="color: #FF7700;margin: 0;">جمع کارمزد شرکت:</strong>
+                        <h:outputText style="color: green" value="#{factorController.selected.getSumWageInteger()}" id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        
+                    </p:outputPanel>
+                </p:panelGrid>
+                <p:panel id="ViewFactorDetailListPanel">
+                    <p:dataTable id="ViewtableInsertedFactorDetail" 
+                                 var="item" 
+                                 emptyMessage="هیچ محتویاتی ندارد"
+                                 scrollHeight="150"
+                                 dir="rtl"
+                                 value="#{factorController.selected.factorDetails}" 
+                                 rowKey="#{rowIdViewFactorDetail}"
+                                 rowIndexVar="rowIdViewFactorDetail"
+                                 widgetVar="InsertedFactorDetailWidget"
+
+                                 >
+
+                        <f:facet name="header">
+                            <h:outputText value="محتویات فاکتور" />
+                        </f:facet>
+                        <p:column headerText="ردیف">
+                            <h:outputText value="#{rowIdFactorDetail + 1}" />
+                        </p:column>
+                        <p:column headerText="کد محصول">
+                            <h:outputText value="#{item.productId}" />
+                        </p:column>
+                        <p:column headerText="نام محصول">
+                            <h:outputText value="#{item.productName}" />
+                        </p:column>
+                        <p:column headerText="قیمت محصول">
+                            <h:outputText value="#{item.price}" />
+                        </p:column>
+                        <p:column headerText="تعداد">
+                            <h:outputText value="#{item.countProduct}" />
+                        </p:column>
+                        <p:column headerText="واحد">
+                            <h:outputText value="#{item.unit}" />
+                        </p:column>
+                        <p:column headerText="تخفیف">
+                            <h:outputText value="#{item.discount}" />
+                        </p:column>
+                        <p:column headerText="جمع این سطر">
+                            <h:outputText value="#{item.priceAfterDiscount}" />
+                        </p:column> 
+                    </p:dataTable>
+                </p:panel>
+
+                <p:panelGrid columns="1" layout="grid">
                     <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
-                </h:panelGroup>
+                </p:panelGrid>
+
+
             </h:form>
         </p:dialog>
-
     </ui:composition>
 </html>

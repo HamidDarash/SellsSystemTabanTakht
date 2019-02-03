@@ -9,11 +9,17 @@
     font-weight: normal;
     font-style: normal;
 }
-table, p , select , label , .ui-menuitem-text,
-.ui-button-text , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
+h1,h2,h3,h4,h5,h6,table,textarea, p , select , label , .ui-menuitem-text,
+.ui-button-text ,strong, span , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
     font-family: Vazir , Arial, sans-serif !important;
-/*    font-size: .8em !important;*/
+    /*    font-size: .8em !important;*/
 }
+
+.ui-dialog-title , .ui-panel-title{
+    font-size: 14px !important;
+
+}
+
 input{
     font-family: Vazir , Arial, sans-serif !important;
     font-size: 14px !important;
@@ -45,7 +51,7 @@ table span {
     text-align: right !important;
 }
 .ui-panel-content.ui-widget-content{
-     font-family: Vazir , Arial, sans-serif;
+    font-family: Vazir , Arial, sans-serif;
     font-size: 15px !important; 
 }
 .ui-paginator .ui-paginator-page, .ui-paginator .ui-paginator-pages, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-current{
@@ -67,4 +73,15 @@ table span {
 
 .ui-inputfield {
     padding: 4px 0px !important;
+}
+.fullWidth{
+    width: 100%;
+}
+.ui-clock {
+    background: transparent;
+    border: none;
+    font-size: 12px !important;
+    padding: 0px 10px !important;
+    display: block;
+    margin-top: 12px;
 }

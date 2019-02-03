@@ -17,7 +17,7 @@
 
         <ui:define name="body">
             <h:form id="FactorListForm">
-                <p:panel header="نمایش آخرین فاکتورهای سیستم">
+                <p:panel id="displayFactorPanel" header="نمایش آخرین فاکتورهای سیستم">
 
                     <p:dataTable id="datalistFactors" value="#{factorController.items}" var="item"
                                  selectionMode="single" 
@@ -36,7 +36,8 @@
                                  lazy="true"
                                  >
 
-                        <p:ajax event="rowSelect" />
+                        <p:ajax event="rowSelect"  update="showFactorButton :growl" />
+                        
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
@@ -88,28 +89,28 @@
                             <h:outputText style="color:green" rendered="#{item.condinationFactor == 'نقدی'}" value="#{item.condinationFactor}"/>
                             <h:outputText style="color: chocolate" rendered="#{item.condinationFactor == 'اقساط'}" value="#{item.condinationFactor}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تعداد قسط"/>
                             </f:facet>
                             <h:outputText value="#{item.installmentCount}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="مبلغ قسط"/>
                             </f:facet>
                             <h:outputText value="#{item.installmentValue}"/>
                         </p:column>
-                      
-                         <p:column>
+
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="پیش پرداخت"/>
                             </f:facet>
-                             <h:outputText value="#{item.prepayable}"/>
+                            <h:outputText value="#{item.prepayable}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="درصد اقساط"/>
@@ -135,13 +136,14 @@
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
-                            <p:commandButton id="showFactorButton" icon=""/>
+                            <p:commandButton id="showFactorButton" icon="ui-icon-search" disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
+                            <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor()}"  value="تایید/رد" oncomplete=":datalistFactors" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
             <ui:include src="Create.xhtml"/>
-           
+            <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
 

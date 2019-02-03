@@ -13,7 +13,6 @@ import com.darash.salemaven.services.PersonFacade;
 import com.darash.salemaven.services.ProductFacade;
 import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,6 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -351,6 +349,17 @@ public class FactorController implements Serializable {
         persist(JsfUtil.PersistAction.DELETE, "فاکتور بدرستی حذف شد");
     }
 
+    public void toggleRegisterFactor() {
+        if (selected != null) {
+            selected.setFinalRegistration(!selected.isFinalRegistration());
+            if (selected.isFinalRegistration()) {
+                persist(JsfUtil.PersistAction.UPDATE, "فاکتور تایید نهایی شد");
+            } else {
+                persist(JsfUtil.PersistAction.UPDATE, "فاکتور از تایید خارج شد");
+            }
+        }
+    }
+
     private void persist(JsfUtil.PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
@@ -358,8 +367,6 @@ public class FactorController implements Serializable {
 
                 if (persistAction != JsfUtil.PersistAction.DELETE) {
                     if (persistAction == JsfUtil.PersistAction.CREATE) {
-//                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Action_Create" + selectedExhibitionProvider.getNameExhibition(), "");
-//                        FacesContext.getCurrentInstance().addMessage(null, msg);
                         selected.setPerson(selectedPerson);
                         selected.setProvider(selectedProvider);
                         selected.setExhibition(selectedExhibitionProvider);
@@ -375,12 +382,12 @@ public class FactorController implements Serializable {
                             sumDiscount += Integer.valueOf(fd.getDiscount());
                             sumWageFd += fd.getWage();
                         }
- 
+
                         selected.setFactorDetails(selectedFactorDetails);
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
                         selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage(sumWageFd * (sumPrice - sumDiscount));
+                        selected.setSumWage((int)sumWageFd * (sumPrice - sumDiscount));
                         selected.setFinalRegistration(true);
                         selected.setInstallmentCount(selected.getInstallmentCount());
 
@@ -392,15 +399,15 @@ public class FactorController implements Serializable {
                         }
 
                         //محاسبه هر قسط
-                        double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit)/100 ;
+                        double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
                         int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
-                         
+
                         double installmentValueComputing = purePrice * generalProfit;
                         double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
- 
-                        selected.setInstallmentValue(String.valueOf((int)sumInstallmentAndPaymanet));
+
+                        selected.setInstallmentValue(String.valueOf((int) sumInstallmentAndPaymanet));
                         selected.setPercentage(profit);
-                        selected.setSumInstallmentValue(String.valueOf((int)installmentValueComputing));
+                        selected.setSumInstallmentValue(String.valueOf((int) installmentValueComputing));
 
                         getEjbFacade().create(selected);
                         selected = null;
@@ -467,7 +474,7 @@ public class FactorController implements Serializable {
             return key;
         }
 
-        String getStringKey(java.lang.Long value) {
+        String getStringKey(java.lang.Integer value) {
             StringBuilder sb = new StringBuilder();
             sb.append(value);
             return sb.toString();
@@ -491,6 +498,11 @@ public class FactorController implements Serializable {
 
     public void onSelectTypeFactor() {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.selected.getCondinationFactor(), "");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public void onRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, ((Factor) event.getObject()).getPrepayable(), "");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 

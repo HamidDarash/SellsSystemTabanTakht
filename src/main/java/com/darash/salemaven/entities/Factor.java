@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,7 +46,7 @@ public class Factor implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "date_factor")
@@ -121,11 +122,24 @@ public class Factor implements Serializable {
     @OneToMany(
             mappedBy = "factor",
             cascade = CascadeType.ALL,
-            orphanRemoval = false
+            orphanRemoval = true
     )
     @JoinColumn(name = "factor_id")
     private List<FactorDetail> factorDetails = new ArrayList<>();
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    
+    public int getSumWageInteger(){
+        return (int) getSumWage();
+    }
+    
     public double getSumWage() {
         return sumWage;
     }
@@ -246,9 +260,7 @@ public class Factor implements Serializable {
         this.condinationFactor = condinationFactor;
     }
 
-    public Long getId() {
-        return id;
-    }
+    
 
     public Date getDateFactor() {
         return dateFactor;
@@ -276,27 +288,97 @@ public class Factor implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.dateFactor);
+        hash = 23 * hash + Objects.hashCode(this.condinationFactor);
+        hash = 23 * hash + (this.returned ? 1 : 0);
+        hash = 23 * hash + (this.finalRegistration ? 1 : 0);
+        hash = 23 * hash + Objects.hashCode(this.sumFactor);
+        hash = 23 * hash + Objects.hashCode(this.sumDiscount);
+        hash = 23 * hash + Objects.hashCode(this.payable);
+        hash = 23 * hash + Objects.hashCode(this.prepayable);
+        hash = 23 * hash + Objects.hashCode(this.installmentCount);
+        hash = 23 * hash + (int) (Double.doubleToLongBits(this.percentage) ^ (Double.doubleToLongBits(this.percentage) >>> 32));
+        hash = 23 * hash + Objects.hashCode(this.installmentValue);
+        hash = 23 * hash + Objects.hashCode(this.sumInstallmentValue);
+        hash = 23 * hash + (int) (Double.doubleToLongBits(this.sumWage) ^ (Double.doubleToLongBits(this.sumWage) >>> 32));
+        hash = 23 * hash + Objects.hashCode(this.exhibition);
+        hash = 23 * hash + Objects.hashCode(this.provider);
+        hash = 23 * hash + Objects.hashCode(this.person);
+        hash = 23 * hash + Objects.hashCode(this.factorDetails);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Factor)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Factor other = (Factor) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Factor other = (Factor) obj;
+        if (this.returned != other.returned) {
+            return false;
+        }
+        if (this.finalRegistration != other.finalRegistration) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.percentage) != Double.doubleToLongBits(other.percentage)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.sumWage) != Double.doubleToLongBits(other.sumWage)) {
+            return false;
+        }
+        if (!Objects.equals(this.condinationFactor, other.condinationFactor)) {
+            return false;
+        }
+        if (!Objects.equals(this.sumFactor, other.sumFactor)) {
+            return false;
+        }
+        if (!Objects.equals(this.sumDiscount, other.sumDiscount)) {
+            return false;
+        }
+        if (!Objects.equals(this.payable, other.payable)) {
+            return false;
+        }
+        if (!Objects.equals(this.prepayable, other.prepayable)) {
+            return false;
+        }
+        if (!Objects.equals(this.installmentCount, other.installmentCount)) {
+            return false;
+        }
+        if (!Objects.equals(this.installmentValue, other.installmentValue)) {
+            return false;
+        }
+        if (!Objects.equals(this.sumInstallmentValue, other.sumInstallmentValue)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.dateFactor, other.dateFactor)) {
+            return false;
+        }
+        if (!Objects.equals(this.exhibition, other.exhibition)) {
+            return false;
+        }
+        if (!Objects.equals(this.provider, other.provider)) {
+            return false;
+        }
+        if (!Objects.equals(this.person, other.person)) {
+            return false;
+        }
+        if (!Objects.equals(this.factorDetails, other.factorDetails)) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "com.darash.salemaven.entities.Factor[ id=" + id + " ]";
-    }
+    
 
 }

@@ -6,6 +6,7 @@
 package com.darash.salemaven.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +48,7 @@ public class FactorDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "product_id")
@@ -90,7 +91,7 @@ public class FactorDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "wage")
     private double wage = 0.0;
- 
+
     public double getWage() {
         return wage;
     }
@@ -98,8 +99,6 @@ public class FactorDetail implements Serializable {
     public void setWage(double wage) {
         this.wage = wage;
     }
-
-    
 
     public Factor getFactor() {
         return factor;
@@ -122,8 +121,12 @@ public class FactorDetail implements Serializable {
         this.priceAfterDiscount = priceAfterDiscount;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getProductId() {
@@ -184,19 +187,60 @@ public class FactorDetail implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 83 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 83 * hash + this.productId;
+        hash = 83 * hash + Objects.hashCode(this.productName);
+        hash = 83 * hash + this.countProduct;
+        hash = 83 * hash + Objects.hashCode(this.unit);
+        hash = 83 * hash + Objects.hashCode(this.price);
+        hash = 83 * hash + Objects.hashCode(this.discount);
+        hash = 83 * hash + Objects.hashCode(this.priceAfterDiscount);
+        hash = 83 * hash + Objects.hashCode(this.factor);
+        hash = 83 * hash + (int) (Double.doubleToLongBits(this.wage) ^ (Double.doubleToLongBits(this.wage) >>> 32));
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FactorDetail)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        FactorDetail other = (FactorDetail) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FactorDetail other = (FactorDetail) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (this.productId != other.productId) {
+            return false;
+        }
+        if (this.countProduct != other.countProduct) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.wage) != Double.doubleToLongBits(other.wage)) {
+            return false;
+        }
+        if (!Objects.equals(this.productName, other.productName)) {
+            return false;
+        }
+        if (!Objects.equals(this.unit, other.unit)) {
+            return false;
+        }
+        if (!Objects.equals(this.price, other.price)) {
+            return false;
+        }
+        if (!Objects.equals(this.discount, other.discount)) {
+            return false;
+        }
+        if (!Objects.equals(this.priceAfterDiscount, other.priceAfterDiscount)) {
+            return false;
+        }
+        if (!Objects.equals(this.factor, other.factor)) {
             return false;
         }
         return true;

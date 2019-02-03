@@ -8,40 +8,45 @@
 
     <ui:composition>
 
-        <p:dialog id="PersonEditDlg" dynamic="true" dir="rtl" height="600px"
-                  widgetVar="PersonEditDialog" modal="true" resizable="true"  appendTo="@(body)" header="#{bundle.EditPersonTitle}">
+        <p:dialog id="PersonEditDlg" dynamic="true" dir="rtl" height="700px" width="70%"
+                  widgetVar="PersonEditDialog" modal="true" maximizable="true" resizable="true"  appendTo="@(body)" header="#{bundle.EditPersonTitle}">
             <h:form id="PersonEditForm">
                 <p:growl id="msgs" showDetail="true"/>
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" rendered="#{personController.selected != null}">
+                <p:panel id="display" header="ویرایش اطلاعات کاربری">
+                    <p:panelGrid columns="8" style="width: 100%" rendered="#{personController.selected != null}">
                         <p:outputLabel value="#{bundle.EditPersonLabel_name}" for="name" />
-                        <p:inputText id="name" value="#{personController.selected.name}" title="#{bundle.EditPersonTitle_name}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_name}" style="width: 99%"/>
+                        <p:inputText styleClass="fullWidth" id="name" value="#{personController.selected.name}" title="#{bundle.EditPersonTitle_name}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_name}" style="width: 99%"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_internationalCode}" for="internationalCode" />
-                        <p:inputText id="internationalCode" value="#{personController.selected.internationalCode}"  title="#{bundle.EditPersonTitle_internationalCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_internationalCode}" style="width: 99%"/>
+                        <p:inputText styleClass="fullWidth" id="internationalCode" value="#{personController.selected.internationalCode}"  title="#{bundle.EditPersonTitle_internationalCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_internationalCode}" style="width: 99%"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_email}" for="email" />
-                        <p:inputText id="email" value="#{personController.selected.email}" title="#{bundle.EditPersonTitle_email}" />
+                        <p:inputText styleClass="fullWidth" id="email" value="#{personController.selected.email}" title="#{bundle.EditPersonTitle_email}" />
                         <p:outputLabel value="#{bundle.EditPersonLabel_company}" for="company" />
-                        <p:inputText id="company" value="#{personController.selected.company}" title="#{bundle.EditPersonTitle_company}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_company}" style="width: 99%"/>
+                        <p:inputText styleClass="fullWidth" id="company" value="#{personController.selected.company}" title="#{bundle.EditPersonTitle_company}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_company}" style="width: 99%"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_companyCode}" for="companyCode" />
-                        <p:inputText id="companyCode" value="#{personController.selected.companyCode}" title="#{bundle.EditPersonTitle_companyCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_companyCode}"/>
+                        <p:inputText styleClass="fullWidth" id="companyCode" value="#{personController.selected.companyCode}" title="#{bundle.EditPersonTitle_companyCode}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_companyCode}"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_address}" for="address" />
-                        <p:inputTextarea rows="4" cols="30" id="address" value="#{personController.selected.address}" title="#{bundle.EditPersonTitle_address}" />
+                        <p:inputTextarea  styleClass="fullWidth" rows="4" cols="30" id="address" value="#{personController.selected.address}" title="#{bundle.EditPersonTitle_address}" />
                         <p:outputLabel value="#{bundle.EditPersonLabel_mobile}" for="mobile" />
-                        <p:inputText id="mobile" value="#{personController.selected.mobile}" title="#{bundle.EditPersonTitle_mobile}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_mobile}"/>
+                        <p:inputText styleClass="fullWidth" id="mobile" value="#{personController.selected.mobile}" title="#{bundle.EditPersonTitle_mobile}" required="true" requiredMessage="#{bundle.EditPersonRequiredMessage_mobile}"/>
                         <p:outputLabel value="#{bundle.EditPersonLabel_description}" for="description" />
-                        <p:inputText id="description" value="#{personController.selected.description}" title="#{bundle.EditPersonTitle_description}" requiredMessage="#{bundle.EditPersonRequiredMessage_description}"/>
+                        <p:inputText styleClass="fullWidth" id="description" value="#{personController.selected.description}" title="#{bundle.EditPersonTitle_description}" requiredMessage="#{bundle.EditPersonRequiredMessage_description}"/>
                     </p:panelGrid>
-                    <p:panel id="display2">
+                    <p:spacer height="20px"/>
+                    <p:panel id="display2" header="اعتبارات پرسنل">
                         <p:outputLabel value="اعتبارات" for="display2" />
                         <p:dataTable id="credits" widgetVar="credits" 
                                      emptyMessage="اعتباری در پایگاه داده موجود نیست"
-                                     scrollHeight="100"
                                      var="creditRow" 
                                      dir="rtl"
                                      value="#{personController.selected.credits}" 
                                      rowIndexVar="rowId"
                                      rowKey="#{creditRow.id}"
+                                     scrollable="true"
+                                     scrollHeight="200px"
+                                     paginator="true"
+                                     rows="10"
                                      editable="true" style="margin-bottom:20px">
+
                             <f:facet name="header">
                                 کنترل اعتبارات شخص در سیستم
                             </f:facet>
@@ -75,16 +80,22 @@
                             <p:column headerText="ویرایش" style="width:32px">
                                 <p:rowEditor />
                             </p:column>
-                            
+                            <f:facet name="footer">
+                                <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk">
+                                    <f:actionListener binding="#{rowId + 1}" />
+                                </p:commandButton>
+                            </f:facet>
                         </p:dataTable>
 
-                        <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk" styleClass="">
-                            <f:actionListener binding="#{rowId + 1}" />
-                        </p:commandButton>
+
                     </p:panel>
-                    <p:commandButton actionListener="#{personController.update}" value="#{bundle.Save}" update="display,:PersonListForm:datalist,:growl" oncomplete="handleSubmit(args, 'PersonEditDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="PersonEditDialog.hide()"/>
-                </h:panelGroup>
+
+                    <p:panelGrid columns="2">
+                        <p:commandButton id="updateBtnCredit" actionListener="#{personController.update}" value="#{bundle.Save}" update="display,:PersonListForm:datalist,:growl" oncomplete="handleSubmit(args, 'PersonEditDialog');"/>
+                        <p:commandButton id="cancelBtnCredit" value="#{bundle.Cancel}" onclick="PersonEditDialog.hide()"/>
+                    </p:panelGrid>
+
+                </p:panel>
             </h:form>
         </p:dialog>
 

@@ -14,13 +14,17 @@
 
     </h:head>
 
-    <h:body>
+    <h:body dir="rtl">
         <p:growl id="growl" life="3000" />
 
-        <p:layout fullPage="true" widgetVar="dialogTitlebar">
+        <p:layout fullPage="true" widgetVar="dialogTitlebar" >
+
             <p:layoutUnit position="north" header="#{bundle.AppName}" >
                 <h:form id="menuForm" dir="rtl">
                     <p:toolbar id="toolbar">
+                        <f:facet name="left">
+                            <p:clock mode="server" />
+                        </f:facet>
                         <f:facet name="right">
                             <p:button   value="صفحه اصلی" icon="ui-icon-home" />
                             <span class="ui-separator">
@@ -45,8 +49,8 @@
                             </span>
 
                             <f:view>
-                                <h:outputLabel for="advanced" value="انتخاب قالب"/>
-                                <p:themeSwitcher  id="advanced" value="#{currentTheme.theme}" style="width:190px;vertical-align: middle;padding-left: .7em;" effect="fade" var="t" >
+                                <h:outputLabel for="advanced" value="انتخاب قالب"/><p:spacer width="15px;"/>
+                                <p:themeSwitcher  id="advanced" value="#{currentTheme.theme}" style="width:190px;vertical-align: middle;padding-left: .7em;font-size: 14px" effect="fade" var="t" >
                                     <f:selectItems value="#{themeSwitcherView.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme}" />
                                     <p:column>
                                         <h:outputText styleClass="ui-theme ui-theme-#{t.name}" style="display-block" />
@@ -60,19 +64,21 @@
 
 
                         </f:facet>
-                        <f:facet name="left">
-                            <f:view>
-
-                            </f:view>
-                        </f:facet>
-
                     </p:toolbar>
 
                 </h:form>
             </p:layoutUnit>
 
-            <p:layoutUnit position="south" size="90" header="ابزارهای مهم">
-                <ui:insert name="footer"/>
+            <p:layoutUnit position="south" size="85" style="border: none">
+                <p:panelGrid columns="1" layout="grid" style="border: none">
+                    <p:panel id="consolePanel" style="border: none">
+                        <h:form>
+                            <p:commandButton value="#{footerController.textBtnConsole}" oncomplete=":consolePanel" actionListener="#{footerController.SwichVisibleLogConsole()}"/>
+                            <p:log rendered="#{footerController.visibleLog}" />
+                        </h:form>
+                    </p:panel>
+                </p:panelGrid>
+
             </p:layoutUnit>
 
             <p:layoutUnit position="center" style="overflow-x: hidden">
@@ -84,9 +90,16 @@
 
         <h:outputScript library="js" name="jsfcrud.js"/>
         <h:outputScript library="js" name="persianDatepicker.min.js"/>
-        
-        <script type="text/javascript">
 
+        <script type="text/javascript">
+            function handleComplete(xhr, status, args) {
+                if (args.validationFailed) {
+                    PrimeFaces.debug("Validation Failed");
+                } else {
+                    PrimeFaces.debug("Save:" + args.saved);
+                    PrimeFaces.debug("FirstName: " + args.user.firstname + ", Lastname: " + args.user.lastname);
+                }
+            }
             jQuery(document).ready(function () {
 
                 jQuery("#menuForm\\:toolbar").parent().parent().css({
@@ -125,7 +138,7 @@
                     }
                 });
 
-            
+
             });
         </script>
     </h:body>
