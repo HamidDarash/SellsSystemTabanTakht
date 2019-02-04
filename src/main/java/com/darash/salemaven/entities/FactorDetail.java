@@ -86,20 +86,7 @@ public class FactorDetail implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factor_id")
     private Factor factor;
-
-    @Basic(optional = false)
-    @Size(min = 1, max = 255)
-    @Column(name = "wage")
-    private double wage = 0.0;
-
-    public double getWage() {
-        return wage;
-    }
-
-    public void setWage(double wage) {
-        this.wage = wage;
-    }
-
+ 
     public Factor getFactor() {
         return factor;
     }
@@ -197,7 +184,6 @@ public class FactorDetail implements Serializable {
         hash = 83 * hash + Objects.hashCode(this.discount);
         hash = 83 * hash + Objects.hashCode(this.priceAfterDiscount);
         hash = 83 * hash + Objects.hashCode(this.factor);
-        hash = 83 * hash + (int) (Double.doubleToLongBits(this.wage) ^ (Double.doubleToLongBits(this.wage) >>> 32));
         return hash;
     }
 
@@ -222,9 +208,7 @@ public class FactorDetail implements Serializable {
         if (this.countProduct != other.countProduct) {
             return false;
         }
-        if (Double.doubleToLongBits(this.wage) != Double.doubleToLongBits(other.wage)) {
-            return false;
-        }
+     
         if (!Objects.equals(this.productName, other.productName)) {
             return false;
         }

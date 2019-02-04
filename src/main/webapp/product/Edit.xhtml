@@ -8,12 +8,14 @@
 
     <ui:composition>
 
-        <p:dialog id="ProductEditDlg" widgetVar="ProductEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditProductTitle}">
+        <p:dialog id="ProductEditDlg" widgetVar="ProductEditDialog" modal="true" 
+                  resizable="true" maximizable="true" fitViewport="true"
+                  appendTo="@(body)" header="#{bundle.EditProductTitle}">
             <h:form id="ProductEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{productController.selected != null}">
+                    <p:panelGrid columns="4" layout="grid" rendered="#{productController.selected != null}">
                         <p:outputLabel value="#{bundle.EditProductLabel_productName}" for="productName" />
-                        <p:inputTextarea rows="4" cols="30" id="productName" value="#{productController.selected.productName}" title="#{bundle.EditProductTitle_productName}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_productName}"/>
+                        <p:inputTextarea rows="1" cols="30" id="productName" value="#{productController.selected.productName}" title="#{bundle.EditProductTitle_productName}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_productName}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_model}" for="model" />
                         <p:inputText id="model" value="#{productController.selected.model}" title="#{bundle.EditProductTitle_model}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_model}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_color}" for="color" />
@@ -26,13 +28,25 @@
                         <p:inputText id="wage" value="#{productController.selected.wage}" title="#{bundle.EditProductTitle_wage}" />
                         <p:outputLabel value="#{bundle.EditProductLabel_price}" for="price" />
                         <p:inputText id="price" value="#{productController.selected.price}" title="#{bundle.EditProductTitle_price}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_price}"/>
-                        <p:outputLabel value="#{bundle.EditProductLabel_provider}" for="provider" />
-                        <p:selectOneMenu id="provider" value="#{productController.selected.provider}" >
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{providerController.itemsAvailableSelectOne}"
-                                           var="providerItem"
-                                           itemValue="#{providerItem}"/>
-                        </p:selectOneMenu>
+                        <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
+                        <p:autoComplete id="searchProvider" value="#{productController.selected.provider}"
+                                        completeMethod="#{productController.findInAllProviderForAutoComplete}"
+                                        var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                        >
+                            <p:column headerText="کد تامین کننده">
+                                <h:outputText value="#{t.code}" />
+                            </p:column>
+                            <p:column headerText="کد اقتصادی">
+                                <h:outputText value="#{t.codeEghtesadi}" />
+                            </p:column>
+                            <p:column headerText="نام فروشگاه">
+                                <h:outputText value="#{t.shopName}" />
+                            </p:column>
+                            <p:column headerText="کد ملی">
+                                <h:outputText value="#{t.internationalCode}" />
+                            </p:column>
+                            <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form :growl" process="@form" /> 
+                        </p:autoComplete>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{productController.update}" value="#{bundle.Save}" update="display,:ProductListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ProductEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ProductEditDialog.hide()"/>

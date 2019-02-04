@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      >
+    <ui:composition>
+        <p:dialog id="dialogEditFactorDlg"
+                  widgetVar="dialogEditFactorDialog"
+                  appendTo="@(body)" resizable="true" 
+                  closable="true" modal="true" header="ویرایش فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
+            <h:form id="dateFactorFormEdit">
+                <p:panelGrid columns="4" layout="grid">
+                    <p:panel header="نوع فاکتور">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel for="typeFactorEdit" value="نوع فاکتور"/>
+                            <p:selectOneMenu autoWidth="true"  id="typeFactorEdit" value="#{factorController.selected.condinationFactor}">
+                                <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
+                                <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
+                                <p:ajax listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="typeFactorTextEdit" value="نوع فاکتور انتخابی"/>
+                            <h:outputText id="typeFactorTextEdit" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
+                            </h:outputText>
+                        </p:panelGrid>
+                    </p:panel>
+
+                    <p:panel id="displayDateEdit">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDateEdit"/>
+                            <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDateEdit" 
+                                         a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
+                                         value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
+                                <f:converter converterId="persian_date"  />
+                            </p:inputMask>
+                            <p:outputLabel value="تاریخ انتخابی" for="textDateEdit"/>
+                            <h:outputText id="textDateEdit" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
+                                <f:converter converterId="persian_date" />
+                            </h:outputText>
+                        </p:panelGrid>
+                    </p:panel> 
+                    <p:panel id="installmentPanelEdit" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="پیش پرداخت" for="prepaymentEdit" />
+                            <p:inputText value="#{factorController.selected.prepayable}" id="prepaymentEdit" />
+
+                            <p:outputLabel for="installmentCountEdit" value="تعداد اقساط"/>
+                            <p:selectOneMenu style="width: 80%" id="installmentCountEdit" value="#{factorController.selected.installmentCount}">
+                                <f:selectItem itemLabel="2" itemValue="2" />
+                                <f:selectItem itemLabel="4" itemValue="4" />
+                                <f:selectItem itemLabel="6" itemValue="6" />
+                                <f:selectItem itemLabel="8" itemValue="8" />
+                                <f:selectItem itemLabel="10" itemValue="10" />
+                                <f:selectItem itemLabel="12" itemValue="12" />
+                                <p:ajax update="installmentCountEdit @form" process="@this"/>
+                            </p:selectOneMenu>  
+
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel header="تاییده">
+                        <p:panelGrid columns="1">
+                            <p:outputLabel value="ثبت تاریخ و تنظیمات فاکتور" for="btnRegisterDateEdit"/>
+                            <p:commandButton id="btnRegisterDateEdit" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form :growl" />
+                        </p:panelGrid>
+                    </p:panel>
+                </p:panelGrid>
+            </h:form>
+            <h:form id="formInsertFactorEdit">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panel id="panelInfoPersonGroupEdit">
+                        <p:fieldset id="partPersonInfoEdit" legend="اطلاعات پرسنل" style="margin-bottom:20px">
+                            <h:panelGrid id="panelPersonEdit" columns="2" cellpadding="5">
+                                <p:outputLabel value="انتخاب پرسنل" for="searchPersonEdit" />
+                                <p:autoComplete id="searchPersonEdit" value="#{factorController.selected.person}"
+                                                completeMethod="#{factorController.findInAllUsersForAutoComplete}"
+                                                var="p" itemLabel="#{p.name}" itemValue="#{p}">
+                                    <p:column headerText="کد پرسنلی">
+                                        <h:outputText value="#{p.companyCode}" />
+                                    </p:column>
+                                    <p:column headerText="کد ملی">
+                                        <h:outputText value="#{p.internationalCode}" />
+                                    </p:column>
+                                    <p:column headerText="نام کامل">
+                                        <h:outputText value="#{p.name}" />
+                                    </p:column>
+                                    <p:column headerText="نام شرکت">
+                                        <h:outputText value="#{p.company}" />
+                                    </p:column>
+                                    <p:ajax event="itemSelect" update="@form"  process="@form" /> 
+
+                                </p:autoComplete>
+                            </h:panelGrid>
+                            <p:panelGrid id="panelInfoPersonEdit" rendered="#{factorController.selected.person != null}" columns="4" layout="grid" >
+                                <p:outputLabel value="نام پرسنل" for="personNameEdit" />
+                                <h:outputText id="personNameEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.name}" />
+                                <p:outputLabel value="کد پرسنلی" for="personCompanyCodeEdit" />
+                                <h:outputText id="personCompanyCodeEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.companyCode}" />
+                                <p:outputLabel value="شرکت پرسنل" for="personCompanyEdit" />
+                                <h:outputText id="personCompanyEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.company}" />
+                                <p:outputLabel value="آدرس پرسنل" for="personAddressEdit" />
+                                <h:outputText id="personAddressEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.address}" />
+                                <p:outputLabel value="کد ملی پرسنل" for="personInternationalEdit" />
+                                <h:outputText id="personInternationalEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.internationalCode}" />
+                                <p:outputLabel value="تلفن/موبایل" for="personMobileEdit" />
+                                <h:outputText id="personMobileEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.mobile}" />
+                            </p:panelGrid>
+                        </p:fieldset>
+
+                    </p:panel>
+                    <p:panel id="panelInfoProviderGroupEdit"  rendered="#{factorController.selected.provider != null}">
+                        <p:fieldset id="fieldSetProviderEdit" legend="اطلاعات تامین کننده"  >
+                            <h:panelGrid id="panelProviderEdit"  columns="4"  >
+                                <p:outputLabel value="انتخاب تامین کننده" for="searchProviderEdit" />
+                                <p:autoComplete id="searchProviderEdit" value="#{factorController.selected.provider}"
+                                                completeMethod="#{factorController.findInAllProviderForAutoComplete}"
+                                                var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                                >
+                                    <p:column headerText="کد تامین کننده">
+                                        <h:outputText value="#{t.code}" />
+                                    </p:column>
+                                    <p:column headerText="کد اقتصادی">
+                                        <h:outputText value="#{t.codeEghtesadi}" />
+                                    </p:column>
+                                    <p:column headerText="نام فروشگاه">
+                                        <h:outputText value="#{t.shopName}" />
+                                    </p:column>
+                                    <p:column headerText="کد ملی">
+                                        <h:outputText value="#{t.internationalCode}" />
+                                    </p:column>
+                                    <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form :growl" process="@form" /> 
+                                </p:autoComplete>
+                                <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProviderEdit" />
+                                <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">
+                                    <f:selectItems value="#{factorController.filterOnlyActive(factorController.selected.provider.exhibitions)}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <p:panelGrid id="panelInfoProviderEdit" rendered="#{factorController.selected != null}" columns="4" layout="grid" style="margin-top: 10px">
+                                <p:outputLabel value="فروشگاه" for="providerShopNameEdit" />
+                                <h:outputText id="providerShopNameEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.shopName}" />
+                                <p:outputLabel value="کد اقتصادی" for="providerCodeEghtesadiEdit" />
+                                <h:outputText id="providerCodeEghtesadiEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.codeEghtesadi}" />
+                                <p:outputLabel value="کد تامین کننده" for="providerCodeEdit" />
+                                <h:outputText id="providerCodeEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.code}" />
+                                <p:outputLabel value="آدرس تامین کننده" for="providerAddressEdit" />
+                                <h:outputText id="providerAddressEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.address}" />
+                            </p:panelGrid>
+                        </p:fieldset>
+
+                    </p:panel>
+                </p:panelGrid>
+
+                <p:fieldset legend="محتویات فاکتور" style="margin-top: 20px">
+
+                    <p:panel id="factorDetailPanelEdit" header="ورود کالاهای خریداری شده">
+                        <p:panelGrid columns="2">
+                            <p:panel>
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel for="searchProductEdit" value="جستجوی محصول"/>
+                                    <p:autoComplete id="searchProductEdit" value="#{factorController.productSelectForInsert}"
+                                                    completeMethod="#{factorController.findInAllProductForAutoComplete}"
+                                                    var="pr" itemLabel="#{pr.toString()}" itemValue="#{pr}">
+                                        <p:column headerText="کد محصول">
+                                            <h:outputText value="#{pr.id}" />
+                                        </p:column>
+                                        <p:column headerText="مدل محصول">
+                                            <h:outputText value="#{pr.model}" />
+                                        </p:column>
+                                        <p:column headerText="رنگ محصول">
+                                            <h:outputText value="#{pr.color}" />
+                                        </p:column>
+                                        <p:column headerText="نام محصول">
+                                            <h:outputText value="#{pr.productName}" />
+                                        </p:column>
+                                        <p:column headerText="نام فروشگاه">
+                                            <h:outputText value="#{pr.provider.shopName}" />
+                                        </p:column>
+                                        <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                                    </p:autoComplete>
+                                    <p:outputLabel for="insertPriceEdit" value="قیمت محصول"/>
+                                    <p:inputText id="insertPriceEdit"  value="#{factorController.productSelectForInsert.price}"  readonly="true"/>
+                                    <p:outputLabel for="insertCountProductEdit" value="تعداد"/>
+                                    <p:inputText id="insertCountProductEdit" value="#{factorController.countProduct}" required="true" requiredMessage="تعداد را وارد کنید" />
+
+                                    <p:outputLabel for="insertDiscountEdit" value="تخفیف محصول"/>
+                                    <p:inputText id="insertDiscountEdit" value="#{factorController.discountProduct}"  />
+
+                                    <p:outputLabel for="insertToDetailEdit" value="اضافه تو لیست"/>
+                                    <p:commandButton id="insertToDetailEdit" style="width: 100%;"
+                                                     actionListener="#{factorController.onAddToFactorDetailEdit}" 
+                                                     value="محاسبه و اضافه شود" 
+                                                     disabled="#{factorController.productSelectForInsert == null}"
+                                                     update="tableInsertedFactorDetailEdit factorDetailPanelEdit insertToDetailEdit :growl"
+                                                     process="@form"
+                                                     />
+                                    <p:outputLabel for="saveFactorEdit" value="اتمام ثبت"/>
+                                    <p:commandButton id="saveFactorEdit" style="width: 100%;" disabled="#{empty factorController.selected.factorDetails}"
+                                                     actionListener="#{factorController.update}" 
+                                                     value="ثبت تغییرات" 
+                                                     update=":dateFactorFormEdit , tableInsertedFactorDetailEdit, factorDetailPanelEdit, insertToDetailEdit ,:growl ,dialogEditFactorDlg ,:FactorListForm:datalistFactors"
+                                                     oncomplete="handleSubmit(args,'dialogInserFactorDialog');"
+                                                     >
+                                    </p:commandButton>
+                                    <p:outputLabel for="cancelBtnEdit"/>
+                                    <p:commandButton id="cancelBtnEdit" style="width: 100%" value="انصراف" onclick="PersonCreateDialog.hide()"/>
+                                    <p:keyFilter for="insertCountProductEdit" mask="num"/>
+                                    <p:keyFilter for="insertPriceEdit" mask="num"/>
+                                    <p:keyFilter for="insertDiscountEdit" mask="num"/>
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel id="displayFactorDetailListPanelEdit">
+                                <p:dataTable id="tableInsertedFactorDetailEdit" 
+                                             var="item" 
+                                             emptyMessage="هیچ محتویاتی ندارد"
+                                             scrollHeight="150"
+                                             dir="rtl"
+                                             value="#{factorController.selected.factorDetails}" 
+                                             selection="#{factorController.rowFactorDetailSelect}"
+                                             rowKey="#{rowIdFactorDetailEdit}"
+                                             rowIndexVar="rowIdFactorDetailEdit"
+                                             widgetVar="InsertedFactorDetailWidgetEdit"
+                                             selectionMode="single"
+                                             >
+
+                                    <f:facet name="header">
+                                        <h:outputText value="محتویات فاکتور" />
+                                    </f:facet>
+
+                                    <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update=":growl" />
+
+                                    <p:column headerText="ردیف">
+                                        <h:outputText value="#{rowIdFactorDetailEdit + 1}" />
+                                    </p:column>
+                                    <p:column headerText="کد محصول">
+                                        <h:outputText value="#{item.productId}" />
+                                    </p:column>
+                                    <p:column headerText="نام محصول">
+                                        <h:outputText value="#{item.productName}" />
+                                    </p:column>
+                                    <p:column headerText="قیمت محصول">
+                                        <h:outputText value="#{item.price}" />
+                                    </p:column>
+                                    <p:column headerText="تعداد">
+                                        <h:outputText value="#{item.countProduct}" />
+                                    </p:column>
+                                    <p:column headerText="واحد">
+                                        <h:outputText value="#{item.unit}" />
+                                    </p:column>
+                                    <p:column headerText="تخفیف">
+                                        <h:outputText value="#{item.discount}" />
+                                    </p:column>
+                                    <p:column headerText="جمع این سطر">
+                                        <h:outputText value="#{item.priceAfterDiscount}" />
+                                    </p:column> 
+                                    <p:column headerText="حذف" style="width:32px">
+                                        <p:commandButton actionListener="#{factorController.deleteFactorDetailListEditForm(item)}" icon="ui-icon-trash" 
+                                                         update="formInsertFactorEdit:tableInsertedFactorDetailEdit formInsertFactorEdit:saveFactorEdit :growl"   />
+                                    </p:column>ّ
+                                </p:dataTable>
+                            </p:panel>
+                        </p:panelGrid>
+                    </p:panel>
+                </p:fieldset>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

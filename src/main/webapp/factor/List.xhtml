@@ -36,7 +36,7 @@
                                  lazy="true"
                                  >
 
-                        <p:ajax event="rowSelect"  update="showFactorButton :growl" />
+                        <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor :growl" />
                         
                         <p:column>
                             <f:facet name="header">
@@ -136,14 +136,16 @@
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
-                            <p:commandButton id="showFactorButton" icon="ui-icon-search" disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
-                            <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor()}"  value="تایید/رد" oncomplete=":datalistFactors" />
+                            <p:commandButton id="showFactorButton" value="نمایش" icon="ui-icon-search"  disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
+                            <p:commandButton id="EditFactorButton" value="ویرایش" icon="ui-icon-pencil"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogEditFactorDialog').show();PF('dialogEditFactorDialog').toggleMaximize();onStatusChange();" update=":dateFactorFormEdit :formInsertFactorEdit , :formInsertFactorEdit:tableInsertedFactorDetailEdit" />
+                            <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor()}"  value="تایید/رد" oncomplete=":datalistFactors" disabled="#{factorController.selected == null}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
             <ui:include src="Create.xhtml"/>
             <ui:include src="View.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
         </ui:define>
     </ui:composition>
 

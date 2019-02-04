@@ -91,7 +91,7 @@
                         <strong style="color: #FF7700;margin: 0;">مبلغ قابل پرداخت:</strong>
                         <h:outputText value="#{factorController.selected.payable}" id="payableFactor" /><p:spacer width="5px;"/><span>ریال</span> 
                         <strong style="color: #FF7700;margin: 0;">جمع کارمزد شرکت:</strong>
-                        <h:outputText style="color: green" value="#{factorController.selected.getSumWageInteger()}" id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        <h:outputText style="color: green" value="#{factorController.selected.sumWage}"  id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
                         
                     </p:outputPanel>
                 </p:panelGrid>
@@ -105,14 +105,13 @@
                                  rowKey="#{rowIdViewFactorDetail}"
                                  rowIndexVar="rowIdViewFactorDetail"
                                  widgetVar="InsertedFactorDetailWidget"
-
                                  >
 
                         <f:facet name="header">
                             <h:outputText value="محتویات فاکتور" />
                         </f:facet>
                         <p:column headerText="ردیف">
-                            <h:outputText value="#{rowIdFactorDetail + 1}" />
+                            <h:outputText value="#{rowIdViewFactorDetail + 1}" />
                         </p:column>
                         <p:column headerText="کد محصول">
                             <h:outputText value="#{item.productId}" />

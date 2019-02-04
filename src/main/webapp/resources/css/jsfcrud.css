@@ -85,3 +85,7 @@ table span {
     display: block;
     margin-top: 12px;
 }
+
+.ui-log{
+    font-size: 12px !important;
+}

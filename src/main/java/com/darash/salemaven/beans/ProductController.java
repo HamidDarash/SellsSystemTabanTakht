@@ -3,7 +3,9 @@ package com.darash.salemaven.beans;
 import com.darash.salemaven.entities.Product;
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
+import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.services.ProductFacade;
+import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -30,6 +33,8 @@ public class ProductController implements Serializable {
     private com.darash.salemaven.services.ProductFacade ejbFacade;
     private LazyDataModel<Product> items;
     private Product selected;
+    @EJB
+    private com.darash.salemaven.services.ProviderFacade providerFacade;
 
     @PostConstruct
     public void initDataModel() {
@@ -56,7 +61,19 @@ public class ProductController implements Serializable {
         };
     }
 
+    public ProviderFacade getProviderFacade() {
+        return providerFacade;
+    }
+
+    public void setProviderFacade(ProviderFacade providerFacade) {
+        this.providerFacade = providerFacade;
+    }
+
     public ProductController() {
+    }
+
+    public List<Provider> findInAllProviderForAutoComplete(String search) {
+        return providerFacade.findByNameOrCodeOrFullnameSearch(search);
     }
 
     public Product getSelected() {

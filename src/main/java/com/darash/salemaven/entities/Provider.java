@@ -85,6 +85,13 @@ public class Provider implements Serializable {
     @Column(name = "code")
     private String code;
 
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "wage")
+    private double wage = 0.0;
+
+    
+    
     @ManyToMany(mappedBy = "providers")
     private List<Exhibition> exhibitions;
 
@@ -142,6 +149,14 @@ public class Provider implements Serializable {
         this.mobile = mobile;
         this.shopName = shopName;
         this.code = code;
+    }
+
+    public double getWage() {
+        return wage;
+    }
+
+    public void setWage(double wage) {
+        this.wage = wage;
     }
 
     public Integer getId() {
