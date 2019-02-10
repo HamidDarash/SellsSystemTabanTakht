@@ -22,12 +22,10 @@
                         <h:outputText value="#{productController.selected.unit}" title="#{bundle.ViewProductTitle_unit}"/>
                         <h:outputText value="#{bundle.ViewProductLabel_description}"/>
                         <h:outputText value="#{productController.selected.description}" title="#{bundle.ViewProductTitle_description}"/>
-                        <h:outputText value="#{bundle.ViewProductLabel_wage}"/>
-                        <h:outputText value="#{productController.selected.wage}" title="#{bundle.ViewProductTitle_wage}"/>
                         <h:outputText value="#{bundle.ViewProductLabel_price}"/>
                         <h:outputText value="#{productController.selected.price}" title="#{bundle.ViewProductTitle_price}"/>
                         <h:outputText value="#{bundle.ViewProductLabel_provider}"/>
-                        <h:outputText value="#{productController.selected.provider}" title="#{bundle.ViewProductTitle_provider}"/>
+                        <h:outputText value="#{productController.selected.provider.shopName}" title="#{bundle.ViewProductTitle_provider}"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
                 </h:panelGroup>

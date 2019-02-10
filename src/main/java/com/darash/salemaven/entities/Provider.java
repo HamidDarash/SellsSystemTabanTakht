@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Provider.findByEmail", query = "SELECT p FROM Provider p WHERE p.email = :email"),
     @NamedQuery(name = "Provider.findByMobile", query = "SELECT p FROM Provider p WHERE p.mobile = :mobile"),
     @NamedQuery(name = "Provider.findByCode", query = "SELECT p FROM Provider p WHERE p.code = :code"),
+    @NamedQuery(name = "Provider.findByWage", query = "SELECT p FROM Provider p WHERE p.wage = :wage"),
     @NamedQuery(name = "Provider.findByNameOrCodeOrFullname", query = "SELECT p FROM Provider p WHERE p.code LIKE :code or p.shopName LIKE :shopName or p.fullname LIKE :fullname or p.internationalCode LIKE :internationalCode")})
 public class Provider implements Serializable {
 
@@ -85,13 +86,10 @@ public class Provider implements Serializable {
     @Column(name = "code")
     private String code;
 
-    @Basic(optional = false)
-    @Size(min = 1, max = 255)
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "wage")
     private double wage = 0.0;
 
-    
-    
     @ManyToMany(mappedBy = "providers")
     private List<Exhibition> exhibitions;
 
@@ -140,7 +138,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(String fullname, String internationalCode, String codeEghtesadi, String address, String email, String mobile, String shopName, String code) {
+    public Provider(String fullname, String internationalCode, String codeEghtesadi, String address, String email, String mobile, double wage, String shopName, String code) {
         this.fullname = fullname;
         this.internationalCode = internationalCode;
         this.codeEghtesadi = codeEghtesadi;
@@ -149,6 +147,7 @@ public class Provider implements Serializable {
         this.mobile = mobile;
         this.shopName = shopName;
         this.code = code;
+        this.wage = wage;
     }
 
     public double getWage() {

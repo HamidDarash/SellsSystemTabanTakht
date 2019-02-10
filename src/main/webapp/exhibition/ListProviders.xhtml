@@ -27,39 +27,39 @@
                                  liveResize="true"
                                  scrollable="true"
                                  >
-                        
+
                         <p:ajax event="rowSelect" update="@form" />
                         <p:ajax event="rowUnselect" />
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
                             </f:facet>
                             <h:outputText value="#{rowProvidersExhibition + 1}"/>
-                            
+
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_fullname}"/>
                             </f:facet>
                             <h:outputText value="#{item.fullname}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_internationalCode}"/>
                             </f:facet>
                             <h:outputText value="#{item.internationalCode}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_codeEghtesadi}"/>
                             </f:facet>
                             <h:outputText value="#{item.codeEghtesadi}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_address}"/>
@@ -67,21 +67,21 @@
                             <h:outputText value="#{item.address}"/>
                             <p:tooltip  />
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_email}"/>
                             </f:facet>
                             <h:outputText value="#{item.email}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_mobile}"/>
                             </f:facet>
                             <h:outputText value="#{item.mobile}"/>
                         </p:column>
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProviderTitle_shopName}"/>
@@ -95,11 +95,11 @@
                             <h:outputText value="#{item.code}"/>
                         </p:column>
                     </p:dataTable>
-                  
+
                 </p:panel>
                 <p:spacer height="12" />
-           
-                <p:panel header="#{exhibitionController.headerProviderFactors()}">
+
+                <p:panel header="#{exhibitionController.headerProviderFactors()}" rendered="#{exhibitionController.selected != null}">
                     <p:dataTable id="datalistFactors" value="#{exhibitionController.selectedProvider.factors}" var="item"
                                  selectionMode="single"
                                  paginator="true"
@@ -113,14 +113,14 @@
                                  liveResize="true"
                                  scrollable="true"
                                  >
-                        
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
                             </f:facet>
                             <h:outputText value="#{rowProvidersFactors + 1}"/>
                         </p:column>
- 
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="تاریخ فاکتور"/>
@@ -129,24 +129,39 @@
                                 <f:converter converterId="persian_date" />
                             </h:outputText>
                         </p:column>
-                        
-                         <p:column>
+
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="نوع فاکتور"/>
                             </f:facet>
-                             <h:outputText value="#{item.condinationFactor}" />
+                            <h:outputText value="#{item.condinationFactor}" />
                         </p:column>
-                        
-                         <p:column>
+
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="وضعیت مرجوعی فاکتور"/>
                             </f:facet>
-                             <h:outputText value="#{item.returned}" />
+                            <h:outputText value="مرجوع نشده است" rendered="#{item.returned == false}" />
+                            <h:outputText value="مرجوع شده است" rendered="#{item.returned == true}" />
                         </p:column>
-                        
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="مبلغ کل فاکتور"/>
+                            </f:facet>
+                            <h:outputText value="#{item.sumFactor}" /><p:spacer width="5px" /><h:outputText value="ريال" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="کارمزد"/>
+                            </f:facet>
+                            <h:outputText value="#{item.sumWage}" /><p:spacer width="5px" /><h:outputText value="ريال" />
+                        </p:column>
+
                     </p:dataTable>
                 </p:panel>
-              
+
             </h:form>
         </p:dialog>
 

@@ -90,13 +90,20 @@
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{providerController.prepareCreate}" update=":ProviderCreateForm" oncomplete="PF('ProviderCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ProviderViewForm" oncomplete="PF('ProviderViewDialog').show()" disabled="#{empty providerController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ProviderEditForm" oncomplete="PF('ProviderEditDialog').show()" disabled="#{empty providerController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{providerController.destroy}" update=":growl,datalist" disabled="#{empty providerController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{providerController.destroy}" update=":growl,datalist" disabled="#{empty providerController.selected}">
+                                <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
                         </f:facet>
                     </p:dataTable>
-                      <p:blockUI block="datalist" trigger="datalist">
+                    <p:blockUI block="datalist" trigger="datalist">
                         <p:graphicImage name="img/loader.gif"/>
                     </p:blockUI>
                 </p:panel>
+
+                <p:confirmDialog dir="rtl" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="بله" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="خیر" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-cancel" />
+                </p:confirmDialog>
             </h:form>
 
             <ui:include src="Create.xhtml"/>

@@ -13,9 +13,9 @@
                   appendTo="@(body)" header="#{bundle.EditProductTitle}">
             <h:form id="ProductEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="4" layout="grid" rendered="#{productController.selected != null}">
+                    <p:panelGrid columns="4" rendered="#{productController.selected != null}">
                         <p:outputLabel value="#{bundle.EditProductLabel_productName}" for="productName" />
-                        <p:inputTextarea rows="1" cols="30" id="productName" value="#{productController.selected.productName}" title="#{bundle.EditProductTitle_productName}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_productName}"/>
+                        <p:inputTextarea styleClass="fullWidth" rows="1" cols="15" id="productName" value="#{productController.selected.productName}" title="#{bundle.EditProductTitle_productName}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_productName}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_model}" for="model" />
                         <p:inputText id="model" value="#{productController.selected.model}" title="#{bundle.EditProductTitle_model}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_model}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_color}" for="color" />
@@ -24,8 +24,6 @@
                         <p:inputText id="unit" value="#{productController.selected.unit}" title="#{bundle.EditProductTitle_unit}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_unit}"/>
                         <p:outputLabel value="#{bundle.EditProductLabel_description}" for="description" />
                         <p:inputTextarea rows="4" cols="30" id="description" value="#{productController.selected.description}" title="#{bundle.EditProductTitle_description}" />
-                        <p:outputLabel value="#{bundle.EditProductLabel_wage}" for="wage" />
-                        <p:inputText id="wage" value="#{productController.selected.wage}" title="#{bundle.EditProductTitle_wage}" />
                         <p:outputLabel value="#{bundle.EditProductLabel_price}" for="price" />
                         <p:inputText id="price" value="#{productController.selected.price}" title="#{bundle.EditProductTitle_price}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_price}"/>
                         <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />

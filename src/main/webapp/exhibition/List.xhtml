@@ -85,7 +85,9 @@
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleExibition.Create}" actionListener="#{exhibitionController.prepareCreate}" update=":ExhibitionCreateForm" oncomplete="PF('ExhibitionCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleExibition.View}" update=":ExhibitionViewForm" oncomplete="PF('ExhibitionViewDialog').show()" disabled="#{empty exhibitionController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundleExibition.Edit}" update=":ExhibitionEditForm" oncomplete="PF('ExhibitionEditDialog').show()" disabled="#{empty exhibitionController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleExibition.Delete}" actionListener="#{exhibitionController.destroy}" update=":growl,datalist" disabled="#{empty exhibitionController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleExibition.Delete}" actionListener="#{exhibitionController.destroy}" update=":growl,datalist" disabled="#{empty exhibitionController.selected}">
+                                <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
                             <p:commandButton id="viewProvidersButton" icon="ui-icon-pencil" value="نمایش تامین کنندگان" update=":ExhibitionProvidersViewForm" oncomplete="PF('ExhibitionProvidersViewDialog').show()" disabled="#{!(exhibitionController.selected.providers.size() > 0)}"/>
                         </f:facet>
                     </p:dataTable>
@@ -93,6 +95,10 @@
                         <p:graphicImage name="img/loader.gif"/>
                     </p:blockUI>
                 </p:panel>
+                <p:confirmDialog dir="rtl" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="بله" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="خیر" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-cancel" />
+                </p:confirmDialog>
             </h:form>
 
             <ui:include src="Create.xhtml"/>

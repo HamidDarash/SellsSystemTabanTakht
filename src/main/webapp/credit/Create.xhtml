@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="CreditCreateDlg" widgetVar="CreditCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleCredit.CreateCreditTitle}">
+            <h:form id="CreditCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{creditController.selected != null}">
+                        <p:outputLabel value="#{bundleCredit.CreateCreditLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{creditController.selected.id}" title="#{bundleCredit.CreateCreditTitle_id}" required="true" requiredMessage="#{bundleCredit.CreateCreditRequiredMessage_id}"/>
+                        <p:outputLabel value="#{bundleCredit.CreateCreditLabel_credit}" for="credit" />
+                        <p:inputText id="credit" value="#{creditController.selected.credit}" title="#{bundleCredit.CreateCreditTitle_credit}" required="true" requiredMessage="#{bundleCredit.CreateCreditRequiredMessage_credit}"/>
+                        <p:outputLabel value="#{bundleCredit.CreateCreditLabel_createAt}" for="createAt" />
+                        <p:calendar id="createAt" pattern="MM/dd/yyyy" value="#{creditController.selected.createAt}" title="#{bundleCredit.EditCreditTitle_createAt}" required="true" requiredMessage="#{bundleCredit.EditCreditRequiredMessage_createAt}" showOn="button"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{creditController.create}" value="#{bundleCredit.Save}" update="display,:CreditListForm:datalist,:growl" oncomplete="handleSubmit(args,'CreditCreateDialog');"/>
+                    <p:commandButton value="#{bundleCredit.Cancel}" onclick="CreditCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

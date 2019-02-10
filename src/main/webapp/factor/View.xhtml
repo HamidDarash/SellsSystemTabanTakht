@@ -88,8 +88,13 @@
                         </c:if>
                         <strong style="color: #FF7700;margin: 0;">مبلغ کل فاکتور:</strong>
                         <h:outputText value="#{factorController.selected.sumFactor}" id="sumFactorFactor" /><p:spacer width="5px;"/><span>ریال</span> 
-                        <strong style="color: #FF7700;margin: 0;">مبلغ قابل پرداخت:</strong>
+                        <strong style="color: #FF7700;margin: 0;">مبلغ کل با کسر تخفیف</strong>
                         <h:outputText value="#{factorController.selected.payable}" id="payableFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        
+                        <strong style="color: #FF7700;margin: 0;">مبلغ کل پرداختی با سود</strong>
+                        <h:outputText value="#{factorController.selected.sumPurgeAndProfitGeneral}" id="sumPurgeAndProfitGeneral" /><p:spacer width="5px;"/><span>ریال</span> 
+                        
+                        
                         <strong style="color: #FF7700;margin: 0;">جمع کارمزد شرکت:</strong>
                         <h:outputText style="color: green" value="#{factorController.selected.sumWage}"  id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
                         

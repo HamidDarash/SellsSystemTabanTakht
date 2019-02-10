@@ -99,7 +99,7 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="تاریخ آخرین ورود اعتبار"/>
+                                <h:outputText value="تاریخ آخرین تغییرات اعتبار"/>
                             </f:facet>
                             <h:outputText value="#{personController.getLastCreditDate(item)}">
                                 <f:converter converterId="persian_date" />
@@ -110,13 +110,20 @@
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="ایجاد" actionListener="#{personController.prepareCreate}" update=":PersonCreateForm" oncomplete="PF('PersonCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="نمایش" update=":PersonViewForm" oncomplete="PF('PersonViewDialog').show()" disabled="#{empty personController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="ویرایش کلی/اعتبار" update=":PersonEditForm" oncomplete="PF('PersonEditDialog').show();PF('PersonEditDialog').toggleMaximize();" disabled="#{empty personController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="حذف" actionListener="#{personController.destroy}" update=":growl,@form" disabled="#{empty personController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="حذف" actionListener="#{personController.destroy}" update=":growl,@form" disabled="#{empty personController.selected}">
+                                <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
                         </f:facet>
                     </p:dataTable>
                     <p:blockUI block="datalist" trigger="datalist">
                         <p:graphicImage name="img/loader.gif"/>
                     </p:blockUI>
                 </p:panel>
+
+                <p:confirmDialog dir="rtl" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="بله" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="خیر" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-cancel" />
+                </p:confirmDialog>
             </h:form>
 
             <ui:include src="Create.xhtml"/>

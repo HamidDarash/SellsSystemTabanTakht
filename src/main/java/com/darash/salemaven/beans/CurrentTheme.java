@@ -16,7 +16,7 @@ import javax.faces.context.FacesContext;
 public class CurrentTheme implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String theme = "start";
+    private String theme = "bluesky";
 
     public String getTheme() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();

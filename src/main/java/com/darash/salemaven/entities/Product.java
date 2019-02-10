@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Product.findByModel", query = "SELECT p FROM Product p WHERE p.model = :model"),
     @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color"),
     @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit"),
-    @NamedQuery(name = "Product.findByWage", query = "SELECT p FROM Product p WHERE p.wage = :wage"),
     @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
     @NamedQuery(name = "Product.findByProductNameOrModelOrId",
             query = "SELECT p FROM Product p WHERE (p.productName LIKE :productName or p.model LIKE :model) or p.id = :id")
@@ -74,9 +73,7 @@ public class Product implements Serializable {
     @Size(max = 65535)
     @Column(name = "description")
     private String description;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "wage")
-    private double wage = 0.0;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -90,13 +87,13 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String productName, String model, String color, String unit, String description, Float wage, String price, Provider provider) {
+    public Product(String productName, String model, String color, String unit, String description, String price, Provider provider) {
         this.productName = productName;
         this.model = model;
         this.color = color;
         this.unit = unit;
         this.description = description;
-        this.wage = wage;
+
         this.price = price;
         this.provider = provider;
     }
@@ -143,14 +140,6 @@ public class Product implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public double getWage() {
-        return wage;
-    }
-
-    public void setWage(double wage) {
-        this.wage = wage;
     }
 
     public String getPrice() {

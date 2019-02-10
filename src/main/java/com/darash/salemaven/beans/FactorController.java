@@ -1,12 +1,14 @@
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.beans.util.JsfUtil;
+import com.darash.salemaven.entities.Credit;
 import com.darash.salemaven.entities.Exhibition;
 import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.FactorDetail;
 import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.entities.Product;
 import com.darash.salemaven.entities.Provider;
+import com.darash.salemaven.services.CreditFacade;
 import com.darash.salemaven.services.ExhibitionFacade;
 import com.darash.salemaven.services.FactorFacade;
 import com.darash.salemaven.services.PersonFacade;
@@ -47,6 +49,8 @@ public class FactorController implements Serializable {
     private com.darash.salemaven.services.ProductFacade productFacade;
     @EJB
     private com.darash.salemaven.services.ExhibitionFacade exhibitionFacade;
+    @EJB
+    private com.darash.salemaven.services.CreditFacade creditFacade;
 
     private LazyDataModel<Factor> items;
     private Factor selected;
@@ -58,6 +62,7 @@ public class FactorController implements Serializable {
     private FactorDetail rowFactorDetail;
     private FactorDetail rowFactorDetailSelect;
     private boolean stateForInsertDetail = false;
+    private String selectedFactorPurgeAndProfitGeneral = null;
 
     //-------------------------------------------
     //                 fillable
@@ -65,6 +70,14 @@ public class FactorController implements Serializable {
     //-------------------------------------------
     private int countProduct = 0;
     private String discountProduct = "0";
+
+    public String getSelectedFactorPurgeAndProfitGeneral() {
+        return selectedFactorPurgeAndProfitGeneral;
+    }
+
+    public void setSelectedFactorPurgeAndProfitGeneral(String selectedFactorPurgeAndProfitGeneral) {
+        this.selectedFactorPurgeAndProfitGeneral = selectedFactorPurgeAndProfitGeneral;
+    }
 
     public FactorDetail getRowFactorDetailSelect() {
         return rowFactorDetailSelect;
@@ -107,6 +120,14 @@ public class FactorController implements Serializable {
             }
         }
 
+    }
+
+    public CreditFacade getCreditFacade() {
+        return creditFacade;
+    }
+
+    public void setCreditFacade(CreditFacade creditFacade) {
+        this.creditFacade = creditFacade;
     }
 
     public ExhibitionFacade getExhibitionFacade() {
@@ -158,53 +179,6 @@ public class FactorController implements Serializable {
         discountProduct = "0";
         countProduct = 0;
         return selected;
-    }
-
-    public void onAddToFactorDetailEdit() {
-        if (countProduct <= 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
-                    "خطا رخ داده");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } else {
-            rowFactorDetail = new FactorDetail();
-            rowFactorDetail.setUnit(productSelectForInsert.getUnit());
-            rowFactorDetail.setPrice(productSelectForInsert.getPrice());
-            rowFactorDetail.setProductName(productSelectForInsert.getProductName());
-            rowFactorDetail.setProductId(productSelectForInsert.getId());
-            this.rowFactorDetail.setDiscount(discountProduct);
-            this.rowFactorDetail.setCountProduct(countProduct);
-            this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
-            this.selected.getFactorDetails().add(this.rowFactorDetail);
-            this.setDiscountProduct("0");
-            this.setCountProduct(0);
-            this.productSelectForInsert = null;
-        }
-    }
-
-    public void onAddToFactorDetail() {
-        if (countProduct <= 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
-                    "خطا رخ داده");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        } else {
-            rowFactorDetail = new FactorDetail();
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, this.productSelectForInsert.getProductName() + " | "
-                    + this.productSelectForInsert.getModel() + " | "
-                    + this.productSelectForInsert.getUnit() + "  " + "اضافه شد به لیست",
-                    "Cell Changed");
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-            rowFactorDetail.setUnit(productSelectForInsert.getUnit());
-            rowFactorDetail.setPrice(productSelectForInsert.getPrice());
-            rowFactorDetail.setProductName(productSelectForInsert.getProductName());
-            rowFactorDetail.setProductId(productSelectForInsert.getId());
-            this.rowFactorDetail.setDiscount(discountProduct);
-            this.rowFactorDetail.setCountProduct(countProduct);
-            this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
-            this.selectedFactorDetails.add(this.rowFactorDetail);
-            this.setDiscountProduct("0");
-            this.setCountProduct(0);
-            this.productSelectForInsert = null;
-        }
     }
 
     public void messageSelectDate() {
@@ -392,11 +366,53 @@ public class FactorController implements Serializable {
     public void toggleRegisterFactor() {
         if (selected != null) {
             selected.setFinalRegistration(!selected.isFinalRegistration());
-            if (selected.isFinalRegistration()) {
-                persist(JsfUtil.PersistAction.UPDATE, "فاکتور تایید نهایی شد");
-            } else {
-                persist(JsfUtil.PersistAction.UPDATE, "فاکتور از تایید خارج شد");
-            }
+            ejbFacade.edit(selected);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "تغییر وضعیت فاکتور",
+                    "اطلاعات برنامه");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+
+    public void onAddToFactorDetailEdit() {
+        if (countProduct <= 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
+                    "خطا رخ داده");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
+            rowFactorDetail = new FactorDetail();
+            rowFactorDetail.setUnit(productSelectForInsert.getUnit());
+            rowFactorDetail.setPrice(productSelectForInsert.getPrice());
+            rowFactorDetail.setProductName(productSelectForInsert.getProductName());
+            rowFactorDetail.setProductId(productSelectForInsert.getId());
+            this.rowFactorDetail.setDiscount(discountProduct);
+            this.rowFactorDetail.setCountProduct(countProduct);
+            this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
+            this.selected.getFactorDetails().add(this.rowFactorDetail);
+            this.setDiscountProduct("0");
+            this.setCountProduct(0);
+            this.productSelectForInsert = null;
+        }
+    }
+
+    public void onAddToFactorDetail() {
+        if (countProduct <= 0) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
+                    "خطا رخ داده");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        } else {
+            rowFactorDetail = new FactorDetail();
+            JsfUtil.addSuccessMessage("اضافه شد به لیست");
+            rowFactorDetail.setUnit(productSelectForInsert.getUnit());
+            rowFactorDetail.setPrice(productSelectForInsert.getPrice());
+            rowFactorDetail.setProductName(productSelectForInsert.getProductName());
+            rowFactorDetail.setProductId(productSelectForInsert.getId());
+            this.rowFactorDetail.setDiscount(discountProduct);
+            this.rowFactorDetail.setCountProduct(countProduct);
+            this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
+            this.selectedFactorDetails.add(this.rowFactorDetail);
+            this.setDiscountProduct("0");
+            this.setCountProduct(0);
+            this.productSelectForInsert = null;
         }
     }
 
@@ -404,52 +420,62 @@ public class FactorController implements Serializable {
         if (selected != null) {
             setEmbeddableKeys();
             try {
-
                 if (persistAction != JsfUtil.PersistAction.DELETE) {
                     if (persistAction == JsfUtil.PersistAction.CREATE) {
-                        selected.setPerson(selectedPerson);
-                        selected.setProvider(selectedProvider);
-                        selected.setExhibition(selectedExhibitionProvider);
-                        selectedPerson.getFactors().add(selected);
-                        selectedProvider.getFactors().add(selected);
-                        selectedExhibitionProvider.getFactors().add(selected);
+
                         int sumPrice = 0;//جمع کل
                         int sumDiscount = 0;//جمع کل تخفیف
-                        double sumWageFd = 0.0;//جمع کارمزد
+
                         for (FactorDetail fd : selectedFactorDetails) {
                             fd.setFactor(selected);
-                            sumPrice += Integer.valueOf(fd.getPriceAfterDiscount());
+                            sumPrice += Integer.valueOf(fd.getPrice());
                             sumDiscount += Integer.valueOf(fd.getDiscount().isEmpty() ? "0" : fd.getDiscount());
-//                            sumWageFd += fd.getWage();
                         }
+
+                        double profit = 0.0;//درصد قسط
+                        if (Integer.valueOf(selected.getInstallmentCount()) > 6) {
+                            profit = 1.8;
+                        } else {
+                            profit = 1.5;
+                        }
+
+                        //محاسبه هر قسط
+                        double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
+                        //خالص مانده
+                        int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
+                        // کل سود روی خالص  مانده
+                        double installmentValueComputing = purePrice * generalProfit;
+                        // مبلغ هر قسط ماهیانه
+                        double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
+                        //جمع سود و خالص پرداختی
+                        long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
 
                         selected.setFactorDetails(selectedFactorDetails);
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
                         selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage((int) selected.getProvider().getWage() * (sumPrice - sumDiscount));//جمع کل کارمزد
+                        selected.setSumWage((int) (selectedProvider.getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
                         selected.setInstallmentCount(selected.getInstallmentCount());//تعداد اقساط
 
-                        double profit = 0.0;//درصد قسط
-                        if (Integer.valueOf(selected.getInstallmentCount()) >= 6) {
-                            profit = 1.8;
-                        } else {
-                            profit = 1.6;
-                        }
-
-                        //محاسبه هر قسط
-                        double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
-                        int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
-
-                        double installmentValueComputing = purePrice * generalProfit;
-                        double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
+                        selectedPerson.getFactors().add(selected);
+                        selectedProvider.getFactors().add(selected);
+                        selectedExhibitionProvider.getFactors().add(selected);
+                        selected.setPerson(selectedPerson);
+                        selected.setProvider(selectedProvider);
+                        selected.setExhibition(selectedExhibitionProvider);
 
                         selected.setInstallmentValue(String.valueOf((int) sumInstallmentAndPaymanet));
                         selected.setPercentage(profit);
                         selected.setSumInstallmentValue(String.valueOf((int) installmentValueComputing));
+                        selected.setSumPurgeAndProfitGeneral(String.valueOf(sumPurgeAndProfit));
 
                         getEjbFacade().create(selected);
+                        //جمع خلص مانده + سود کل مانده
+                        // از اعتبار پرسنل کسر میشود
+                        Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
+                        creditFacade.edit(credit);
+
                         selected = null;
                         productSelectForInsert = null;
                         selectedPerson = null;
@@ -459,41 +485,58 @@ public class FactorController implements Serializable {
                         discountProduct = "0";
 
                     } else {
+
                         int sumPrice = 0;//جمع کل
                         int sumDiscount = 0;//جمع کل تخفیف
-                        double sumWageFd = 0.0;//جمع کارمزد
+
                         for (FactorDetail fd : selected.getFactorDetails()) {
                             fd.setFactor(selected);
-                            sumPrice += Integer.valueOf(fd.getPriceAfterDiscount());
+                            sumPrice += Integer.valueOf(fd.getPrice());
                             sumDiscount += Integer.valueOf(fd.getDiscount().isEmpty() ? "0" : fd.getDiscount());
-//                            sumWageFd += fd.getWage();
                         }
-                        selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
-                        selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
-                        selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage((selected.getProvider().getWage() * (sumPrice - sumDiscount)/100));//جمع کل کارمزد
-                        selected.setFinalRegistration(true);//ثبت نهایی شود
-                        selected.setInstallmentCount(selected.getInstallmentCount());//تعداد اقساط
 
                         double profit = 0.0;//درصد قسط
-                        if (Integer.valueOf(selected.getInstallmentCount()) >= 6) {
+                        if (Integer.valueOf(selected.getInstallmentCount()) > 6) {
                             profit = 1.8;
                         } else {
-                            profit = 1.6;
+                            profit = 1.5;
                         }
 
                         //محاسبه هر قسط
                         double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
+                        //خالص مانده
                         int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
-
+                        // کل سود روی خالص  مانده
                         double installmentValueComputing = purePrice * generalProfit;
+                        // مبلغ هر قسط ماهیانه
                         double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
+                        //جمع سود و خالص پرداختی
+                        long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
+
+                        selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
+                        selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
+                        selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
+                        selected.setSumWage((int) (selected.getProvider().getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
+                        selected.setFinalRegistration(true);//ثبت نهایی شود
+                        selected.setInstallmentCount(selected.getInstallmentCount());//تعداد اقساط
 
                         selected.setInstallmentValue(String.valueOf((int) sumInstallmentAndPaymanet));
                         selected.setPercentage(profit);
                         selected.setSumInstallmentValue(String.valueOf((int) installmentValueComputing));
+                        selected.setSumPurgeAndProfitGeneral(String.valueOf(sumPurgeAndProfit));
 
                         getEjbFacade().edit(selected);
+
+                        //جمع خلص مانده + سود کل مانده
+                        // از اعتبار پرسنل کسر میشود
+                        long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
+                        List<Credit> credits = creditFacade.findByCredit(-valueCredit);
+                        if (credits != null && !credits.isEmpty()) {
+                            creditFacade.remove(credits.get(0));
+                            Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
+                            creditFacade.edit(credit);
+                        }
+
                         selected = null;
                         productSelectForInsert = null;
                         rowFactorDetail = null;
@@ -502,6 +545,7 @@ public class FactorController implements Serializable {
                     }
 
                 } else {
+                    selected.setFactorDetails(null);
                     getEjbFacade().remove(selected);
                 }
                 JsfUtil.addSuccessMessage(successMessage);
@@ -582,8 +626,12 @@ public class FactorController implements Serializable {
     }
 
     public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, ((Factor) event.getObject()).getPerson().getInternationalCode(), "");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+        this.setSelectedFactorPurgeAndProfitGeneral(((Factor) event.getObject()).getSumPurgeAndProfitGeneral());
+        JsfUtil.addSuccessMessage(this.getSelectedFactorPurgeAndProfitGeneral());
+    }
+    
+    public void removeFactor(){
+        persist(JsfUtil.PersistAction.DELETE, "فاکتور مورد نظر حذف گردید");
     }
 
 }

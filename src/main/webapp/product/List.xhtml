@@ -70,35 +70,37 @@
                             </f:facet>
                             <h:outputText value="#{item.description}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListProductTitle_wage}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.wage}"/>
-                        </p:column>
+                      
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProductTitle_price}"/>
                             </f:facet>
-                            <h:outputText value="#{item.price}"/>
+                            <h:outputText value="#{item.price}"/><p:spacer width="5px" /> <h:outputText value="ريال" />
                         </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProductTitle_provider}"/>
                             </f:facet>
-                            <h:outputText value="#{item.provider}"/>
+                            <h:outputText value="#{item.provider.shopName}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{productController.prepareCreate}" update=":ProductCreateForm" oncomplete="PF('ProductCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ProductViewForm" oncomplete="PF('ProductViewDialog').show()" disabled="#{empty productController.selected}"/>
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ProductEditForm" oncomplete="PF('ProductEditDialog').show()" disabled="#{empty productController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productController.destroy}" update=":growl,datalist" disabled="#{empty productController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{productController.destroy}" update=":growl,datalist" disabled="#{empty productController.selected}">
+                                <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
                         </f:facet>
                     </p:dataTable>
                     <p:blockUI block="datalist" trigger="datalist">
                         <p:graphicImage name="img/loader.gif"/>
                     </p:blockUI>
                 </p:panel>
+
+                <p:confirmDialog dir="rtl" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="بله" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="خیر" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-cancel" />
+                </p:confirmDialog>
             </h:form>
 
             <ui:include src="Create.xhtml"/>

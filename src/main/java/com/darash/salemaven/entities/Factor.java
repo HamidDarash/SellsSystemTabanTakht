@@ -107,6 +107,11 @@ public class Factor implements Serializable {
     @Column(name = "sum_wage")
     private double sumWage = 0.0;
 
+    @Basic(optional = false)
+    @Size(min = 1, max = 255)
+    @Column(name = "sum_purge_and_profit_general")
+    private String sumPurgeAndProfitGeneral = "0";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exhibition_id")
     private Exhibition exhibition;
@@ -127,6 +132,16 @@ public class Factor implements Serializable {
     @JoinColumn(name = "factor_id")
     private List<FactorDetail> factorDetails = new ArrayList<>();
 
+    public String getSumPurgeAndProfitGeneral() {
+        return sumPurgeAndProfitGeneral;
+    }
+
+    public void setSumPurgeAndProfitGeneral(String sumPurgeAndProfitGeneral) {
+        this.sumPurgeAndProfitGeneral = sumPurgeAndProfitGeneral;
+    }
+
+    
+    
     public Integer getId() {
         return id;
     }
@@ -135,11 +150,10 @@ public class Factor implements Serializable {
         this.id = id;
     }
 
-    
-    public int getSumWageInteger(){
+    public int getSumWageInteger() {
         return (int) getSumWage();
     }
-    
+
     public double getSumWage() {
         return sumWage;
     }
@@ -260,8 +274,6 @@ public class Factor implements Serializable {
         this.condinationFactor = condinationFactor;
     }
 
-    
-
     public Date getDateFactor() {
         return dateFactor;
     }
@@ -378,7 +390,5 @@ public class Factor implements Serializable {
         }
         return true;
     }
-
-    
 
 }
