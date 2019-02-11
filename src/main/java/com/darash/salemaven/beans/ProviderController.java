@@ -56,7 +56,7 @@ public class ProviderController implements Serializable {
 
         };
     }
-    
+
     public ProviderController() {
     }
 
@@ -101,24 +101,24 @@ public class ProviderController implements Serializable {
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ProviderCreated"));
+        persist(PersistAction.CREATE, "تامین کننده بدرستی ایجاد شد");
 //        if (!JsfUtil.isValidationFailed()) {
 //            items = null;    // Invalidate list of items to trigger re-query.
 //        }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ProviderUpdated"));
+        persist(PersistAction.UPDATE, "تامین کننده مورد نظر بدرستی ویرایش شد");
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ProviderDeleted"));
+        persist(PersistAction.DELETE, "تامین کننده مورد نظر حذف شد");
 //        if (!JsfUtil.isValidationFailed()) {
 //            selected = null; // Remove selection
 //            items = null;    // Invalidate list of items to trigger re-query.
 //        }
     }
- 
+
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();

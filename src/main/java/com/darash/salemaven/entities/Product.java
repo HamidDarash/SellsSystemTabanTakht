@@ -31,14 +31,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "product")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
-    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
-    @NamedQuery(name = "Product.findByModel", query = "SELECT p FROM Product p WHERE p.model = :model"),
-    @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color"),
-    @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit"),
-    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
+    ,
+    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id")
+    ,
+    @NamedQuery(name = "Product.findByModel", query = "SELECT p FROM Product p WHERE p.model = :model")
+    ,
+    @NamedQuery(name = "Product.findByColor", query = "SELECT p FROM Product p WHERE p.color = :color")
+    ,
+    @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit")
+    ,
+    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
+    ,
     @NamedQuery(name = "Product.findByProductNameOrModelOrId",
             query = "SELECT p FROM Product p WHERE (p.productName LIKE :productName or p.model LIKE :model) or p.id = :id")
+    ,
+    @NamedQuery(name = "Product.findByProductNameOrModelOrIdByProvider",
+            query = "SELECT p FROM Product p WHERE ((p.productName LIKE :productName or p.model LIKE :model) or p.id = :id) and p.provider = :provider")
 })
 public class Product implements Serializable {
 

@@ -4,47 +4,154 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      >
 
     <ui:composition>
         <p:dialog id="ExhibitionEditDlg" widgetVar="ExhibitionEditDialog" maximizable="true" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.EditExhibitionTitle}">
             <h:form id="ExhibitionEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_nameExhibition}" for="nameExhibition" />
-                        <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.EditExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_nameExhibition}"/>
-                        <p:outputLabel value="تاریخ شروع رکورد فعلی" for="displayDateStart" />
-                        <p:outputLabel id="displayDateStart" value="#{exhibitionController.selected.dateStart}" style="color:red">
-                            <f:converter converterId="persian_date"/>
-                        </p:outputLabel>
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateStart}" for="dateStart" />
-                        <p:inputMask id="dateStart" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
-                            <f:converter converterId="persian_date"/>
-                        </p:inputMask> 
-                         <p:outputLabel value="تاریخ پایان رکورد فعلی" for="displayDateEnd" />
-                        <p:outputLabel id="displayDateEnd" value="#{exhibitionController.selected.dateEnd}" style="color:red">
-                            <f:converter converterId="persian_date"/>
-                        </p:outputLabel>
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
-                        <p:inputMask id="dateEnd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
-                            <f:converter converterId="persian_date" />
-                        </p:inputMask> 
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_managerName}" for="managerName" />
-                        <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.EditExhibitionTitle_managerName}" />
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_desciption}" for="desciption" />
-                        <p:inputTextarea rows="4" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.EditExhibitionTitle_desciption}" />
-                        <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_activate}" for="activate" />
-                        <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
+                    <p:panelGrid columns="2">
+                        <p:panel header="ویرایش اطلاعات">
+                            <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
+                                <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_nameExhibition}" for="nameExhibition" />
+                                <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.EditExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_nameExhibition}"/>
+
+                                <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_dateStart}" for="dateStart" />
+                                <p:inputText id="dateStart" a:shamsipicker="true" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
+                                    <f:converter converterId="persian_date"/>
+                                </p:inputText> 
+                                <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
+                                <p:inputText id="dateEnd" a:shamsipicker="true"  value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
+                                    <f:converter converterId="persian_date" />
+                                </p:inputText> 
+                                <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_managerName}" for="managerName" />
+                                <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.EditExhibitionTitle_managerName}" />
+                                <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_desciption}" for="desciption" />
+                                <p:inputTextarea rows="4" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.EditExhibitionTitle_desciption}" />
+                                <p:outputLabel value="#{bundleExibition.EditExhibitionLabel_activate}" for="activate" />
+                                <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel header="لیست تامین کنندگان این نمایشگاه">
+                            <p:panelGrid columns="1">
+                                <p:panel header="انتخاب تامیین کننده">
+                                    <p:outputLabel value="انتخاب تامین کننده" for="searchProviderForExhibitionEdit" />
+                                    <p:autoComplete id="searchProviderForExhibitionEdit" value="#{exhibitionController.selectedProvider}"
+                                                    completeMethod="#{exhibitionController.findInAllProviderForAutoComplete}"
+                                                    var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                                    >
+                                        <p:column headerText="کد تامین کننده">
+                                            <h:outputText value="#{t.code}" />
+                                        </p:column>
+                                        <p:column headerText="کد اقتصادی">
+                                            <h:outputText value="#{t.codeEghtesadi}" />
+                                        </p:column>
+                                        <p:column headerText="نام فروشگاه">
+                                            <h:outputText value="#{t.shopName}" />
+                                        </p:column>
+                                        <p:column headerText="کد ملی">
+                                            <h:outputText value="#{t.internationalCode}" />
+                                        </p:column>
+                                    </p:autoComplete>
+                                    <p:commandButton id="buttonAddProviderEdit" value="اضافه شود" actionListener="#{exhibitionController.addToListProviders}" update="ExhibitionEditForm:datalistProvidersExhibitionEdit :growl" />
+                                </p:panel>
+                                <p:panel header="لیست تامین کنندگان نمایشگاه">
+                                    <p:dataTable id="datalistProvidersExhibitionEdit" value="#{exhibitionController.selected.providers}" var="item"
+                                                 selectionMode="single"
+                                                 paginator="true"
+                                                 rowKey="#{item.id}"
+                                                 rowIndexVar="rowProvidersExhibitionEdit"
+                                                 rows="5"
+                                                 rowsPerPageTemplate="3,5"
+                                                 widgetVar="listProvidersExhibitionEdit"
+                                                 emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                                 resizableColumns="true"
+                                                 liveResize="true"
+                                                 scrollable="true"
+                                                 >
+
+                                        <p:ajax event="rowSelect" update="@form" />
+                                        <p:ajax event="rowUnselect" />
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="ردیف"/>
+                                            </f:facet>
+                                            <h:outputText value="#{rowProvidersExhibitionEdit + 1}"/>
+
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_fullname}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.fullname}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_internationalCode}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.internationalCode}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_codeEghtesadi}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.codeEghtesadi}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_address}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.address}"/>
+                                            <p:tooltip  />
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_email}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.email}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_mobile}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.mobile}"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_shopName}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.shopName}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="#{bundle.ListProviderTitle_code}"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.code}"/>
+                                        </p:column>
+                                        <p:column headerText="حذف" style="width:32px">
+                                            <p:commandButton actionListener="#{exhibitionController.deleteProviderOfList(item)}" icon="ui-icon-trash" 
+                                                             update="ExhibitionEditForm:datalistProvidersExhibitionEdit :growl"   />
+                                        </p:column>ّ
+                                    </p:dataTable>
+                                </p:panel>
+                            </p:panelGrid>
+                        </p:panel>
                     </p:panelGrid>
+
                     <p:commandButton actionListener="#{exhibitionController.update}" value="#{bundleExibition.Save}" update="display,:ExhibitionListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ExhibitionEditDialog');"/>
                     <p:commandButton value="#{bundleExibition.Cancel}" onclick="ExhibitionEditDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-        <script>
-            jQuery(document).ready(function () {
-
-            });
-        </script>
     </ui:composition>
 </html>

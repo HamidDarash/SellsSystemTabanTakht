@@ -12,21 +12,21 @@
             <h:form id="ProviderCreateForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="4" rendered="#{providerController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_fullname}" for="fullname" />
+                        <p:outputLabel value="نام کامل" for="fullname" />
                         <p:inputTextarea rows="1" cols="30" id="fullname" value="#{providerController.selected.fullname}" title="#{bundle.CreateProviderTitle_fullname}" required="true" requiredMessage="#{bundle.CreateProviderRequiredMessage_fullname}"/>
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_internationalCode}" for="internationalCode" />
+                        <p:outputLabel value="کدملی" for="internationalCode" />
                         <p:inputText id="internationalCode" value="#{providerController.selected.internationalCode}" title="#{bundle.CreateProviderTitle_internationalCode}" required="true" requiredMessage="#{bundle.CreateProviderRequiredMessage_internationalCode}"/>
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_codeEghtesadi}" for="codeEghtesadi" />
+                        <p:outputLabel value="کد اقتصادی" for="codeEghtesadi" />
                         <p:inputText id="codeEghtesadi" value="#{providerController.selected.codeEghtesadi}" title="#{bundle.CreateProviderTitle_codeEghtesadi}" required="true" requiredMessage="#{bundle.CreateProviderRequiredMessage_codeEghtesadi}"/>
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_address}" for="address" />
+                        <p:outputLabel value="آدرس کامل" for="address" />
                         <p:inputTextarea rows="1" cols="30" id="address" value="#{providerController.selected.address}" title="#{bundle.CreateProviderTitle_address}" />
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_email}" for="email" />
+                        <p:outputLabel value="ایمیل" for="email" />
                         <p:inputText id="email" value="#{providerController.selected.email}" title="#{bundle.CreateProviderTitle_email}" />
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_mobile}" for="mobile" />
+                        <p:outputLabel value="شماره موبایل/فروشگاه/شرکت" for="mobile" />
                         <p:inputText id="mobile" value="#{providerController.selected.mobile}" title="#{bundle.CreateProviderTitle_mobile}" />
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_shopName}" for="shopName" />
+                        <p:outputLabel value="نام شرکت/فروشگاه" for="shopName" />
                         <p:inputTextarea rows="1" cols="30" id="shopName" value="#{providerController.selected.shopName}" title="#{bundle.CreateProviderTitle_shopName}" />
-                        <p:outputLabel value="#{bundle.CreateProviderLabel_code}" for="code" />
+                        <p:outputLabel value="کد تامین کننده" for="code" />
                         <p:inputText id="code" value="#{providerController.selected.code}" title="#{bundle.CreateProviderTitle_code}" />
                         
                     </p:panelGrid>

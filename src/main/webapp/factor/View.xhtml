@@ -96,7 +96,7 @@
                         
                         
                         <strong style="color: #FF7700;margin: 0;">جمع کارمزد شرکت:</strong>
-                        <h:outputText style="color: green" value="#{factorController.selected.sumWage}"  id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
+                        <h:outputText style="color: green" value="#{factorController.selected.sumWageInteger}"  id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
                         
                     </p:outputPanel>
                 </p:panelGrid>
@@ -143,7 +143,7 @@
                 </p:panel>
 
                 <p:panelGrid columns="1" layout="grid">
-                    <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
+                    <p:commandButton value="انصراف" onclick="ProductViewDialog.hide()"/>
                 </p:panelGrid>
 
 

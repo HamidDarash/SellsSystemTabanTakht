@@ -6,6 +6,7 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Product;
+import com.darash.salemaven.entities.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,13 +52,31 @@ public class ProductFacade extends AbstractFacade<Product> {
         TypedQuery<Product> typedQuery;
         if (isNumeric(search)) {
             typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
-                     .setParameter("productName", "")
+                    .setParameter("productName", "")
                     .setParameter("model", "")
                     .setParameter("id", Integer.valueOf(search));
         } else {
             typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrId", Product.class)
                     .setParameter("productName", "%" + search + "%")
                     .setParameter("model", "%" + search + "%")
+                    .setParameter("id", null);
+        }
+        return typedQuery.getResultList();
+    }
+
+    public List<Product> findProductByIdOrModelOrProductNameByProvider(String search, Provider p) {
+        TypedQuery<Product> typedQuery;
+        if (isNumeric(search)) {
+            typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrIdByProvider", Product.class)
+                    .setParameter("productName", "")
+                    .setParameter("model", "")
+                    .setParameter("provider", p)
+                    .setParameter("id", Integer.valueOf(search));
+        } else {
+            typedQuery = em.createNamedQuery("Product.findByProductNameOrModelOrIdByProvider", Product.class)
+                    .setParameter("productName", "%" + search + "%")
+                    .setParameter("model", "%" + search + "%")
+                    .setParameter("provider", p)
                     .setParameter("id", null);
         }
         return typedQuery.getResultList();

@@ -18,11 +18,11 @@
                         <h:outputText value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.ViewExhibitionTitle_nameExhibition}"/>
                         <h:outputText value="#{bundleExibition.ViewExhibitionLabel_dateStart}"/>
                         <h:outputText value="#{exhibitionController.selected.dateStart}" title="#{bundleExibition.ViewExhibitionTitle_dateStart}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <f:converter converterId="persian_date" />
                         </h:outputText>
                         <h:outputText value="#{bundleExibition.ViewExhibitionLabel_dateEnd}"/>
                         <h:outputText value="#{exhibitionController.selected.dateEnd}" title="#{bundleExibition.ViewExhibitionTitle_dateEnd}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <f:converter converterId="persian_date" />
                         </h:outputText>
                         <h:outputText value="#{bundleExibition.ViewExhibitionLabel_managerName}"/>
                         <h:outputText value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.ViewExhibitionTitle_managerName}"/>

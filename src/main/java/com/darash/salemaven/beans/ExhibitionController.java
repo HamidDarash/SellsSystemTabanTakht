@@ -1,12 +1,11 @@
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Exhibition;
-import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.services.util.JsfUtil;
 import com.darash.salemaven.services.util.JsfUtil.PersistAction;
 import com.darash.salemaven.services.ExhibitionFacade;
-
+import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -17,24 +16,34 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.view.ViewScoped;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
 @Named("exhibitionController")
-@SessionScoped
+@ViewScoped
 public class ExhibitionController implements Serializable {
 
     @EJB
     private com.darash.salemaven.services.ExhibitionFacade ejbFacade;
+    @EJB
+    private com.darash.salemaven.services.ProviderFacade providerFacade;
     private LazyDataModel<Exhibition> items;
     private Exhibition selected;
     private Provider selectedProvider;
+
+    public ProviderFacade getProviderFacade() {
+        return providerFacade;
+    }
+
+    public void setProviderFacade(ProviderFacade providerFacade) {
+        this.providerFacade = providerFacade;
+    }
 
     public ExhibitionFacade getEjbFacade() {
         return ejbFacade;
@@ -50,6 +59,25 @@ public class ExhibitionController implements Serializable {
 
     public void setItems(LazyDataModel<Exhibition> items) {
         this.items = items;
+    }
+
+    public List<Provider> findInAllProviderForAutoComplete(String search) {
+        return providerFacade.findByNameOrCodeOrFullnameSearch(search);
+    }
+
+    public void addToListProviders() {
+        if (selectedProvider != null) {
+            selectedProvider.getExhibitions().add(selected);
+            selected.getProviders().add(selectedProvider);
+            selectedProvider = null;
+            JsfUtil.addSuccessMessage("با موفقیت اضافه شد");
+        }
+    }
+
+    public void deleteProviderOfList(Provider p) {
+        p.getExhibitions().remove(selected);
+        selected.getProviders().remove(p);
+        JsfUtil.addSuccessMessage("بدرستی از لیست حذف شد");
     }
 
     @PostConstruct
@@ -130,8 +158,13 @@ public class ExhibitionController implements Serializable {
             try {
                 if (persistAction != PersistAction.DELETE) {
                     getFacade().edit(selected);
+                    selected = null;
+                    selectedProvider = null;
                 } else {
+                    selected.setProviders(null);
                     getFacade().remove(selected);
+                    selected = null;
+                    selectedProvider = null;
                 }
                 JsfUtil.addSuccessMessage(successMessage);
             } catch (EJBException ex) {
@@ -205,14 +238,14 @@ public class ExhibitionController implements Serializable {
 
     }
 
-    
-    public String headerProviderFactors(){
+    public String headerProviderFactors() {
         if (this.selectedProvider != null) {
             return "فاکتورهای " + this.selectedProvider.getShopName() + "  |  " + this.selected.getNameExhibition();
         }
         return "فاکتورهای فروشگاه";
     }
+
     public void rowSelectedDataTableProvider(SelectEvent event) {
-        
+
     }
 }

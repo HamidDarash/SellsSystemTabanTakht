@@ -20,7 +20,7 @@
                             <p:selectOneMenu autoWidth="true"  id="typeFactorEdit" value="#{factorController.selected.condinationFactor}">
                                 <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
                                 <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
-                                <p:ajax listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
+                                <p:ajax event="change" listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
                             </p:selectOneMenu>
                             <p:outputLabel for="typeFactorTextEdit" value="نوع فاکتور انتخابی"/>
                             <h:outputText id="typeFactorTextEdit" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
@@ -28,13 +28,14 @@
                         </p:panelGrid>
                     </p:panel>
 
-                    <p:panel id="displayDateEdit">
-                        <p:panelGrid columns="2">
+                    <p:panel id="displayDateEdit" header="انتخاب تاریخ">
+                        <p:panelGrid id="selectDateEdit" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDateEdit"/>
-                            <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDateEdit" 
+                            <p:inputMask autocomplete="off" a:shamsipicker="true" id="factorDateEdit" 
                                          a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
                                          value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
-                                <f:converter converterId="persian_date"  />
+                                <f:converter converterId="persian_date"/>
+                                <p:ajax event="change" update="displayDateEdit" oncomplete="onStatusChange()" />
                             </p:inputMask>
                             <p:outputLabel value="تاریخ انتخابی" for="textDateEdit"/>
                             <h:outputText id="textDateEdit" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
@@ -89,7 +90,7 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" update="@form"  process="@form" /> 
+                                    <p:ajax event="itemSelect" update="panelInfoPersonGroupEdit panelInfoProviderGroupEdit partPersonInfoEdit"  process="@form" /> 
 
                                 </p:autoComplete>
                             </h:panelGrid>
@@ -130,7 +131,7 @@
                                     <p:column headerText="کد ملی">
                                         <h:outputText value="#{t.internationalCode}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="@form :growl" process="@form" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="panelInfoProviderGroupEdit fieldSetProviderEdit" process="@form" /> 
                                 </p:autoComplete>
                                 <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProviderEdit" />
                                 <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">
@@ -161,7 +162,7 @@
                                 <p:panelGrid columns="2">
                                     <p:outputLabel for="searchProductEdit" value="جستجوی محصول"/>
                                     <p:autoComplete id="searchProductEdit" value="#{factorController.productSelectForInsert}"
-                                                    completeMethod="#{factorController.findInAllProductForAutoComplete}"
+                                                    completeMethod="#{factorController.findInAllProductForAutoCompleteByProviderEditForm}"
                                                     var="pr" itemLabel="#{pr.toString()}" itemValue="#{pr}">
                                         <p:column headerText="کد محصول">
                                             <h:outputText value="#{pr.id}" />

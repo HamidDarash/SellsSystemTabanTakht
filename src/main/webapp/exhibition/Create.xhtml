@@ -12,29 +12,144 @@
         <p:dialog id="ExhibitionCreateDlg" widgetVar="ExhibitionCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleExibition.CreateExhibitionTitle}">
             <h:form id="ExhibitionCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{exhibitionController.selected != null}">
-                        <p:outputLabel  value="#{bundleExibition.CreateExhibitionLabel_nameExhibition}" for="nameExhibition" />
-                        <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.CreateExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.CreateExhibitionRequiredMessage_nameExhibition}"/>
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateStart}" for="dateStart"  />
-                        <p:inputMask id="dateStart" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
-                            <f:converter converterId="persian_date"/>
-                        </p:inputMask> 
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
-                        <p:inputMask id="dateEnd" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
-                            <f:converter converterId="persian_date" />
-                        </p:inputMask> 
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_managerName}" for="managerName" />
-                        <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.CreateExhibitionTitle_managerName}" />
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_desciption}" for="desciption" />
-                        <p:inputTextarea rows="4" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.CreateExhibitionTitle_desciption}" />
-                        <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_activate}" for="activate" />
-                        <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{exhibitionController.create}" value="#{bundleExibition.Save}" update="display,:ExhibitionListForm:datalist,:growl" oncomplete="handleSubmit(args,'ExhibitionCreateDialog');"/>
-                    <p:commandButton value="#{bundleExibition.Cancel}" onclick="ExhibitionCreateDialog.hide()"/>
+                    <p:panel header="ورود اطلاعات">
+                        <p:panelGrid columns="12" rendered="#{exhibitionController.selected != null}">
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_nameExhibition}" for="nameExhibition" />
+                            <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.CreateExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.CreateExhibitionRequiredMessage_nameExhibition}"/>
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateStart}" for="dateStart"  />
+                            <p:inputMask widgetVar="DateStartShamsi" autocomplete="off" id="dateStart" a:shamsipicker="true" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
+                                <f:converter converterId="persian_date"/>
+                            </p:inputMask> 
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
+                            <p:inputMask autocomplete="off" id="dateEnd" a:shamsipicker="true" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
+                                <f:converter converterId="persian_date" />
+                            </p:inputMask> 
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_managerName}" for="managerName" />
+                            <p:inputText id="managerName" value="#{exhibitionController.selected.managerName}" title="#{bundleExibition.CreateExhibitionTitle_managerName}" />
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_desciption}" for="desciption" />
+                            <p:inputTextarea rows="1" cols="30" id="desciption" value="#{exhibitionController.selected.desciption}" title="#{bundleExibition.CreateExhibitionTitle_desciption}" />
+                            <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_activate}" for="activate" />
+                            <p:selectBooleanCheckbox id="activate" value="#{exhibitionController.selected.activate}" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_activate}"/>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel>
+                        <p:panelGrid columns="1">
+                            <p:panel header="انتخاب تامیین کننده">
+                                <p:outputLabel value="انتخاب تامین کننده" for="searchProviderForExhibition" />
+                                <p:autoComplete id="searchProviderForExhibition" value="#{exhibitionController.selectedProvider}"
+                                                completeMethod="#{exhibitionController.findInAllProviderForAutoComplete}"
+                                                var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                                >
+                                    <p:column headerText="کد تامین کننده">
+                                        <h:outputText value="#{t.code}" />
+                                    </p:column>
+                                    <p:column headerText="کد اقتصادی">
+                                        <h:outputText value="#{t.codeEghtesadi}" />
+                                    </p:column>
+                                    <p:column headerText="نام فروشگاه">
+                                        <h:outputText value="#{t.shopName}" />
+                                    </p:column>
+                                    <p:column headerText="کد ملی">
+                                        <h:outputText value="#{t.internationalCode}" />
+                                    </p:column>
+                                </p:autoComplete>
+                                <p:commandButton value="اضافه شود" actionListener="#{exhibitionController.addToListProviders}" update="ExhibitionCreateForm:datalistProvidersExhibition searchProviderForExhibition :growl" />
+                            </p:panel>
+                            <p:panel header="لیست تامین کنندگان نمایشگاه">
+                                <p:dataTable id="datalistProvidersExhibition" value="#{exhibitionController.selected.providers}" var="item"
+                                             selectionMode="single"
+                                             paginator="true"
+                                             rowKey="#{item.id}"
+                                             rowIndexVar="rowProvidersExhibitionAdd"
+                                             rows="5"
+                                             rowsPerPageTemplate="3,5"
+                                             widgetVar="listProvidersExhibitionAdd"
+                                             emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                             resizableColumns="true"
+                                             liveResize="true"
+                                             scrollable="true"
+                                             >
+
+                                    <p:ajax event="rowSelect" update="@form" />
+                                    <p:ajax event="rowUnselect" />
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="ردیف"/>
+                                        </f:facet>
+                                        <h:outputText value="#{rowProvidersExhibitionAdd + 1}"/>
+
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_fullname}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.fullname}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_internationalCode}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.internationalCode}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_codeEghtesadi}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.codeEghtesadi}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_address}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.address}"/>
+                                        <p:tooltip  />
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_email}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.email}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_mobile}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.mobile}"/>
+                                    </p:column>
+
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_shopName}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.shopName}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="#{bundle.ListProviderTitle_code}"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.code}"/>
+                                    </p:column>
+                                    <p:column headerText="حذف" style="width:32px">
+                                        <p:commandButton actionListener="#{exhibitionController.deleteProviderOfList(item)}" icon="ui-icon-trash" 
+                                                         update="ExhibitionCreateForm:datalistProvidersExhibition :growl"   />
+                                    </p:column>ّ
+                                </p:dataTable>
+                            </p:panel>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel>
+                        <p:commandButton actionListener="#{exhibitionController.create}" value="#{bundleExibition.Save}" update="display :ExhibitionListForm:datalist,:growl" oncomplete="handleSubmit(args,'ExhibitionCreateDialog');"/>
+                        <p:commandButton value="انصراف" onclick="ExhibitionCreateDialog.hide()"/>
+                    </p:panel>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
-     
     </ui:composition>
 </html>

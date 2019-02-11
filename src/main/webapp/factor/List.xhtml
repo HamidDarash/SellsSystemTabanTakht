@@ -5,8 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      >
 
     <ui:composition template="/template.xhtml">
 
@@ -135,9 +134,9 @@
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();"/>
+                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();onStatusChange();"/>
                             <p:commandButton id="showFactorButton" value="نمایش" icon="ui-icon-search"  disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
-                            <p:commandButton id="EditFactorButton" value="ویرایش" icon="ui-icon-pencil"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogEditFactorDialog').show();PF('dialogEditFactorDialog').toggleMaximize();onStatusChange();" update=":dateFactorFormEdit :formInsertFactorEdit , :formInsertFactorEdit:tableInsertedFactorDetailEdit" />
+                            <p:commandButton id="EditFactorButton" value="ویرایش" icon="ui-icon-pencil"  disabled="#{factorController.selected == null}" update=":formInsertFactorEdit , :formInsertFactorEdit:tableInsertedFactorDetailEdit" oncomplete="PF('dialogEditFactorDialog').show();PF('dialogEditFactorDialog').toggleMaximize();onStatusChange();"  />
                             <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor}"  value="تایید/رد" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}"/>
                             <p:commandButton id="removeFactor" icon="ui-icon-refresh" actionListener="#{factorController.removeFactor}"  value="حذف فاکتور" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
                                 <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />

@@ -63,6 +63,7 @@ public class FactorController implements Serializable {
     private FactorDetail rowFactorDetailSelect;
     private boolean stateForInsertDetail = false;
     private String selectedFactorPurgeAndProfitGeneral = null;
+    private String selectedLastCondinationTypeFactor = "";
 
     //-------------------------------------------
     //                 fillable
@@ -70,6 +71,14 @@ public class FactorController implements Serializable {
     //-------------------------------------------
     private int countProduct = 0;
     private String discountProduct = "0";
+
+    public String getSelectedLastCondinationTypeFactor() {
+        return selectedLastCondinationTypeFactor;
+    }
+
+    public void setSelectedLastCondinationTypeFactor(String selectedLastCondinationTypeFactor) {
+        this.selectedLastCondinationTypeFactor = selectedLastCondinationTypeFactor;
+    }
 
     public String getSelectedFactorPurgeAndProfitGeneral() {
         return selectedFactorPurgeAndProfitGeneral;
@@ -288,8 +297,23 @@ public class FactorController implements Serializable {
     }
 
     // find product autoComplete
-    public List<Product> findInAllProductForAutoComplete(String search) {
-        return productFacade.findProductByIdOrModelOrProductName(search);
+    public List<Product> findInAllProductForAutoCompleteByProviderCreateForm(String search) {
+
+        return productFacade.findProductByIdOrModelOrProductNameByProvider(search, selectedProvider);
+
+    }
+
+    // find product autoComplete
+    public List<Product> findInAllProductForAutoCompleteByProviderEditForm(String search) {
+
+        return productFacade.findProductByIdOrModelOrProductNameByProvider(search, selected.getProvider());
+
+    }
+
+    public void resetSelectProduct() {
+        selectedFactorDetails.clear();
+        productSelectForInsert = null;
+        JsfUtil.addSuccessMessage("تامین کننده تغییر کرد");
     }
 
     @PostConstruct
@@ -421,6 +445,7 @@ public class FactorController implements Serializable {
             setEmbeddableKeys();
             try {
                 if (persistAction != JsfUtil.PersistAction.DELETE) {
+
                     if (persistAction == JsfUtil.PersistAction.CREATE) {
 
                         int sumPrice = 0;//جمع کل
@@ -428,7 +453,7 @@ public class FactorController implements Serializable {
 
                         for (FactorDetail fd : selectedFactorDetails) {
                             fd.setFactor(selected);
-                            sumPrice += Integer.valueOf(fd.getPrice());
+                            sumPrice += Integer.valueOf(fd.getPriceAfterDiscount());
                             sumDiscount += Integer.valueOf(fd.getDiscount().isEmpty() ? "0" : fd.getDiscount());
                         }
 
@@ -456,7 +481,8 @@ public class FactorController implements Serializable {
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
                         selected.setSumWage((int) (selectedProvider.getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
-                        selected.setInstallmentCount(selected.getInstallmentCount());//تعداد اقساط
+
+                        selected.setInstallmentCount(selected.getCondinationFactor().equals("اقساط") ? selected.getInstallmentCount() : "0");
 
                         selectedPerson.getFactors().add(selected);
                         selectedProvider.getFactors().add(selected);
@@ -465,16 +491,19 @@ public class FactorController implements Serializable {
                         selected.setProvider(selectedProvider);
                         selected.setExhibition(selectedExhibitionProvider);
 
-                        selected.setInstallmentValue(String.valueOf((int) sumInstallmentAndPaymanet));
-                        selected.setPercentage(profit);
-                        selected.setSumInstallmentValue(String.valueOf((int) installmentValueComputing));
-                        selected.setSumPurgeAndProfitGeneral(String.valueOf(sumPurgeAndProfit));
+                        selected.setInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
+                        selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
+                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
+                        selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
                         getEjbFacade().create(selected);
-                        //جمع خلص مانده + سود کل مانده
-                        // از اعتبار پرسنل کسر میشود
-                        Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
-                        creditFacade.edit(credit);
+
+                        if (selected.getCondinationFactor().equals("اقساط")) {
+                            //جمع خلص مانده + سود کل مانده
+                            // از اعتبار پرسنل کسر میشود
+                            Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
+                            creditFacade.edit(credit);
+                        }
 
                         selected = null;
                         productSelectForInsert = null;
@@ -491,7 +520,7 @@ public class FactorController implements Serializable {
 
                         for (FactorDetail fd : selected.getFactorDetails()) {
                             fd.setFactor(selected);
-                            sumPrice += Integer.valueOf(fd.getPrice());
+                            sumPrice += Integer.valueOf(fd.getPriceAfterDiscount());
                             sumDiscount += Integer.valueOf(fd.getDiscount().isEmpty() ? "0" : fd.getDiscount());
                         }
 
@@ -518,21 +547,27 @@ public class FactorController implements Serializable {
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
                         selected.setSumWage((int) (selected.getProvider().getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
-                        selected.setInstallmentCount(selected.getInstallmentCount());//تعداد اقساط
 
-                        selected.setInstallmentValue(String.valueOf((int) sumInstallmentAndPaymanet));
-                        selected.setPercentage(profit);
-                        selected.setSumInstallmentValue(String.valueOf((int) installmentValueComputing));
-                        selected.setSumPurgeAndProfitGeneral(String.valueOf(sumPurgeAndProfit));
+                        selected.setInstallmentCount(selected.getCondinationFactor().equals("اقساط") ? selected.getInstallmentCount() : "0");
 
+                        selected.setInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
+                        selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
+                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
+                        selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
+
+                        
+                        
                         getEjbFacade().edit(selected);
 
-                        //جمع خلص مانده + سود کل مانده
-                        // از اعتبار پرسنل کسر میشود
-                        long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
-                        List<Credit> credits = creditFacade.findByCredit(-valueCredit);
-                        if (credits != null && !credits.isEmpty()) {
-                            creditFacade.remove(credits.get(0));
+                        if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
+                            long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
+                            List<Credit> credits = creditFacade.findByCredit(-valueCredit);
+                            if (credits != null && !credits.isEmpty()) {
+                                creditFacade.remove(credits.get(0));
+                            }
+                        }
+
+                        if (selected.getCondinationFactor().equals("اقساط") && this.getSelectedLastCondinationTypeFactor().equals("نقدی")) {
                             Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
                             creditFacade.edit(credit);
                         }
@@ -545,6 +580,13 @@ public class FactorController implements Serializable {
                     }
 
                 } else {
+                    if (selected.getCondinationFactor().equals("اقساط")) {
+                        long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
+                        List<Credit> credits = creditFacade.findByCredit(-valueCredit);
+                        if (credits != null && !credits.isEmpty()) {
+                            creditFacade.remove(credits.get(0));
+                        }
+                    }
                     selected.setFactorDetails(null);
                     getEjbFacade().remove(selected);
                 }
@@ -627,10 +669,12 @@ public class FactorController implements Serializable {
 
     public void onRowSelect(SelectEvent event) {
         this.setSelectedFactorPurgeAndProfitGeneral(((Factor) event.getObject()).getSumPurgeAndProfitGeneral());
+        this.setSelectedLastCondinationTypeFactor(((Factor) event.getObject()).getCondinationFactor());
+
         JsfUtil.addSuccessMessage(this.getSelectedFactorPurgeAndProfitGeneral());
     }
-    
-    public void removeFactor(){
+
+    public void removeFactor() {
         persist(JsfUtil.PersistAction.DELETE, "فاکتور مورد نظر حذف گردید");
     }
 
