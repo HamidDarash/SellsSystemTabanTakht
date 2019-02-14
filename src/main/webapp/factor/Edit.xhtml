@@ -13,7 +13,7 @@
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ویرایش فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
             <h:form id="dateFactorFormEdit">
-                <p:panelGrid columns="4" layout="grid">
+                <p:panelGrid columns="3" layout="grid">
                     <p:panel header="نوع فاکتور">
                         <p:panelGrid columns="2">
                             <p:outputLabel for="typeFactorEdit" value="نوع فاکتور"/>
@@ -31,19 +31,19 @@
                     <p:panel id="displayDateEdit" header="انتخاب تاریخ">
                         <p:panelGrid id="selectDateEdit" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDateEdit"/>
-                            <p:inputMask autocomplete="off" a:shamsipicker="true" id="factorDateEdit" 
-                                         a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
-                                         value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
+                            <p:inputText autocomplete="off" a:shamsipicker="true" id="factorDateEdit" a:placeholder="yyyy/mm/dd"
+                                         value="#{factorController.selected.dateFactor}" required="true" 
+                                         requiredMessage="تاریخ فاکتور را مشخص کنید">
                                 <f:converter converterId="persian_date"/>
-                                <p:ajax event="change" update="displayDateEdit" oncomplete="onStatusChange()" />
-                            </p:inputMask>
+                                <p:ajax event="change" update="displayDateEdit" process="@this" global="false" oncomplete="onStatusChange()" />
+                            </p:inputText>
                             <p:outputLabel value="تاریخ انتخابی" for="textDateEdit"/>
                             <h:outputText id="textDateEdit" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
                                 <f:converter converterId="persian_date" />
                             </h:outputText>
                         </p:panelGrid>
                     </p:panel> 
-                    <p:panel id="installmentPanelEdit" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
+                    <p:panel id="installmentPanelEdit" header="تنظیم اقساط" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
                         <p:panelGrid columns="2">
                             <p:outputLabel value="پیش پرداخت" for="prepaymentEdit" />
                             <p:inputText value="#{factorController.selected.prepayable}" id="prepaymentEdit" />
@@ -56,17 +56,12 @@
                                 <f:selectItem itemLabel="8" itemValue="8" />
                                 <f:selectItem itemLabel="10" itemValue="10" />
                                 <f:selectItem itemLabel="12" itemValue="12" />
-                                <p:ajax update="installmentCountEdit @form" process="@this"/>
+                                <p:ajax update="dateFactorFormEdit:installmentPanelEdit" process="@this" global="false"/>
                             </p:selectOneMenu>  
 
                         </p:panelGrid>
                     </p:panel>
-                    <p:panel header="تاییده">
-                        <p:panelGrid columns="1">
-                            <p:outputLabel value="ثبت تاریخ و تنظیمات فاکتور" for="btnRegisterDateEdit"/>
-                            <p:commandButton id="btnRegisterDateEdit" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form :growl" />
-                        </p:panelGrid>
-                    </p:panel>
+
                 </p:panelGrid>
             </h:form>
             <h:form id="formInsertFactorEdit">
@@ -90,7 +85,7 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" update="panelInfoPersonGroupEdit panelInfoProviderGroupEdit partPersonInfoEdit"  process="@form" /> 
+                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
 
                                 </p:autoComplete>
                             </h:panelGrid>
@@ -131,7 +126,7 @@
                                     <p:column headerText="کد ملی">
                                         <h:outputText value="#{t.internationalCode}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" listener="#{factorController.onSelectSaveFactor}" update="panelInfoProviderGroupEdit fieldSetProviderEdit" process="@form" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct()}"  update="@form" process="@this" /> 
                                 </p:autoComplete>
                                 <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProviderEdit" />
                                 <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">

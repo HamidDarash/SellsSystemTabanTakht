@@ -13,14 +13,14 @@
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
             <h:form id="dateFactorForm">
-                <p:panelGrid columns="4" layout="grid">
+                <p:panelGrid columns="3" layout="grid">
                     <p:panel id="typeFactorSelect" header="نوع فاکتور">
                         <p:panelGrid columns="2">
                             <p:outputLabel for="typeFactor" value="نوع فاکتور"/>
                             <p:selectOneMenu autoWidth="true"  id="typeFactor" value="#{factorController.selected.condinationFactor}">
                                 <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
                                 <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
-                                <p:ajax event="change" listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
+                                <p:ajax event="change" listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" global="true" oncomplete="onStatusChange()"/>
                             </p:selectOneMenu>
                             <p:outputLabel for="typeFactorText" value="نوع فاکتور انتخابی"/>
                             <h:outputText id="typeFactorText" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
@@ -31,19 +31,19 @@
                     <p:panel id="displayDate" header="انتخاب تاریخ">
                         <p:panelGrid id="selectDate" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
-                            <p:inputMask autocomplete="off"  a:shamsipicker="true" id="factorDate" 
-                                         a:placeholder="yyyy/mm/dd" mask="9999/99/99" 
+                            <p:inputText autocomplete="off"  a:shamsipicker="true" id="factorDate" 
+                                         a:placeholder="yyyy/mm/dd" 
                                          value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
-                                <f:converter converterId="persian_date"  />
-                                <p:ajax event="change" update="selectDate" oncomplete="onStatusChange()" />
-                            </p:inputMask>
+                                <f:converter converterId="persian_date" />
+                                <p:ajax event="change" update="@form" process="@this" global="false" oncomplete="onStatusChange()" />
+                            </p:inputText>
                             <p:outputLabel value="تاریخ انتخابی" for="textDate"/>
                             <h:outputText id="textDate" style="color: #FF7700;" value="#{factorController.selected.dateFactor}">
                                 <f:converter converterId="persian_date" />
                             </h:outputText>
                         </p:panelGrid>
                     </p:panel> 
-                    <p:panel id="installmentPanel" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
+                    <p:panel id="installmentPanel" header="تنظیم اقساط" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
                         <p:panelGrid columns="2">
                             <p:outputLabel value="پیش پرداخت" for="prepayment" />
                             <p:inputText value="#{factorController.selected.prepayable}" id="prepayment" />
@@ -56,16 +56,12 @@
                                 <f:selectItem itemLabel="8" itemValue="8" />
                                 <f:selectItem itemLabel="10" itemValue="10" />
                                 <f:selectItem itemLabel="12" itemValue="12" />
+                                <p:ajax update="dateFactorForm:installmentPanel" process="@this" global="false"/>
                             </p:selectOneMenu>  
                             
                         </p:panelGrid>
                     </p:panel>
-                    <p:panel header="تاییده">
-                        <p:panelGrid columns="1">
-                            <p:outputLabel value="ثبت تاریخ و تنظیمات فاکتور" for="btnRegisterDate"/>
-                            <p:commandButton id="btnRegisterDate" oncomplete="onStatusChange()" value="ثبت تاریخ" actionListener="#{factorController.processing}" update="@form :growl" />
-                        </p:panelGrid>
-                    </p:panel>
+
                 </p:panelGrid>
             </h:form>
             <h:form id="formInsertFactor">
@@ -89,7 +85,7 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" update="@form" process="@form" /> 
+                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
                                 </p:autoComplete>
                             </h:panelGrid>
                             <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="4" layout="grid" >
@@ -129,7 +125,7 @@
                                     <p:column headerText="کد ملی">
                                         <h:outputText value="#{t.internationalCode}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct}" update="@form factorDetailPanel" process="@form" /> 
+                                    <p:ajax event="itemSelect"  update="@form" process="@this" /> 
                                 </p:autoComplete>
                                 <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProvider" />
                                 <p:selectOneMenu rendered="#{factorController.selectedProvider != null}" disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
