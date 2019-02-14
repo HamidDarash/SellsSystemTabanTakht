@@ -9,7 +9,7 @@
     font-weight: normal;
     font-style: normal;
 }
-h1,h2,h3,h4,h5,h6,table,textarea, p , select , label , .ui-menuitem-text,
+h1,h2,h3,h4,h5,h6,table,textarea, p , select , label , .ui-menuitem-text,.ui-dialog-content,
 .ui-button-text ,strong, span , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
     font-family: Vazir , Arial, sans-serif !important;
     /*    font-size: .8em !important;*/

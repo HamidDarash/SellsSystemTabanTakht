@@ -31,6 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -71,6 +72,20 @@ public class FactorController implements Serializable {
     //-------------------------------------------
     private int countProduct = 0;
     private String discountProduct = "0";
+
+    public long getCreditSelectedUser() {
+        if (selectedPerson != null) {
+            return creditFacade.getCreditUser(selectedPerson);
+        }
+        return 0;
+    }
+
+    public long getCreditSum(Person per) {
+        if (per != null) {
+            return creditFacade.getCreditUser(per);
+        }
+        return 0;
+    }
 
     public String getSelectedLastCondinationTypeFactor() {
         return selectedLastCondinationTypeFactor;
@@ -288,19 +303,31 @@ public class FactorController implements Serializable {
 
     // find users autoComplete
     public List<Person> findInAllUsersForAutoComplete(String search) {
-        return personFacade.findByInternationalOrNameOrCompanyCode(search);
+        try {
+            return personFacade.findByInternationalOrNameOrCompanyCode(search);
+        } catch (Exception e) {
+        }
+        return new ArrayList<>();
     }
 
     // find provider autoComplete
     public List<Provider> findInAllProviderForAutoComplete(String search) {
-        return providerFacade.findByNameOrCodeOrFullnameSearch(search);
+        try {
+            return providerFacade.findByNameOrCodeOrFullnameSearch(search);
+        } catch (Exception e) {
+        }
+        return new ArrayList<>();
+
     }
 
     // find product autoComplete
     public List<Product> findInAllProductForAutoCompleteByProviderCreateForm(String search) {
+        try {
+            return productFacade.findProductByIdOrModelOrProductNameByProvider(search, selectedProvider);
+        } catch (Exception e) {
 
-        return productFacade.findProductByIdOrModelOrProductNameByProvider(search, selectedProvider);
-
+        }
+        return new ArrayList<>();
     }
 
     // find product autoComplete
@@ -376,6 +403,7 @@ public class FactorController implements Serializable {
 
     //-------------------------------------------------------------------------------
     public void create() {
+
         persist(JsfUtil.PersistAction.CREATE, "فاکتور بدرستی ساخته شد");
     }
 
@@ -419,6 +447,7 @@ public class FactorController implements Serializable {
     }
 
     public void onAddToFactorDetail() {
+
         if (countProduct <= 0) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
                     "خطا رخ داده");
@@ -438,6 +467,18 @@ public class FactorController implements Serializable {
             this.setCountProduct(0);
             this.productSelectForInsert = null;
         }
+        
+    }
+
+    public void checkCreditPerson() {
+        if ((getCreditSum(selectedPerson) <= 0) && selected.getCondinationFactor().equals("اقساط")) {
+            showMessage();
+            selectedPerson = null;
+        }
+    }
+
+    public void showMessage() {
+        RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "اعتبار پرسنل کافی نیست"));
     }
 
     private void persist(JsfUtil.PersistAction persistAction, String successMessage) {
@@ -496,13 +537,18 @@ public class FactorController implements Serializable {
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
-                        getEjbFacade().create(selected);
-
-                        if (selected.getCondinationFactor().equals("اقساط")) {
+                        if ((getCreditSum(selectedPerson) > sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط")) {
+                            getEjbFacade().create(selected);
                             //جمع خلص مانده + سود کل مانده
                             // از اعتبار پرسنل کسر میشود
                             Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
                             creditFacade.edit(credit);
+                        } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط")) {
+                            showMessage();
+                        }
+
+                        if (selected.getCondinationFactor().equals("نقدی")) {
+                            getEjbFacade().create(selected);
                         }
 
                         selected = null;
@@ -555,8 +601,6 @@ public class FactorController implements Serializable {
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
-                        
-                        
                         getEjbFacade().edit(selected);
 
                         if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
@@ -659,7 +703,6 @@ public class FactorController implements Serializable {
                 return null;
             }
         }
-
     }
 
     public void onSelectTypeFactor() {

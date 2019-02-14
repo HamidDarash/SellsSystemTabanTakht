@@ -31,7 +31,7 @@
                     <p:panel id="displayDate" header="انتخاب تاریخ">
                         <p:panelGrid id="selectDate" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
-                            <p:inputText autocomplete="off"  a:shamsipicker="true" id="factorDate" 
+                            <p:inputText autocomplete="off" a:component-id="factorDate" id="factorDate" 
                                          a:placeholder="yyyy/mm/dd" 
                                          value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
                                 <f:converter converterId="persian_date" />
@@ -58,7 +58,7 @@
                                 <f:selectItem itemLabel="12" itemValue="12" />
                                 <p:ajax update="dateFactorForm:installmentPanel" process="@this" global="false"/>
                             </p:selectOneMenu>  
-                            
+
                         </p:panelGrid>
                     </p:panel>
 
@@ -85,7 +85,10 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                                    <p:column headerText="اعتبار پرسنل">
+                                        <h:outputText value="#{factorController.getCreditSum(p)}" /> <p:spacer width="10px" /><h:outputText value="ریال" />
+                                    </p:column>
+                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPerson()}" update="@form" process="@this" /> 
                                 </p:autoComplete>
                             </h:panelGrid>
                             <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="4" layout="grid" >
@@ -101,6 +104,8 @@
                                 <h:outputText id="personInternational" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.internationalCode}" />
                                 <p:outputLabel value="تلفن/موبایل" for="personMobile" />
                                 <h:outputText id="personMobile" style="color: #FF7700;font-weight: bolder" value="#{factorController.selectedPerson.mobile}" />
+                                <p:outputLabel value="اعتبار" for="creditSum" />
+                                <h:outputText id="creditSum" style="color: #FF7700;font-weight: bolder" value="#{factorController.getCreditSelectedUser()} ریال" />
                             </p:panelGrid>
                         </p:fieldset>
 
@@ -125,7 +130,7 @@
                                     <p:column headerText="کد ملی">
                                         <h:outputText value="#{t.internationalCode}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect"  update="@form" process="@this" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct()}"  update="@form" process="@this" /> 
                                 </p:autoComplete>
                                 <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProvider" />
                                 <p:selectOneMenu rendered="#{factorController.selectedProvider != null}" disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
@@ -190,7 +195,9 @@
                                                      disabled="#{factorController.productSelectForInsert == null}"
                                                      update="tableInsertedFactorDetail factorDetailPanel insertToDetail :growl"
                                                      process="@form"
-                                                     />
+                                                     >
+                                        <p:ajax listener="#{factorController.checkCreditPersonDefSumFactor()}" />
+                                    </p:commandButton>
                                     <p:outputLabel for="saveFactor" value="اتمام ثبت"/>
                                     <p:commandButton id="saveFactor" style="width: 100%;" disabled="#{empty factorController.selectedFactorDetails}"
                                                      actionListener="#{factorController.create}" 
@@ -261,6 +268,6 @@
                 </p:fieldset>
             </h:form>
         </p:dialog>
-  
+
     </ui:composition>
 </html>

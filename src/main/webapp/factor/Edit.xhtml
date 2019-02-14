@@ -20,7 +20,7 @@
                             <p:selectOneMenu autoWidth="true"  id="typeFactorEdit" value="#{factorController.selected.condinationFactor}">
                                 <f:selectItem itemLabel="نقدی" itemValue="نقدی" />
                                 <f:selectItem itemLabel="اقساط" itemValue="اقساط" />
-                                <p:ajax event="change" listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" oncomplete="onStatusChange()"/>
+                                <p:ajax event="change" listener="#{factorController.onSelectTypeFactor}" update="@form" process="@this" global="true" oncomplete="onStatusChange()"/>
                             </p:selectOneMenu>
                             <p:outputLabel for="typeFactorTextEdit" value="نوع فاکتور انتخابی"/>
                             <h:outputText id="typeFactorTextEdit" style="color: #FF7700;" value="#{factorController.selected.condinationFactor}">
@@ -31,7 +31,7 @@
                     <p:panel id="displayDateEdit" header="انتخاب تاریخ">
                         <p:panelGrid id="selectDateEdit" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDateEdit"/>
-                            <p:inputText autocomplete="off" a:shamsipicker="true" id="factorDateEdit" a:placeholder="yyyy/mm/dd"
+                            <p:inputText autocomplete="off" a:component-id="factorDateEdit" id="factorDateEdit" a:placeholder="yyyy/mm/dd"
                                          value="#{factorController.selected.dateFactor}" required="true" 
                                          requiredMessage="تاریخ فاکتور را مشخص کنید">
                                 <f:converter converterId="persian_date"/>
