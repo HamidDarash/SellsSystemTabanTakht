@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <p:dialog id="dialogPrintFactorDlg"
+                  widgetVar="dialogPrintFactorDialog"
+                  appendTo="@(body)" resizable="true" 
+                  modal="true" header="چاپ فاکتور" dir="rtl"
+                  maximizable="true"
+                  >
+            <p:ajax event="close" oncomplete="PF('dialogPrintFactorDialog').toggleMaximize();" />
+            <h:form id="factorPrint">
+
+                <h:panelGroup style="margin: 10px" id="container">
+                    <div class="factor-title">
+                        <h:graphicImage class="logo" value="/resources/img/factor-logo.png" height="64px"/>
+                        <div class="name-co">
+                            <span>شرکت تجارت الکترونیک خودرو تابان تاخت</span>
+                        </div>
+                        <div class="dateFactor">
+                            <table border="0" style="direction: rtl;margin-left: 10px;font-size: 12px"> 
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: left">شماره فاکتور:</td>
+                                        <td style="text-align: right;padding-left: 10px"><h:outputText value="#{factorController.selected.id}" /></td>
+                                        <td style="text-align: left">تاریخ فاکتور:</td>
+                                        <td style="text-align: right;">
+                                            <h:outputText value="#{factorController.selected.dateFactor}">
+                                                <f:converter converterId="persian_date" />
+                                            </h:outputText>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align: left">نوع فاکتور:</td>
+                                        <td style="text-align: right;padding-left: 10px"><h:outputText value="#{factorController.selected.condinationFactor}" /></td>
+                                        <td style="text-align: left">وضعیت فاکتور:</td>
+                                        <td style="text-align: right"><h:outputText value="#{factorController.selected.finalRegistration == true?'ثبت نهایی':'تایید نشده'}" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="holderTable">
+                        <table class="tamin" style="width: 100%;direction: rtl;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid">
+                                    <th colspan="12" style="text-align: center;font-size: 15px;font-weight: bold">اطلاعات تامین کننده/فروشگاه</th>
+                                </tr>
+                                <tr>
+                                    <th>کد فروشگاه</th>
+                                    <th>نام فروشگاه</th>
+                                    <th>مدیریت</th>
+                                    <th>کد اقتصادی</th>
+                                    <th>ایمیل</th>
+                                    <th>شماره موبایل/تلفن</th>
+                                    <th>آدرس ‍ پستی</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><h:outputText value="#{factorController.selected.provider.id}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.shopName}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.fullname}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.codeEghtesadi}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.email}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.mobile}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.provider.address}" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="holderTable">
+                        <table class="tamin" style="width: 100%;direction: rtl;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid">
+                                    <th colspan="12" style="text-align: center;font-size: 15px;font-weight: bold">اطلاعات خریدار/پرسنل</th>
+                                </tr>
+                                <tr>
+                                    <th>نام و نام خانوادگی پرسنل</th>
+                                    <th>کد ملی</th>
+                                    <th>کد پرسنلی</th>
+                                    <th>شرکت</th>
+                                    <th>ایمیل</th>
+                                    <th>شماره موبایل/تلفن</th>
+                                    <th>آدرس ‍ پستی</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><h:outputText value="#{factorController.selected.person.name}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.internationalCode}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.companyCode}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.company}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.email}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.mobile}" /></td>
+                                    <td><h:outputText value="#{factorController.selected.person.address}" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="holderTable">
+                        <table class="tamin" style="direction: rtl;width: 100%">
+                            <thead>
+                                <tr style="border-bottom: 1px solid">
+                                    <th colspan="12" style="text-align: center;font-size: 15px;font-weight: bold">محصولات خریداری شده</th>
+                                </tr>
+                                <tr>
+                                    <th>کد محصول</th>
+                                    <th>نام محصول</th>
+                                    <th>مدل</th>
+                                    <th>قیمت</th>
+                                    <th>تعداد</th>
+                                    <th>واحد</th>
+                                    <th>تخفیف</th>
+                                    <th>قیمت بعد از تخفیف</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="item" items="#{factorController.selected.factorDetails}">
+                                    <tr>
+                                        <td><h:outputText value="#{item.productId}"/></td>
+                                        <td><h:outputText value="#{item.productName}"/></td>
+                                        <td><h:outputText value="#{item.model}"/></td>
+                                        <td><h:outputText value="#{factorController.formatMonyString(item.price)} ريال"/></td>
+                                        <td><h:outputText value="#{item.countProduct}"/></td>
+                                        <td><h:outputText value="#{item.unit}"/></td>
+                                        <td><h:outputText value="#{factorController.formatMonyString(item.discount)} ريال"/></td>
+                                        <td><h:outputText value="#{factorController.formatMonyString(item.priceAfterDiscount)} ريال"/></td>
+                                    </tr>   
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="holderTable">
+                        <table class="tamin" style="direction: rtl;width: 100%">
+                            <thead>
+                                <tr style="border-bottom: 1px solid">
+                                    <th colspan="12" style="text-align: center;font-size: 15px;font-weight: bold">محاسبات نهایی</th>
+                                </tr>
+                                <tr>
+                                    <th>جمع تخفیف</th>
+                                    <th>جمع کل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.sumDiscount)} ريال"/></td>
+                                    <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.payable)} ريال"/></td>
+                                </tr>   
+                            </tbody>
+                        </table>
+                    </div>
+                    <h:panelGroup rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
+                        <div class="holderTable">
+                            <table class="tamin" style="direction: rtl;width: 100%">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid">
+                                        <th colspan="12" style="text-align: center;font-size: 15px;font-weight: bold">شرایط اقساط</th>
+                                    </tr>
+                                    <tr>
+                                        <th>تعداد اقساط</th>
+                                        <th>مبلغ قابل پرداخت ماهانه</th>
+                                        <th>مبلغ تمام شده با اقساط</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><h:outputText value="#{factorController.selected.installmentCount} ماه"/></td>
+                                        <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.sumInstallmentValue)} ريال"/></td>
+                                        <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.sumPurgeAndProfitGeneral)} ريال"/></td>
+                                    </tr>   
+                                </tbody>
+                            </table>
+                        </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+
+                <p:commandButton value="چاپ" icon="ui-icon-print">
+                    <p:printer target="container"  />
+                </p:commandButton>
+                <p:commandButton id="cancelBtnPrint"  value="بستن" onclick="dialogPrintFactorDialog.hide()"/>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

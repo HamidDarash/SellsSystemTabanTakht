@@ -8,6 +8,7 @@ package com.darash.salemaven.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,6 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Credit.findByCreateAt", query = "SELECT c FROM Credit c WHERE c.createAt = :createAt"),
     @NamedQuery(name = "Credit.sumCredit", query = "SELECT SUM(c.credit) as sumcol FROM Credit c WHERE c.person = :person"),
     })
+
+@Cacheable(false)
 public class Credit implements Serializable {
 
     private static final long serialVersionUID = 1L;

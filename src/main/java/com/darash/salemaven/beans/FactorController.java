@@ -75,12 +75,20 @@ public class FactorController implements Serializable {
     private String discountProduct = "0";
 
     public String formatMony(Long x) {
-        return new DecimalFormat("###,###,###").format(x);
+        try {
+            return new DecimalFormat("###,###,###").format(x);
+        } catch (Exception e) {
+            return "";
+        }
     }
-    
+
     public String formatMonyString(String x) {
-        long c = Long.valueOf(x);
-        return new DecimalFormat("###,###,###").format(c);
+        try {
+            long c = Long.valueOf(x);
+            return new DecimalFormat("###,###,###").format(c);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public long getCreditSelectedUser() {
@@ -469,6 +477,7 @@ public class FactorController implements Serializable {
             rowFactorDetail.setPrice(productSelectForInsert.getPrice());
             rowFactorDetail.setProductName(productSelectForInsert.getProductName());
             rowFactorDetail.setProductId(productSelectForInsert.getId());
+            rowFactorDetail.setModel(productSelectForInsert.getModel());
             this.rowFactorDetail.setDiscount(discountProduct);
             this.rowFactorDetail.setCountProduct(countProduct);
             this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));

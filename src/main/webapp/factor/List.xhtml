@@ -35,7 +35,7 @@
                                  lazy="true"
                                  >
 
-                        <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor removeFactor :growl" />
+                        <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor removeFactor :growl printFactorButton" />
 
                         <p:column>
                             <f:facet name="header">
@@ -141,6 +141,8 @@
                             <p:commandButton id="removeFactor" icon="ui-icon-refresh" actionListener="#{factorController.removeFactor}"  value="حذف فاکتور" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
                                 <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
                             </p:commandButton>
+                            <p:commandButton id="printFactorButton" value="چاب فاکتور" icon="ui-icon-print"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogPrintFactorDialog').show();PF('dialogPrintFactorDialog').toggleMaximize();" update=":factorPrint"/>
+
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
@@ -152,6 +154,7 @@
             <ui:include src="Create.xhtml"/>
             <ui:include src="View.xhtml"/>
             <ui:include src="Edit.xhtml"/>
+            <ui:include src="FactorPrint.xhtml" />
         </ui:define>
     </ui:composition>
 

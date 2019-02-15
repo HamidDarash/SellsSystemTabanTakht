@@ -1,0 +1,83 @@
+/*@font-face {
+    font-family: Vazir;
+    src: url("Vazir.eot");
+    src: url("Vazir.ttf") format('embedded-opentype'),
+        url("Vazir.woff2") format('woff2'),
+        url("Vazir.woff") format('woff'),
+        url("Vazir.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}*/
+
+@font-face {
+    font-family: Vazir;
+    src: url("#{resource['css:Vazir.eot']}");
+    src: url("#{resource['css:Vazir.ttf']}") format('embedded-opentype'),
+        url("#{resource['css:Vazir.woff2']}") format('woff2'),
+        url("#{resource['css:Vazir.woff']}") format('woff'),
+        url("#{resource['css:Vazir.ttf']}") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+*,html,h1 {
+    font-family: Vazir , Arial, sans-serif !important;
+}
+html{
+    direction: rtl;
+}
+body{
+    margin: 50px;
+}
+.factor-title{
+    font-size: 15px;
+    text-align: center;
+    display: block;
+    position: relative;
+    background: #c7c7c7;
+    height: 81px;
+    border: 2px solid black;
+    margin-bottom: 2px;
+}
+.logo{
+    position: absolute;
+    right: 4px;
+    top: 8px;
+}
+
+.name-co{
+    left: 0;
+    padding-top: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    font-weight: bold;
+    direction: rtl;
+}
+hr{
+    border: 1px solid;
+    padding: 0;
+    margin: 3px 0px;
+}
+
+.holderTable{
+    border: 2px solid black;
+}
+.tamin th , .tamin td{
+    border: 1px solid black;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    direction: rtl;
+}
+.dateFactor{
+    padding-top: 16px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    direction: rtl;
+}

@@ -16,6 +16,7 @@
       <property name="eclipselink.logging.parameters" value="true"/>
       <property name="eclipselink.logging.timestamp" value="true"/>
       <property name="eclipselink.logging.exceptions" value="true"/>
+      
       <property name="javax.persistence.validation.group.pre-persist" value="none"/>
       <property name="javax.persistence.validation.group.pre-remove" value="none"/>
       <property name="javax.persistence.validation.group.pre-update" value="none"/>

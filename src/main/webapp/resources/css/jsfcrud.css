@@ -89,3 +89,61 @@ table span {
 .ui-log{
     font-size: 12px !important;
 }
+
+/*
+ چاپ فاکتور
+*/
+
+.factor-title{
+    font-size: 15px;
+    text-align: center;
+    display: block;
+    position: relative;
+    background: #c7c7c7;
+    height: 81px;
+    border: 2px solid black;
+    margin-bottom: 2px;
+    direction: rtl;
+}
+.logo{
+    position: absolute;
+    right: 4px;
+    top: 8px;
+}
+
+.name-co{
+    left: 0;
+    padding-top: 30px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    font-weight: bold;
+    direction: rtl;
+}
+hr{
+    border: 1px solid;
+    padding: 0;
+    margin: 3px 0px;
+}
+
+.holderTable{
+    border: 2px solid black;
+}
+.tamin th , .tamin td{
+    border: 1px solid black;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    direction: rtl;
+}
+.dateFactor{
+    padding-top: 19px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    direction: rtl;
+}

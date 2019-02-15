@@ -32,13 +32,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "factor_detail")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f"),
-    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id"),
-    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId"),
-    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct"),
-    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit"),
-    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price"),
-    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount"),
+    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f")
+    ,
+    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id")
+    ,
+    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId")
+    ,
+    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct")
+    ,
+    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit")
+    ,
+    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price")
+    ,
+    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount")
+    ,
     @NamedQuery(name = "FactorDetail.findByPriceAfterDiscount", query = "SELECT f FROM FactorDetail f WHERE f.priceAfterDiscount = :priceAfterDiscount")
 })
 public class FactorDetail implements Serializable {
@@ -82,11 +89,15 @@ public class FactorDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "price_after_discount")
     private String priceAfterDiscount;
-
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "model")
+    private String model;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factor_id")
     private Factor factor;
- 
+
     public Factor getFactor() {
         return factor;
     }
@@ -98,14 +109,22 @@ public class FactorDetail implements Serializable {
     public FactorDetail() {
     }
 
-    public FactorDetail(int productId, String productName, int countProduct, String unit, String price, String discount, String priceAfterDiscount) {
+    public FactorDetail(int productId, String productName, int countProduct, String unit, String price, String priceAfterDiscount, String model) {
         this.productId = productId;
         this.productName = productName;
         this.countProduct = countProduct;
         this.unit = unit;
         this.price = price;
-        this.discount = discount;
         this.priceAfterDiscount = priceAfterDiscount;
+        this.model = model;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public Integer getId() {
@@ -208,7 +227,7 @@ public class FactorDetail implements Serializable {
         if (this.countProduct != other.countProduct) {
             return false;
         }
-     
+
         if (!Objects.equals(this.productName, other.productName)) {
             return false;
         }
