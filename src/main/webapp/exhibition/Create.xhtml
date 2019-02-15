@@ -17,11 +17,11 @@
                             <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_nameExhibition}" for="nameExhibition" />
                             <p:inputText id="nameExhibition" value="#{exhibitionController.selected.nameExhibition}" title="#{bundleExibition.CreateExhibitionTitle_nameExhibition}" required="true" requiredMessage="#{bundleExibition.CreateExhibitionRequiredMessage_nameExhibition}"/>
                             <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateStart}" for="dateStart"  />
-                            <p:inputMask widgetVar="DateStartShamsi" autocomplete="off" id="dateStart" a:shamsipicker="true" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
+                            <p:inputMask widgetVar="DateStartShamsi" autocomplete="off" id="dateStart" a:component-id="exibitionDateCreate" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateStart}" required="true" requiredMessage="#{bundleExibition.EditExhibitionRequiredMessage_dateStart}">
                                 <f:converter converterId="persian_date"/>
                             </p:inputMask> 
                             <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_dateEnd}" for="dateEnd" />
-                            <p:inputMask autocomplete="off" id="dateEnd" a:shamsipicker="true" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
+                            <p:inputMask autocomplete="off" id="dateEnd" a:component-id="exibitionDateCreate" a:placeholder="yyyy/mm/dd" mask="9999/99/99" value="#{exhibitionController.selected.dateEnd}" required="true" requiredMessage="#{bundleExibition.EditExhibitionTitle_dateEnd}">
                                 <f:converter converterId="persian_date" />
                             </p:inputMask> 
                             <p:outputLabel value="#{bundleExibition.CreateExhibitionLabel_managerName}" for="managerName" />
@@ -34,7 +34,7 @@
                     </p:panel>
                     <p:panel>
                         <p:panelGrid columns="1">
-                            <p:panel header="انتخاب تامیین کننده">
+                            <p:panel id="providerHolderAdd" header="انتخاب تامیین کننده">
                                 <p:outputLabel value="انتخاب تامین کننده" for="searchProviderForExhibition" />
                                 <p:autoComplete id="searchProviderForExhibition" value="#{exhibitionController.selectedProvider}"
                                                 completeMethod="#{exhibitionController.findInAllProviderForAutoComplete}"
@@ -53,7 +53,7 @@
                                         <h:outputText value="#{t.internationalCode}" />
                                     </p:column>
                                 </p:autoComplete>
-                                <p:commandButton value="اضافه شود" actionListener="#{exhibitionController.addToListProviders}" update="ExhibitionCreateForm:datalistProvidersExhibition searchProviderForExhibition :growl" />
+                                <p:commandButton value="اضافه شود" actionListener="#{exhibitionController.addToListProviders}" update="ExhibitionCreateForm:datalistProvidersExhibition searchProviderForExhibition :growl providerHolderAdd" />
                             </p:panel>
                             <p:panel header="لیست تامین کنندگان نمایشگاه">
                                 <p:dataTable id="datalistProvidersExhibition" value="#{exhibitionController.selected.providers}" var="item"

@@ -93,35 +93,35 @@
                             <f:facet name="header">
                                 <h:outputText value="تعداد قسط"/>
                             </f:facet>
-                            <h:outputText value="#{item.installmentCount}"/>
+                            <h:outputText value="#{item.installmentCount} ماه"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="مبلغ قسط"/>
                             </f:facet>
-                            <h:outputText value="#{item.installmentValue}"/>
+                            <h:outputText value="#{factorController.formatMonyString(item.installmentValue)} ريال"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="پیش پرداخت"/>
                             </f:facet>
-                            <h:outputText value="#{item.prepayable}"/>
+                            <h:outputText value="#{factorController.formatMonyString(item.prepayable)} ريال"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="درصد اقساط"/>
                             </f:facet>
-                            <h:outputText value="#{item.percentage}"/>
+                            <h:outputText value="#{item.percentage} درصد"/>
                         </p:column>
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="وضعیت مرجوعی"/>
                             </f:facet>
-                            <h:outputText rendered="#{item.returned == true}" value="مرجوعی"/>
+                            <h:outputText rendered="#{item.returned == true}" value="مرجوع شده"/>
                             <h:outputText rendered="#{item.returned == false}" value="خیر"/>
                         </p:column>
 

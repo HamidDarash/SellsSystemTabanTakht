@@ -85,7 +85,7 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPerson()}" update="@form" process="@this" /> 
 
                                 </p:autoComplete>
                             </h:panelGrid>
@@ -102,6 +102,8 @@
                                 <h:outputText id="personInternationalEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.internationalCode}" />
                                 <p:outputLabel value="تلفن/موبایل" for="personMobileEdit" />
                                 <h:outputText id="personMobileEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.mobile}" />
+                                <p:outputLabel value="اعتبار" for="creditSumEdit" />
+                                <h:outputText id="creditSumEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.formatMony(factorController.getCreditSum(factorController.selected.person))} ریال" />
                             </p:panelGrid>
                         </p:fieldset>
 
@@ -237,7 +239,7 @@
                                         <h:outputText value="#{item.productName}" />
                                     </p:column>
                                     <p:column headerText="قیمت محصول">
-                                        <h:outputText value="#{item.price}" />
+                                        <h:outputText value="#{factorController.formatMonyString(item.price)} ريال" />
                                     </p:column>
                                     <p:column headerText="تعداد">
                                         <h:outputText value="#{item.countProduct}" />
@@ -249,7 +251,7 @@
                                         <h:outputText value="#{item.discount}" />
                                     </p:column>
                                     <p:column headerText="جمع این سطر">
-                                        <h:outputText value="#{item.priceAfterDiscount}" />
+                                        <h:outputText value="#{factorController.formatMonyString(item.priceAfterDiscount)} ريال" />
                                     </p:column> 
                                     <p:column headerText="حذف" style="width:32px">
                                         <p:commandButton actionListener="#{factorController.deleteFactorDetailListEditForm(item)}" icon="ui-icon-trash" 

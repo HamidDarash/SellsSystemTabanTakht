@@ -63,7 +63,7 @@
                             </p:column>
                             <p:column headerText="مقدار اعتبار">
                                 <p:cellEditor>
-                                    <f:facet name="output"><h:outputText value="#{creditRow.credit}" /></f:facet>
+                                    <f:facet name="output"><h:outputText value="#{personController.formatMony(creditRow.credit)} ريال" /></f:facet>
                                     <f:facet name="input"><p:inputText id="modelInput" value="#{creditRow.credit}" style="width:100%"/></f:facet>
                                 </p:cellEditor>
                             </p:column>

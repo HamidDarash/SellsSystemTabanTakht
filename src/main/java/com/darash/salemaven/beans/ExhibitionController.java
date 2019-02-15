@@ -67,10 +67,15 @@ public class ExhibitionController implements Serializable {
 
     public void addToListProviders() {
         if (selectedProvider != null) {
-            selectedProvider.getExhibitions().add(selected);
-            selected.getProviders().add(selectedProvider);
-            selectedProvider = null;
-            JsfUtil.addSuccessMessage("با موفقیت اضافه شد");
+            if (!selected.getProviders().contains(selectedProvider)) {
+                selectedProvider.getExhibitions().add(selected);
+                selected.getProviders().add(selectedProvider);
+                selectedProvider = null;
+                JsfUtil.addSuccessMessage("با موفقیت اضافه شد");
+            } else {
+                JsfUtil.addSuccessMessage("تامبن کننده در لیست موجود است");
+                selectedProvider = null;
+            }
         }
     }
 

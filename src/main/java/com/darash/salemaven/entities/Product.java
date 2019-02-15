@@ -154,6 +154,8 @@ public class Product implements Serializable {
     public String getPrice() {
         return price;
     }
+    
+    
 
     public void setPrice(String price) {
         this.price = price;

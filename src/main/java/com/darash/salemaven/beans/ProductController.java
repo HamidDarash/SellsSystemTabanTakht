@@ -29,7 +29,7 @@ import org.primefaces.model.SortOrder;
 @SessionScoped
 public class ProductController implements Serializable {
 
-    @Inject
+    @EJB
     private com.darash.salemaven.services.ProductFacade ejbFacade;
     private LazyDataModel<Product> items;
     private Product selected;

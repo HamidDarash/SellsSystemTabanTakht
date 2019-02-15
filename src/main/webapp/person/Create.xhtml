@@ -32,8 +32,6 @@
                         <p:inputText id="description" value="#{personController.selected.description}" title="#{bundle.CreatePersonTitle_description}" required="true" requiredMessage="#{bundle.CreatePersonRequiredMessage_description}"/>
                     </p:panelGrid>
 
-               
-
                     <p:commandButton actionListener="#{personController.create}" value="#{bundle.Save}" update="display,:PersonListForm:datalist,:growl" oncomplete="handleSubmit(args,'PersonCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="PersonCreateDialog.hide()"/>
                 </h:panelGroup>

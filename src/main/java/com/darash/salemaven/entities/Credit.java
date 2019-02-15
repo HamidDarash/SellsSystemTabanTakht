@@ -74,7 +74,7 @@ public class Credit implements Serializable {
         this.person = person;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
 

@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.faces.component.UIComponent;
@@ -19,7 +20,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -27,7 +27,7 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class ProviderController implements Serializable {
 
-    @Inject
+    @EJB
     private com.darash.salemaven.services.ProviderFacade ejbFacade;
     private LazyDataModel<Provider> items;
     private Provider selected;

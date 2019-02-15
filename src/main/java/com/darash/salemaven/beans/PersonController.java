@@ -8,6 +8,7 @@ import com.darash.salemaven.entities.Credit;
 import helper.DateConvertor;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
@@ -27,7 +29,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -38,8 +39,10 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class PersonController implements Serializable {
 
-    @Inject
+    @EJB
     private PersonFacade ejbFacade;
+    @EJB
+    private com.darash.salemaven.services.CreditFacade creditFacade;
 
     private LazyDataModel<Person> items;
 
@@ -87,24 +90,6 @@ public class PersonController implements Serializable {
         this.ejbFacade = ejbFacade;
     }
 
-    public String getShamsiDate(String date) {
-        if (date.isEmpty()) {
-            return "none";
-        }
-        String[] array = date.split("\\-", -1);
-        int year = Integer.valueOf(array[0]);
-        int month = Integer.valueOf(array[1]);
-        int day = Integer.valueOf(array[2]);
-        int[] tarikh_out = DateConvertor.gregorian_to_jalali(year, month, day);
-        return String.valueOf(tarikh_out[0]) + "/" + String.valueOf(tarikh_out[1]) + "/" + String.valueOf(tarikh_out[2]);
-    }
-
-    public String convertDateToString(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = format.format(date);
-        return dateString;
-    }
-
     public Date getLastCreditDate(Person p) {
         try {
             Date createdAt = p.getCredits().get(p.getCredits().size() - 1).getCreateAt();
@@ -143,16 +128,13 @@ public class PersonController implements Serializable {
 
     public Person prepareCreate() {
         selected = new Person();
-
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
         persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("PersonCreated"));
-//        if (!JsfUtil.isValidationFailed()) {
-//            items = null;    // Invalidate list of items to trigger re-query.
-//        }
+
     }
 
     public void update() {
@@ -161,19 +143,18 @@ public class PersonController implements Serializable {
 
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("PersonDeleted"));
-//        if (!JsfUtil.isValidationFailed()) {
-//            selected = null; // Remove selection
-//        }
+
     }
 
-    public long getCreditSum(List<Credit> credits) {
-        Iterator it = credits.iterator();
-        long sum = 0;
-        while (it.hasNext()) {
-            Credit obj = (Credit) it.next();
-            sum += obj.getCredit();
+    public long getCreditSelectedUser(Person p) {
+        if (p != null) {
+            return creditFacade.getCreditUser(p);
         }
-        return sum;
+        return 0;
+    }
+
+    public String formatMony(Long x) {
+        return new DecimalFormat("###,###,###").format(x);
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -218,6 +199,7 @@ public class PersonController implements Serializable {
 
     @FacesConverter(forClass = Person.class)
     public static class PersonControllerConverter implements Converter {
+
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
@@ -280,8 +262,8 @@ public class PersonController implements Serializable {
     }
 
     public void onRowSelect(SelectEvent event) {
-         
-        FacesMessage msg = new FacesMessage("اعتبار فعلی : " + String.valueOf(this.getCreditSum(((Person) event.getObject()).getCredits())));
+
+        FacesMessage msg = new FacesMessage("اعتبار فعلی : " + String.valueOf(this.getCreditSelectedUser((Person) event.getObject())));
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
