@@ -4,6 +4,7 @@ import com.darash.salemaven.entities.Product;
 import com.darash.salemaven.beans.util.JsfUtil;
 import com.darash.salemaven.beans.util.JsfUtil.PersistAction;
 import com.darash.salemaven.entities.Provider;
+import com.darash.salemaven.services.FactorDetailFacade;
 import com.darash.salemaven.services.ProductFacade;
 import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
@@ -21,7 +22,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -31,6 +31,9 @@ public class ProductController implements Serializable {
 
     @EJB
     private com.darash.salemaven.services.ProductFacade ejbFacade;
+    @EJB
+    private com.darash.salemaven.services.FactorDetailFacade factorDetailFacade;
+
     private LazyDataModel<Product> items;
     private Product selected;
     @EJB
@@ -59,6 +62,14 @@ public class ProductController implements Serializable {
             }
 
         };
+    }
+
+    public FactorDetailFacade getFactorDetailFacade() {
+        return factorDetailFacade;
+    }
+
+    public void setFactorDetailFacade(FactorDetailFacade factorDetailFacade) {
+        this.factorDetailFacade = factorDetailFacade;
     }
 
     public ProviderFacade getProviderFacade() {
@@ -102,9 +113,6 @@ public class ProductController implements Serializable {
 
     public void create() {
         persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ProductCreated"));
-//        if (!JsfUtil.isValidationFailed()) {
-//            items = null;    // Invalidate list of items to trigger re-query.
-//        }
     }
 
     public void update() {
@@ -113,10 +121,6 @@ public class ProductController implements Serializable {
 
     public void destroy() {
         persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ProductDeleted"));
-//        if (!JsfUtil.isValidationFailed()) {
-//            selected = null; // Remove selection
-//            items = null;    // Invalidate list of items to trigger re-query.
-//        }
     }
 
     public ProductFacade getEjbFacade() {
@@ -141,6 +145,11 @@ public class ProductController implements Serializable {
             try {
                 if (persistAction != PersistAction.DELETE) {
                     getFacade().edit(selected);
+//                    factorDetailFacade.ChangeProductInfo(
+//                            selected.isWarranty(), selected.isInsurance(),
+//                            selected.getModel(),
+//                            selected.getUnit(),
+//                            selected.getId());
                 } else {
                     getFacade().remove(selected);
                 }

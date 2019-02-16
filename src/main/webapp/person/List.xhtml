@@ -60,13 +60,13 @@
                             </f:facet>
                             <h:outputText value="#{item.email}"/>
                         </p:column>
-                        <p:column>
+                        <p:column filterBy="#{item.company}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListPersonTitle_company}"/>
                             </f:facet>
                             <h:outputText value="#{item.company}"/>
                         </p:column>
-                        <p:column>
+                        <p:column filterBy="#{item.companyCode}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListPersonTitle_companyCode}"/>
                             </f:facet>
@@ -94,7 +94,7 @@
                             <f:facet name="header">
                                 <h:outputText value="جمع اعتبار"/>
                             </f:facet>
-                            <h:outputText style="color:#ff690e" value="#{personController.formatMony(personController.getCreditSelectedUser(item))} ريال"/>
+                            <h:outputText style="color:#ff690e;font-size: 13px !important;" value="#{personController.formatMony(personController.getCreditSelectedUser(item))} ريال"/>
                         </p:column>
 
                         <p:column>

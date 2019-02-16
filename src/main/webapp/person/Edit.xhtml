@@ -64,7 +64,9 @@
                             <p:column headerText="مقدار اعتبار">
                                 <p:cellEditor>
                                     <f:facet name="output"><h:outputText value="#{personController.formatMony(creditRow.credit)} ريال" /></f:facet>
-                                    <f:facet name="input"><p:inputText id="modelInput" value="#{creditRow.credit}" style="width:100%"/></f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="modelInput" value="#{creditRow.credit}" style="width:100%" />
+                                    </f:facet>
                                 </p:cellEditor>
                             </p:column>
 
@@ -74,11 +76,13 @@
                                 </h:outputText>
                             </p:column>ّ
                             <p:column headerText="حذف" style="width:32px">
-                                <p:commandButton actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
+                                <p:commandButton rendered="#{creditRow.credit gt 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
+                                <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>ّ
 
-                            <p:column headerText="ویرایش" style="width:32px">
-                                <p:rowEditor />
+                            <p:column headerText="ویرایش" style="width:32px" >
+                                <p:rowEditor rendered="#{creditRow.credit gt 0}" />
+                                <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>
                             <f:facet name="footer">
                                 <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk">

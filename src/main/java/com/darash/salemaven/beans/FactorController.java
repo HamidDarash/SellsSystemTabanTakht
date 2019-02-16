@@ -57,6 +57,15 @@ public class FactorController implements Serializable {
     private LazyDataModel<Factor> items;
     private Factor selected;
     private Person selectedPerson = null;
+    private Person lastSelectedPerson = null;
+
+    public Person getLastSelectedPerson() {
+        return lastSelectedPerson;
+    }
+
+    public void setLastSelectedPerson(Person lastSelectedPerson) {
+        this.lastSelectedPerson = lastSelectedPerson;
+    }
     private Provider selectedProvider = null;
     private List<FactorDetail> selectedFactorDetails;
     private Product productSelectForInsert = null;
@@ -454,6 +463,8 @@ public class FactorController implements Serializable {
             rowFactorDetail.setPrice(productSelectForInsert.getPrice());
             rowFactorDetail.setProductName(productSelectForInsert.getProductName());
             rowFactorDetail.setProductId(productSelectForInsert.getId());
+            rowFactorDetail.setWarranty(productSelectForInsert.isWarranty());
+            rowFactorDetail.setInsurance(productSelectForInsert.isInsurance());
             this.rowFactorDetail.setDiscount(discountProduct);
             this.rowFactorDetail.setCountProduct(countProduct);
             this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
@@ -478,6 +489,8 @@ public class FactorController implements Serializable {
             rowFactorDetail.setProductName(productSelectForInsert.getProductName());
             rowFactorDetail.setProductId(productSelectForInsert.getId());
             rowFactorDetail.setModel(productSelectForInsert.getModel());
+            rowFactorDetail.setWarranty(productSelectForInsert.isWarranty());
+            rowFactorDetail.setInsurance(productSelectForInsert.isInsurance());
             this.rowFactorDetail.setDiscount(discountProduct);
             this.rowFactorDetail.setCountProduct(countProduct);
             this.rowFactorDetail.setPriceAfterDiscount(String.valueOf(this.getCountProduct() * Long.valueOf(this.productSelectForInsert.getPrice()) - Long.valueOf(this.getDiscountProduct())));
@@ -489,16 +502,84 @@ public class FactorController implements Serializable {
 
     }
 
+    public void checkInsertModeUserSelected() {
+        if (lastSelectedPerson != null) {
+            lastSelectedPerson.setInsertMode(false);
+            personFacade.edit(lastSelectedPerson);
+        }
+        if (selectedPerson != null) {
+            selectedPerson.setInsertMode(false);
+            personFacade.edit(selectedPerson);
+        }
+        selected = null;
+        lastSelectedPerson = null;
+        selectedPerson = null;
+        selectedProvider = null;
+    }
+
+    public void checkInsertModeUserSelectedEdit() {
+        if (lastSelectedPerson != null) {
+            lastSelectedPerson.setInsertMode(false);
+            personFacade.edit(lastSelectedPerson);
+        }
+        if (selected.getPerson() != null) {
+            selected.getPerson().setInsertMode(false);
+            personFacade.edit(selected.getPerson());
+        }
+    }
+
+    public void checkCreditPersonEdit() {
+        if (selected.getPerson() != null && selected.getPerson().isInsertMode()) {
+            showMessageInsertModeLock();
+        } else if ((getCreditSum(selected.getPerson()) <= 0) && selected.getCondinationFactor().equals("اقساط")) {
+            showMessage();
+        } else {
+            if (lastSelectedPerson != null) {
+                lastSelectedPerson.setInsertMode(false);
+                personFacade.edit(lastSelectedPerson);
+            }
+            if (selected.getPerson() != null) {
+                selected.getPerson().setInsertMode(true);
+                personFacade.edit(selected.getPerson());
+                lastSelectedPerson = selected.getPerson();
+                JsfUtil.addSuccessMessage("پرسنل در حالت ایجاد فاکتور قرار گرفت");
+            }
+        }
+    }
+    
     public void checkCreditPerson() {
-        if ((getCreditSum(selectedPerson) <= 0) && selected.getCondinationFactor().equals("اقساط")) {
+        if (selectedPerson != null && selectedPerson.isInsertMode()) {
+            showMessageInsertModeLock();
+            selectedPerson = null;
+        } else if ((getCreditSum(selectedPerson) <= 0) && selected.getCondinationFactor().equals("اقساط")) {
             showMessage();
             selectedPerson = null;
+        } else {
+            if (lastSelectedPerson != null) {
+                lastSelectedPerson.setInsertMode(false);
+                personFacade.edit(lastSelectedPerson);
+            }
+            if (selectedPerson != null) {
+                selectedPerson.setInsertMode(true);
+                personFacade.edit(selectedPerson);
+                lastSelectedPerson = selectedPerson;
+                JsfUtil.addSuccessMessage("پرسنل در حالت ایجاد فاکتور قرار گرفت");
+            }
         }
     }
 
     public void showMessage() {
         RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "اعتبار پرسنل کافی نیست"));
     }
+
+    public void showMessageInsertModeLock() {
+        RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "این کاربر در حالت ثبت فاکتور می باشد لطفا بعدا ثبت فاکتور کنید"));
+    }
+    
+    public void showMessageInsertModeLockOrCredit() {
+        RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "این کاربر در حالت ثبت فاکتور می باشد یا اعتبار کافی ندارد لطفا بعدا ثبت فاکتور کنید"));
+    }
+    
 
     private void persist(JsfUtil.PersistAction persistAction, String successMessage) {
         if (selected != null) {
@@ -537,7 +618,7 @@ public class FactorController implements Serializable {
 
                         selected.setFactorDetails(selectedFactorDetails);
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
-                        selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
+                        selected.setPayable(String.valueOf(sumPrice));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
                         selected.setSumWage((int) (selectedProvider.getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
@@ -562,7 +643,7 @@ public class FactorController implements Serializable {
                             // از اعتبار پرسنل کسر میشود
                             Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
                             creditFacade.edit(credit);
-                        } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط")) {
+                        } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط") && selectedPerson.isInsertMode()) {
                             showMessage();
                         }
 
@@ -570,9 +651,15 @@ public class FactorController implements Serializable {
                             getEjbFacade().create(selected);
                         }
 
+                        if (selectedPerson != null) {
+                            selectedPerson.setInsertMode(false);
+                            personFacade.edit(selectedPerson);
+                        }
+
                         selected = null;
                         productSelectForInsert = null;
                         selectedPerson = null;
+                        lastSelectedPerson = null;
                         selectedProvider = null;
                         rowFactorDetailSelect = null;
                         rowFactorDetail = null;
@@ -616,7 +703,7 @@ public class FactorController implements Serializable {
                         System.out.println("sumPurgeAndProfit factor: " + sumPurgeAndProfit);
 
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
-                        selected.setPayable(String.valueOf(sumPrice - sumDiscount));//جمع کل کالاها کم میشود از جمع تخفیف
+                        selected.setPayable(String.valueOf(sumPrice));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
                         selected.setSumWage((int) (selected.getProvider().getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
@@ -627,7 +714,9 @@ public class FactorController implements Serializable {
                         selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
-
+                        
+                      
+                        
                         if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
                             getEjbFacade().edit(selected);
                             long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
@@ -637,8 +726,8 @@ public class FactorController implements Serializable {
                             }
                         }
 
-                        if ((selected.getCondinationFactor().equals("اقساط") && this.getSelectedLastCondinationTypeFactor().equals("نقدی"))
-                                || this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("اقساط")) {
+                        if (((selected.getCondinationFactor().equals("اقساط") && this.getSelectedLastCondinationTypeFactor().equals("نقدی"))
+                                || this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("اقساط")) && !selected.getPerson().isInsertMode()) {
 
                             System.out.println("getCreditSum(selectedPerson) + lastFactorCreditValue = " + getCreditSum(selectedPerson) + lastFactorCreditValue);
                             if (((getCreditSum(selected.getPerson()) + lastFactorCreditValue) > sumPurgeAndProfit)) {
@@ -652,12 +741,17 @@ public class FactorController implements Serializable {
                                 Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
                                 creditFacade.edit(credit);
                             } else {
-                                showMessage();
+                                showMessageInsertModeLockOrCredit();
                             }
                         }
 
                         if (selected.getCondinationFactor().equals("نقدی") && this.getSelectedLastCondinationTypeFactor().equals("نقدی")) {
                             getEjbFacade().edit(selected);
+                        }
+
+                        if (selected.getPerson() != null) {
+                            selected.getPerson().setInsertMode(false);
+                            personFacade.edit(selected.getPerson());
                         }
 
                         selected = null;

@@ -12,6 +12,7 @@
                   widgetVar="dialogInserFactorDialog"
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ثبت فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
+            <p:ajax event="close" listener="#{factorController.checkInsertModeUserSelected()}" oncomplete="PF('dialogInserFactorDialog').toggleMaximize();" />
             <h:form id="dateFactorForm">
                 <p:panelGrid columns="3" layout="grid">
                     <p:panel id="typeFactorSelect" header="نوع فاکتور">
@@ -88,7 +89,7 @@
                                     <p:column headerText="اعتبار پرسنل">
                                         <h:outputText value="#{factorController.getCreditSum(p)}" /> <p:spacer width="10px" /><h:outputText value="ریال" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPerson()}" update="@form" process="@this" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPerson()}" update="@form :growl" process="@this" /> 
                                 </p:autoComplete>
                             </h:panelGrid>
                             <p:panelGrid id="panelInfoPerson" rendered="#{factorController.selectedPerson != null}" columns="4" layout="grid" >
@@ -196,7 +197,7 @@
                                                      update="tableInsertedFactorDetail factorDetailPanel insertToDetail :growl"
                                                      process="@form"
                                                      >
-                                        
+
                                     </p:commandButton>
                                     <p:outputLabel for="saveFactor" value="اتمام ثبت"/>
                                     <p:commandButton id="saveFactor" style="width: 100%;" disabled="#{empty factorController.selectedFactorDetails}"
@@ -207,7 +208,7 @@
                                                      >
                                     </p:commandButton>
                                     <p:outputLabel for="cancelBtn"/>
-                                    <p:commandButton id="cancelBtn" style="width: 100%" value="انصراف" onclick="PersonCreateDialog.hide()"/>
+                                    <p:commandButton id="cancelBtn" style="width: 100%" value="انصراف" onclick="PersonCreateDialog.hide()" oncomplete="PF('dialogInserFactorDialog').toggleMaximize();" actionListener="#{factorController.checkInsertModeUserSelected()}" />
                                     <p:keyFilter for="insertCountProduct" mask="num"/>
                                     <p:keyFilter for="insertPrice" mask="num"/>
                                     <p:keyFilter for="insertDiscount" mask="num"/>
@@ -244,6 +245,13 @@
                                     </p:column>
                                     <p:column headerText="مدل محصول">
                                         <h:outputText value="#{item.model}" />
+                                    </p:column>
+                                    <p:column headerText="گارانتی">
+                                        <h:outputText value="#{item.warranty?'دارد':'ندارد'}" />
+                                    </p:column>
+
+                                    <p:column headerText="بیمه">
+                                        <h:outputText value="#{item.insurance?'دارد':'ندارد'}" />
                                     </p:column>
                                     <p:column headerText="قیمت محصول">
                                         <h:outputText value="#{factorController.formatMonyString(item.price)} ريال" />

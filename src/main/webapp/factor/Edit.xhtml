@@ -12,6 +12,9 @@
                   widgetVar="dialogEditFactorDialog"
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ویرایش فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
+           
+            <p:ajax event="close" listener="#{factorController.checkInsertModeUserSelectedEdit()}" oncomplete="PF('dialogEditFactorDialog').toggleMaximize();" />
+
             <h:form id="dateFactorFormEdit">
                 <p:panelGrid columns="3" layout="grid">
                     <p:panel header="نوع فاکتور">
@@ -85,7 +88,7 @@
                                     <p:column headerText="نام شرکت">
                                         <h:outputText value="#{p.company}" />
                                     </p:column>
-                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPerson()}" update="@form" process="@this" /> 
+                                    <p:ajax event="itemSelect" listener="#{factorController.checkCreditPersonEdit()}" update="@form" process="@this" /> 
 
                                 </p:autoComplete>
                             </h:panelGrid>
@@ -199,11 +202,11 @@
                                                      actionListener="#{factorController.update}" 
                                                      value="ثبت تغییرات" 
                                                      update=":dateFactorFormEdit , tableInsertedFactorDetailEdit, factorDetailPanelEdit, insertToDetailEdit ,:growl ,dialogEditFactorDlg ,:FactorListForm:datalistFactors"
-                                                     oncomplete="handleSubmit(args,'dialogInserFactorDialog');"
+                                                     oncomplete="handleSubmit(args,'dialogEditFactorDialog');"
                                                      >
                                     </p:commandButton>
                                     <p:outputLabel for="cancelBtnEdit"/>
-                                    <p:commandButton id="cancelBtnEdit" style="width: 100%" value="انصراف" onclick="PersonCreateDialog.hide()"/>
+                                    <p:commandButton id="cancelBtnEdit" style="width: 100%" value="انصراف" oncomplete="PF('dialogEditFactorDialog').toggleMaximize();" actionListener="#{factorController.checkInsertModeUserSelectedEdit()}" onclick="PersonCreateDialog.hide()"/>
                                     <p:keyFilter for="insertCountProductEdit" mask="num"/>
                                     <p:keyFilter for="insertPriceEdit" mask="num"/>
                                     <p:keyFilter for="insertDiscountEdit" mask="num"/>
@@ -240,6 +243,13 @@
                                     </p:column>
                                     <p:column headerText="مدل محصول">
                                         <h:outputText value="#{item.model}" />
+                                    </p:column>
+                                    <p:column headerText="گارانتی">
+                                        <h:outputText value="#{item.warranty?'دارد':'ندارد'}" />
+                                    </p:column>
+
+                                    <p:column headerText="بیمه">
+                                        <h:outputText value="#{item.insurance?'دارد':'ندارد'}" />
                                     </p:column>
                                     <p:column headerText="قیمت محصول">
                                         <h:outputText value="#{factorController.formatMonyString(item.price)} ريال" />

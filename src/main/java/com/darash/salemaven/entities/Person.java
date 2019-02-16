@@ -80,6 +80,9 @@ public class Person implements Serializable {
     @Size(max = 65535)
     @Column(name = "description")
     private String description;
+    
+    @Column(name = "insert_mode")
+    private boolean insertMode = false;
 
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -108,6 +111,14 @@ public class Person implements Serializable {
         this.address = address;
         this.mobile = mobile;
         this.description = description;
+    }
+
+    public boolean isInsertMode() {
+        return insertMode;
+    }
+
+    public void setInsertMode(boolean insertMode) {
+        this.insertMode = insertMode;
     }
 
     public Integer getId() {

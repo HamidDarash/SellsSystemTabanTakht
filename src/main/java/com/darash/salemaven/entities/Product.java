@@ -88,6 +88,15 @@ public class Product implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "price")
     private String price;
+    
+   
+    @Column(name = "insurance")
+    private boolean insurance = false;
+    
+    @Column(name = "warranty")
+    private boolean warranty = false;
+    
+    
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id")
@@ -154,9 +163,23 @@ public class Product implements Serializable {
     public String getPrice() {
         return price;
     }
-    
-    
 
+    public boolean isInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(boolean insurance) {
+        this.insurance = insurance;
+    }
+
+    public boolean isWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(boolean warranty) {
+        this.warranty = warranty;
+    }
+    
     public void setPrice(String price) {
         this.price = price;
     }

@@ -26,6 +26,13 @@
                         <p:inputTextarea rows="4" cols="30" id="description" value="#{productController.selected.description}" title="#{bundle.EditProductTitle_description}" />
                         <p:outputLabel value="#{bundle.EditProductLabel_price}" for="price" />
                         <p:inputText id="price" value="#{productController.selected.price}" title="#{bundle.EditProductTitle_price}" required="true" requiredMessage="#{bundle.EditProductRequiredMessage_price}"/>
+
+                        <p:outputLabel value="گارانتی" for="warrantyEdit" />   
+                        <p:selectBooleanCheckbox id="warrantyEdit" value="#{productController.selected.warranty}" itemLabel="دارد/ندارد" /> 
+
+                        <p:outputLabel value="بیمه" for="insuranceEdit" />   
+                        <p:selectBooleanCheckbox id="insuranceEdit" value="#{productController.selected.insurance}" itemLabel="دارد/ندارد" /> 
+
                         <p:outputLabel value="انتخاب تامین کننده" for="searchProvider" />
                         <p:autoComplete id="searchProvider" value="#{productController.selected.provider}"
                                         completeMethod="#{productController.findInAllProviderForAutoComplete}"

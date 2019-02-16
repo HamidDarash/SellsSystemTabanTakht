@@ -134,14 +134,14 @@
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();onStatusChange();"/>
+                            <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor :dateFactorForm" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();onStatusChange();"/>
                             <p:commandButton id="showFactorButton" value="نمایش" icon="ui-icon-search"  disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
                             <p:commandButton id="EditFactorButton" value="ویرایش" icon="ui-icon-pencil"  disabled="#{factorController.selected == null}" update=":formInsertFactorEdit , :formInsertFactorEdit:tableInsertedFactorDetailEdit , :dateFactorFormEdit" oncomplete="PF('dialogEditFactorDialog').show();PF('dialogEditFactorDialog').toggleMaximize();onStatusChange();"  />
                             <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor}"  value="تایید/رد" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}"/>
-                            <p:commandButton id="removeFactor" icon="ui-icon-refresh" actionListener="#{factorController.removeFactor}"  value="حذف فاکتور" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
+                            <p:commandButton id="removeFactor" icon="ui-icon-close" actionListener="#{factorController.removeFactor}"  value="حذف فاکتور" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
                                 <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
                             </p:commandButton>
-                            <p:commandButton id="printFactorButton" value="چاب فاکتور" icon="ui-icon-print"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogPrintFactorDialog').show();PF('dialogPrintFactorDialog').toggleMaximize();" update=":factorPrint"/>
+                            <p:commandButton id="printFactorButton" value="چاپ فاکتور" icon="ui-icon-print"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogPrintFactorDialog').show();PF('dialogPrintFactorDialog').toggleMaximize();" update=":factorPrint"/>
 
                         </f:facet>
                     </p:dataTable>

@@ -52,6 +52,13 @@
                             </f:facet>
                             <h:outputText value="#{item.model}"/>
                         </p:column>
+                        <p:column headerText="گارانتی">
+                            <h:outputText value="#{item.warranty?'دارد':'ندارد'}" />
+                        </p:column>
+
+                        <p:column headerText="بیمه">
+                            <h:outputText value="#{item.insurance?'دارد':'ندارد'}" />
+                        </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProductTitle_color}"/>
@@ -70,7 +77,7 @@
                             </f:facet>
                             <h:outputText value="#{item.description}"/>
                         </p:column>
-                      
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListProductTitle_price}"/>

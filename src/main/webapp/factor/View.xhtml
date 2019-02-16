@@ -136,6 +136,14 @@
                         <p:column headerText="تخفیف">
                             <h:outputText value="#{item.discount}" />
                         </p:column>
+                        
+                        <p:column headerText="گارانتی">
+                            <h:outputText value="#{item.warranty?'دارد':'ندارد'}" />
+                        </p:column>
+                        
+                        <p:column headerText="بیمه">
+                            <h:outputText value="#{item.insurance?'دارد':'ندارد'}" />
+                        </p:column>
                         <p:column headerText="جمع این سطر">
                             <h:outputText value="#{item.priceAfterDiscount}" />
                         </p:column> 

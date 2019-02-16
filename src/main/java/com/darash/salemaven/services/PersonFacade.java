@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -58,6 +59,18 @@ public class PersonFacade extends AbstractFacade<Person> {
         super(Person.class);
     }
 
+       public void ChangePersonInsertMode(boolean insertMode) {
+        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+        // create update
+        CriteriaUpdate<Person> update = cb.createCriteriaUpdate(Person.class);
+        // set the root class
+        Root e = update.from(Person.class);
+        // set update and where clause
+        update.set("insertMode", insertMode);
+        // perform update
+        this.em.createQuery(update).executeUpdate();
+    }
+       
     public List<Person> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Person> criteriaQuery = cb.createQuery(Person.class);

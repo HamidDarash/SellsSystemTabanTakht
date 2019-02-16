@@ -8,6 +8,7 @@ package com.darash.salemaven.entities;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,22 +33,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "factor_detail")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f")
-    ,
-    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id")
-    ,
-    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId")
-    ,
-    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct")
-    ,
-    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit")
-    ,
-    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price")
-    ,
-    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount")
-    ,
+    @NamedQuery(name = "FactorDetail.findAll", query = "SELECT f FROM FactorDetail f"),
+    @NamedQuery(name = "FactorDetail.findById", query = "SELECT f FROM FactorDetail f WHERE f.id = :id"),
+    @NamedQuery(name = "FactorDetail.findByProductId", query = "SELECT f FROM FactorDetail f WHERE f.productId = :productId"),
+    @NamedQuery(name = "FactorDetail.findByCountProduct", query = "SELECT f FROM FactorDetail f WHERE f.countProduct = :countProduct"),
+    @NamedQuery(name = "FactorDetail.findByUnit", query = "SELECT f FROM FactorDetail f WHERE f.unit = :unit"),
+    @NamedQuery(name = "FactorDetail.findByPrice", query = "SELECT f FROM FactorDetail f WHERE f.price = :price"),
+    @NamedQuery(name = "FactorDetail.findByDiscount", query = "SELECT f FROM FactorDetail f WHERE f.discount = :discount"),
     @NamedQuery(name = "FactorDetail.findByPriceAfterDiscount", query = "SELECT f FROM FactorDetail f WHERE f.priceAfterDiscount = :priceAfterDiscount")
 })
+//@Cacheable(false)
 public class FactorDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -94,6 +89,13 @@ public class FactorDetail implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "model")
     private String model;
+
+    @Column(name = "insurance")
+    private boolean insurance = false;
+
+    @Column(name = "warranty")
+    private boolean warranty = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "factor_id")
     private Factor factor;
@@ -117,6 +119,24 @@ public class FactorDetail implements Serializable {
         this.price = price;
         this.priceAfterDiscount = priceAfterDiscount;
         this.model = model;
+    }
+    
+    
+
+    public boolean isInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(boolean insurance) {
+        this.insurance = insurance;
+    }
+
+    public boolean isWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(boolean warranty) {
+        this.warranty = warranty;
     }
 
     public String getModel() {

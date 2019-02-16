@@ -12,7 +12,7 @@
             <h:form id="ProductViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{productController.selected != null}">
-                       <h:outputText value="#{bundle.ViewProductLabel_productName}"/>
+                        <h:outputText value="#{bundle.ViewProductLabel_productName}"/>
                         <h:outputText value="#{productController.selected.productName}" title="#{bundle.ViewProductTitle_productName}"/>
                         <h:outputText value="#{bundle.ViewProductLabel_model}"/>
                         <h:outputText value="#{productController.selected.model}" title="#{bundle.ViewProductTitle_model}"/>
@@ -26,6 +26,12 @@
                         <h:outputText value="#{productController.selected.price}" title="#{bundle.ViewProductTitle_price}"/>
                         <h:outputText value="#{bundle.ViewProductLabel_provider}"/>
                         <h:outputText value="#{productController.selected.provider.shopName}" title="#{bundle.ViewProductTitle_provider}"/>
+                        
+                       <h:outputText value="بیمه"/>
+                       <h:outputText value="#{productController.selected.insurance?'دارد':'ندارد'}" title="بیمه"/>
+                       
+                       <h:outputText value="گارانتی"/>
+                       <h:outputText value="#{productController.selected.insurance?'دارد':'ندارد'}" title="گارانتی"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="ProductViewDialog.hide()"/>
                 </h:panelGroup>

@@ -15,7 +15,7 @@
             <h:form id="ProductCreateForm">
                 <h:panelGroup id="display">
                     <p:outputPanel>
-                        
+
                     </p:outputPanel>
                     <p:panelGrid columns="4" rendered="#{productController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateProductLabel_productName}" for="productName" />
@@ -30,6 +30,14 @@
                         <p:inputText styleClass="fullWidth" id="description" value="#{productController.selected.description}"  />
                         <p:outputLabel value="#{bundle.CreateProductLabel_price}" for="price" />
                         <p:inputText styleClass="fullWidth" id="price" value="#{productController.selected.price}" title="#{bundle.CreateProductTitle_price}" required="true" requiredMessage="#{bundle.CreateProductRequiredMessage_price}"/>
+
+                        <p:outputLabel value="گارانتی" for="warranty" />   
+                        <p:selectBooleanCheckbox id="warranty" value="#{productController.selected.warranty}" itemLabel="دارد/ندارد"/> 
+
+                        <p:outputLabel value="بیمه" for="insurance" />   
+                        <p:selectBooleanCheckbox id="insurance" value="#{productController.selected.insurance}" itemLabel="دارد/ندارد"/> 
+
+
                         <p:outputLabel value="جستجو تامین کننده" for="searchProvider" />
                         <p:autoComplete style="width: 70%" id="searchProvider" value="#{productController.selected.provider}"
                                         completeMethod="#{productController.findInAllProviderForAutoComplete}"
