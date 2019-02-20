@@ -26,9 +26,11 @@
                         <p:inputText id="mobile" value="#{providerController.selected.mobile}" title="#{bundle.EditProviderTitle_mobile}" />
                         <p:outputLabel value="نام فروشگاه/شرکت" for="shopName" />
                         <p:inputText id="shopName" value="#{providerController.selected.shopName}" title="نام فروشگاه/شرکت" />
+                        <p:outputLabel value="درصد کارمزد" for="wage" />
+                        <p:inputText id="wage" value="#{providerController.selected.wage}" title="#{bundle.CreateProviderTitle_shopName}" />
                         <p:outputLabel value="کد تامین کننده" for="code" />
                         <p:inputText id="code" value="#{providerController.selected.code}" title="#{bundle.EditProviderTitle_code}" />
-                        
+
                     </p:panelGrid>
                     <p:commandButton actionListener="#{providerController.update}" value="#{bundle.Save}" update="display,:ProviderListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ProviderEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ProviderEditDialog.hide()"/>

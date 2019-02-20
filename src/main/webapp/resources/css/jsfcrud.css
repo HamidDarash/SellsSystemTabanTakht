@@ -110,6 +110,11 @@ table span {
     right: 4px;
     top: 8px;
 }
+.qrcode{
+    position: absolute;
+    right: 96px;
+    top: 10px;
+}
 
 .name-co{
     left: 0;
@@ -147,3 +152,14 @@ hr{
     text-align: center;
     direction: rtl;
 }
+
+.rowInstallment{
+    background-color: rgba(255, 204, 204, 1) !important;
+    background-image: none;
+}
+.rowCache{
+   background-color: rgba(204, 204, 255, 1) !important;
+   background-image: none;
+}
+
+ 

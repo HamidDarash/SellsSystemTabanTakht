@@ -55,7 +55,9 @@ public class FactorFacade extends AbstractFacade<Factor> {
                 if (value == null) {
                     continue;
                 }
+                
                 Expression<String> expr = root.get(field).as(String.class);
+                
                 Predicate p = cb.like(cb.lower(expr),
                         "%" + value.toString().toLowerCase() + "%");
                 predicates.add(p);

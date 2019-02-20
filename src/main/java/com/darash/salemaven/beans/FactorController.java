@@ -14,6 +14,7 @@ import com.darash.salemaven.services.FactorFacade;
 import com.darash.salemaven.services.PersonFacade;
 import com.darash.salemaven.services.ProductFacade;
 import com.darash.salemaven.services.ProviderFacade;
+import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import helper.QrCode;
+import javax.servlet.ServletContext;
 
 @Named("factorController")
 @ViewScoped
@@ -58,6 +61,7 @@ public class FactorController implements Serializable {
     private Factor selected;
     private Person selectedPerson = null;
     private Person lastSelectedPerson = null;
+    private QrCode qrCode = new QrCode();
 
     public Person getLastSelectedPerson() {
         return lastSelectedPerson;
@@ -112,6 +116,10 @@ public class FactorController implements Serializable {
             return creditFacade.getCreditUser(per);
         }
         return 0;
+    }
+
+    public void generateQrCode(String path, String code) {
+        qrCode.generate(path, code);
     }
 
     public String getSelectedLastCondinationTypeFactor() {
@@ -546,7 +554,7 @@ public class FactorController implements Serializable {
             }
         }
     }
-    
+
     public void checkCreditPerson() {
         if (selectedPerson != null && selectedPerson.isInsertMode()) {
             showMessageInsertModeLock();
@@ -575,11 +583,10 @@ public class FactorController implements Serializable {
     public void showMessageInsertModeLock() {
         RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "این کاربر در حالت ثبت فاکتور می باشد لطفا بعدا ثبت فاکتور کنید"));
     }
-    
+
     public void showMessageInsertModeLockOrCredit() {
         RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطا", "این کاربر در حالت ثبت فاکتور می باشد یا اعتبار کافی ندارد لطفا بعدا ثبت فاکتور کنید"));
     }
-    
 
     private void persist(JsfUtil.PersistAction persistAction, String successMessage) {
         if (selected != null) {
@@ -714,9 +721,7 @@ public class FactorController implements Serializable {
                         selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
-                        
-                      
-                        
+
                         if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
                             getEjbFacade().edit(selected);
                             long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
@@ -851,8 +856,11 @@ public class FactorController implements Serializable {
     public void onRowSelect(SelectEvent event) {
         this.setSelectedFactorPurgeAndProfitGeneral(((Factor) event.getObject()).getSumPurgeAndProfitGeneral());
         this.setSelectedLastCondinationTypeFactor(((Factor) event.getObject()).getCondinationFactor());
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String resHomeImgPath = servletContext.getRealPath("resources/img");
 
-        JsfUtil.addSuccessMessage(this.getSelectedFactorPurgeAndProfitGeneral());
+        this.generateQrCode(resHomeImgPath, ((Factor) event.getObject()).getPerson().getInternationalCode());
+//        JsfUtil.addSuccessMessage(resHomeImgPath);
     }
 
     public void removeFactor() {
