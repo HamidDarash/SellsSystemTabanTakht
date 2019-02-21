@@ -33,7 +33,7 @@
                                  scrollable="true"
                                  scrollWidth="100%"
                                  lazy="true"
-                                 rowStyleClass="#{item.condinationFactor eq 'اقساط'?'rowInstallment':'rowCache'}"
+                                 rowStyleClass="#{item.finalRegistration eq true ? (item.condinationFactor eq 'اقساط' ? 'rowInstallment':'rowCache'):'rowUnregister'}"
                                  >
 
                         <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor removeFactor :growl printFactorButton" />

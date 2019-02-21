@@ -12,7 +12,7 @@
                   widgetVar="dialogEditFactorDialog"
                   appendTo="@(body)" resizable="true" 
                   closable="true" modal="true" header="ویرایش فاکتور" dir="rtl" maximizable="true" width="70%" height="100%" fitViewport="true"> 
-           
+
             <p:ajax event="close" listener="#{factorController.checkInsertModeUserSelectedEdit()}" oncomplete="PF('dialogEditFactorDialog').toggleMaximize();" />
 
             <h:form id="dateFactorFormEdit">
@@ -92,29 +92,55 @@
 
                                 </p:autoComplete>
                             </h:panelGrid>
-                            <p:panelGrid id="panelInfoPersonEdit" rendered="#{factorController.selected.person != null}" columns="4" layout="grid" >
-                                <p:outputLabel value="نام پرسنل" for="personNameEdit" />
-                                <h:outputText id="personNameEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.name}" />
-                                <p:outputLabel value="کد پرسنلی" for="personCompanyCodeEdit" />
-                                <h:outputText id="personCompanyCodeEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.companyCode}" />
-                                <p:outputLabel value="شرکت پرسنل" for="personCompanyEdit" />
-                                <h:outputText id="personCompanyEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.company}" />
-                                <p:outputLabel value="آدرس پرسنل" for="personAddressEdit" />
-                                <h:outputText id="personAddressEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.address}" />
-                                <p:outputLabel value="کد ملی پرسنل" for="personInternationalEdit" />
-                                <h:outputText id="personInternationalEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.internationalCode}" />
-                                <p:outputLabel value="تلفن/موبایل" for="personMobileEdit" />
-                                <h:outputText id="personMobileEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.person.mobile}" />
-                                <p:outputLabel value="اعتبار" for="creditSumEdit" />
-                                <h:outputText id="creditSumEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.formatMony(factorController.getCreditSum(factorController.selected.person))} ریال" />
-                            </p:panelGrid>
+                            <p:dataTable id="datalistPersonShowOnlyEdit" rendered="#{factorController.selected.person != null}" value="#{factorController.selected.person}" var="item"
+                                         widgetVar="personTableEdit"
+                                         emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                         resizableColumns="true"
+                                         liveResize="true"
+                                         scrollable="true"
+                                         >
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListPersonTitle_name}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.name}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListPersonTitle_internationalCode}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.internationalCode}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListPersonTitle_company}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.company}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListPersonTitle_companyCode}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.companyCode}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="جمع اعتبار"/>
+                                    </f:facet>
+                                    <h:outputText style="color:#ff690e;font-size: 13px !important;" value="#{factorController.formatMony(factorController.getCreditSum(factorController.selected.person))} ريال"/>
+                                </p:column>
+                            </p:dataTable>
                         </p:fieldset>
 
                     </p:panel>
                     <p:panel id="panelInfoProviderGroupEdit"  rendered="#{factorController.selected.provider != null}">
                         <p:fieldset id="fieldSetProviderEdit" legend="اطلاعات تامین کننده"  >
                             <h:panelGrid id="panelProviderEdit"  columns="4"  >
-                                <p:outputLabel value="انتخاب تامین کننده" for="searchProviderEdit" />
+                                <p:outputLabel value="تامین کننده" for="searchProviderEdit" />
                                 <p:autoComplete id="searchProviderEdit" value="#{factorController.selected.provider}"
                                                 completeMethod="#{factorController.findInAllProviderForAutoComplete}"
                                                 var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
@@ -133,22 +159,47 @@
                                     </p:column>
                                     <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct()}"  update="@form" process="@this" /> 
                                 </p:autoComplete>
-                                <p:outputLabel value="انتخاب نمایشگاه شرکت کرده" for="exhibitionProviderEdit" />
+                                <p:outputLabel value="نمایشگاه" for="exhibitionProviderEdit" />
                                 <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">
                                     <f:selectItems value="#{factorController.filterOnlyActive(factorController.selected.provider.exhibitions)}" />
                                 </p:selectOneMenu>
                             </h:panelGrid>
 
-                            <p:panelGrid id="panelInfoProviderEdit" rendered="#{factorController.selected != null}" columns="4" layout="grid" style="margin-top: 10px">
-                                <p:outputLabel value="فروشگاه" for="providerShopNameEdit" />
-                                <h:outputText id="providerShopNameEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.shopName}" />
-                                <p:outputLabel value="کد اقتصادی" for="providerCodeEghtesadiEdit" />
-                                <h:outputText id="providerCodeEghtesadiEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.codeEghtesadi}" />
-                                <p:outputLabel value="کد تامین کننده" for="providerCodeEdit" />
-                                <h:outputText id="providerCodeEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.code}" />
-                                <p:outputLabel value="آدرس تامین کننده" for="providerAddressEdit" />
-                                <h:outputText id="providerAddressEdit" style="color: #FF7700;font-weight: bolder" value="#{factorController.selected.provider.address}" />
-                            </p:panelGrid>
+                            <p:dataTable id="datalistProvidersShowOnlyEdit" rendered="#{factorController.selected.provider != null}" value="#{factorController.selected.provider}" var="item"
+                                         widgetVar="datalistProvidersShowOnlyEdit"
+                                         emptyMessage="محتویاتی جهت نمایش وجود ندارد"
+                                         resizableColumns="true"
+                                         liveResize="true"
+                                         scrollable="true"
+                                         >
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListProviderTitle_fullname}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.fullname}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListProviderTitle_codeEghtesadi}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.codeEghtesadi}"/>
+                                </p:column>
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListProviderTitle_shopName}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.shopName}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListProviderTitle_code}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.code}"/>
+                                </p:column>
+                            </p:dataTable>
                         </p:fieldset>
 
                     </p:panel>
