@@ -135,8 +135,6 @@ public class Factor implements Serializable {
         this.sumPurgeAndProfitGeneral = sumPurgeAndProfitGeneral;
     }
 
-    
-    
     public Integer getId() {
         return id;
     }
@@ -147,6 +145,10 @@ public class Factor implements Serializable {
 
     public int getSumWageInteger() {
         return (int) getSumWage();
+    }
+
+    public int convertSumWageInteger(double sumWage) {
+        return (int) sumWage;
     }
 
     public double getSumWage() {

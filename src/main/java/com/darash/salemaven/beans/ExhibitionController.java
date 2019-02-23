@@ -79,6 +79,10 @@ public class ExhibitionController implements Serializable {
         }
     }
 
+    public int convertSumWageInteger(double sumWage) {
+        return (int) sumWage;
+    }
+
     public void deleteProviderOfList(Provider p) {
         p.getExhibitions().remove(selected);
         selected.getProviders().remove(p);

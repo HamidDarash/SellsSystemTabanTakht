@@ -6,6 +6,7 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Product;
+import com.darash.salemaven.entities.Product_;
 import com.darash.salemaven.entities.Provider;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +87,7 @@ public class ProductFacade extends AbstractFacade<Product> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Product_.id)));
         CriteriaQuery<Product> select = criteriaQuery.select(root);
 
         if (filters != null && filters.size() > 0) {

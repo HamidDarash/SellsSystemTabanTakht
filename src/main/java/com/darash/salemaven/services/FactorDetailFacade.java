@@ -6,7 +6,6 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.FactorDetail;
-import com.darash.salemaven.entities.Product;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

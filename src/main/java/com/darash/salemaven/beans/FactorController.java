@@ -38,6 +38,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import helper.QrCode;
+import java.util.UUID;
 import javax.servlet.ServletContext;
 
 @Named("factorController")
@@ -858,8 +859,10 @@ public class FactorController implements Serializable {
         this.setSelectedLastCondinationTypeFactor(((Factor) event.getObject()).getCondinationFactor());
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String resHomeImgPath = servletContext.getRealPath("resources/img");
-
-        this.generateQrCode(resHomeImgPath, ((Factor) event.getObject()).getPerson().getInternationalCode());
+        UUID uuid = UUID.randomUUID();
+        String infoPerson = ((Factor) event.getObject()).getPerson().getInternationalCode() + "  "
+                + ((Factor) event.getObject()).getPerson().getCompanyCode() + "  " + uuid.toString();
+        this.generateQrCode(resHomeImgPath, infoPerson);
 //        JsfUtil.addSuccessMessage(resHomeImgPath);
     }
 
@@ -867,4 +870,7 @@ public class FactorController implements Serializable {
         persist(JsfUtil.PersistAction.DELETE, "فاکتور مورد نظر حذف گردید");
     }
 
+    public String getRandomAddressFile() {
+        return "/resources/img/qrcodeFactor.png?dummy=" + UUID.randomUUID().toString();
+    }
 }

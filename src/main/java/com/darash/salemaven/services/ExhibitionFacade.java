@@ -6,6 +6,7 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Exhibition;
+import com.darash.salemaven.entities.Exhibition_;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -43,6 +45,7 @@ public class ExhibitionFacade extends AbstractFacade<Exhibition> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Exhibition> criteriaQuery = cb.createQuery(Exhibition.class);
         Root<Exhibition> root = criteriaQuery.from(Exhibition.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Exhibition_.id)));
         CriteriaQuery<Exhibition> select = criteriaQuery.select(root);
 
         if (filters != null && filters.size() > 0) {

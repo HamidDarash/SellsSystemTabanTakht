@@ -10,10 +10,10 @@
       >
 
     <h:head>
-        <title><ui:insert name="title">Default Title</ui:insert></title>
+        <title><ui:insert name="title">تجارت الکترونیک خودرو تابان تاخت</ui:insert></title>
         <h:outputStylesheet library="css" name="jsfcrud.css"/>
         <h:outputStylesheet library="css" name="persianDatepicker-default.css"/>
-
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/img/logo-takht-2.png"/>
     </h:head>
 
     <h:body dir="rtl">
@@ -89,8 +89,8 @@
                 <p:panelGrid columns="1" layout="grid" style="border: none">
                     <p:panel id="consolePanel" style="border: none">
                         <h:form>
-                            <p:commandButton value="#{footerController.textBtnConsole}" oncomplete=":consolePanel" actionListener="#{footerController.SwichVisibleLogConsole()}"/>
-                            <p:log rendered="#{footerController.visibleLog}" />
+                            <p:commandButton value="#{footerController.textBtnConsole}" oncomplete="@form" actionListener="#{footerController.SwichVisibleLogConsole()}"/>
+                            <p:log id="clog" rendered="#{footerController.visibleLog}" />
                         </h:form>
                     </p:panel>
                 </p:panelGrid>

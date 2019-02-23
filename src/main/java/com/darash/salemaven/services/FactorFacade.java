@@ -6,7 +6,7 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Factor;
-import com.darash.salemaven.entities.Factor;
+import com.darash.salemaven.entities.Factor_;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Factor> criteriaQuery = cb.createQuery(Factor.class);
         Root<Factor> root = criteriaQuery.from(Factor.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Factor_.id)));
         CriteriaQuery<Factor> select = criteriaQuery.select(root);
 
         if (filters != null && filters.size() > 0) {

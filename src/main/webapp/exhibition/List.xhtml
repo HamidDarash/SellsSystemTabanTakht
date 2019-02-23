@@ -88,7 +88,7 @@
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleExibition.Delete}" actionListener="#{exhibitionController.destroy}" update=":growl,datalist" disabled="#{empty exhibitionController.selected}">
                                 <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
                             </p:commandButton>
-                            <p:commandButton id="viewProvidersButton" icon="ui-icon-pencil" value="نمایش تامین کنندگان" update=":ExhibitionProvidersViewForm" oncomplete="PF('ExhibitionProvidersViewDialog').show()" disabled="#{!(exhibitionController.selected.providers.size() > 0)}"/>
+                            <p:commandButton id="viewProvidersButton" icon="ui-icon-pencil" value="نمایش تامین کنندگان" update=":ExhibitionProvidersViewForm" oncomplete="PF('ExhibitionProvidersViewDialog').show();PF('ExhibitionProvidersViewDialog').toggleMaximize();" disabled="#{!(exhibitionController.selected.providers.size() > 0)}"/>
                         </f:facet>
                     </p:dataTable>
                     <p:blockUI block="datalist" trigger="datalist">

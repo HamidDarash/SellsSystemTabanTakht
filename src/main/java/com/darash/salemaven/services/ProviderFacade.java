@@ -6,6 +6,7 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Provider;
+import com.darash.salemaven.entities.Provider_;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class ProviderFacade extends AbstractFacade<Provider> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Provider> criteriaQuery = cb.createQuery(Provider.class);
         Root<Provider> root = criteriaQuery.from(Provider.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Provider_.id)));
         CriteriaQuery<Provider> select = criteriaQuery.select(root);
 
         if (filters != null && filters.size() > 0) {

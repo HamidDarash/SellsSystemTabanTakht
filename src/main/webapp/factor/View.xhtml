@@ -9,15 +9,17 @@
 
     <ui:composition>
         <p:dialog id="ProductViewDlg"  widgetVar="ProductViewDialog" maximizable="true" modal="true" resizable="true" appendTo="@(body)" header="نمایش فاکتور" dir="rtl">
+            <p:ajax event="close"  oncomplete="PF('ProductViewDialog').toggleMaximize();" />
+
             <h:form id="ProductViewForm">
                 <p:panelGrid columns="3" layout="grid" rendered="#{factorController.selected != null}">
                     <p:panel  header="اطلاعات نمایشگاه">
                         <p:outputPanel style="border: none">
                             <strong style="color: #FF7700;margin: 0;">نام نمایشگاه:</strong><p:spacer width="20px"/>
                             <h:outputText style="" value="#{factorController.selected.exhibition.nameExhibition}" id="exhibitionName" />
-                             <strong style="color: #FF7700;margin: 0;">وضعیت فاکتور در نمایشگاه:</strong><p:spacer width="20px"/>
-                             <h:outputText   rendered="#{factorController.selected.finalRegistration == true}" value="ثبت نهایی" id="finalRegistrationFactor" />
-                             <h:outputText   rendered="#{factorController.selected.finalRegistration == false}" value="تایید نشده" id="finalRegistrationFactor2" />
+                            <strong style="color: #FF7700;margin: 0;">وضعیت فاکتور در نمایشگاه:</strong><p:spacer width="20px"/>
+                            <h:outputText   rendered="#{factorController.selected.finalRegistration == true}" value="ثبت نهایی" id="finalRegistrationFactor" />
+                            <h:outputText   rendered="#{factorController.selected.finalRegistration == false}" value="تایید نشده" id="finalRegistrationFactor2" />
                         </p:outputPanel>
                     </p:panel>
                     <p:panel header="اطلاعات فاکتور">
@@ -90,14 +92,14 @@
                         <h:outputText value="#{factorController.selected.sumFactor}" id="sumFactorFactor" /><p:spacer width="5px;"/><span>ریال</span> 
                         <strong style="color: #FF7700;margin: 0;">مبلغ کل با کسر تخفیف</strong>
                         <h:outputText value="#{factorController.selected.payable}" id="payableFactor" /><p:spacer width="5px;"/><span>ریال</span> 
-                        
+
                         <strong style="color: #FF7700;margin: 0;">مبلغ کل پرداختی با سود</strong>
                         <h:outputText value="#{factorController.selected.sumPurgeAndProfitGeneral}" id="sumPurgeAndProfitGeneral" /><p:spacer width="5px;"/><span>ریال</span> 
-                        
-                        
+
+
                         <strong style="color: #FF7700;margin: 0;">جمع کارمزد شرکت:</strong>
                         <h:outputText style="color: green" value="#{factorController.selected.sumWageInteger}"  id="sumWageFactor" /><p:spacer width="5px;"/><span>ریال</span> 
-                        
+
                     </p:outputPanel>
                 </p:panelGrid>
                 <p:panel id="ViewFactorDetailListPanel">
@@ -136,11 +138,11 @@
                         <p:column headerText="تخفیف">
                             <h:outputText value="#{item.discount}" />
                         </p:column>
-                        
+
                         <p:column headerText="گارانتی">
                             <h:outputText value="#{item.warranty?'دارد':'ندارد'}" />
                         </p:column>
-                        
+
                         <p:column headerText="بیمه">
                             <h:outputText value="#{item.insurance?'دارد':'ندارد'}" />
                         </p:column>

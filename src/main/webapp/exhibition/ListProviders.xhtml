@@ -10,7 +10,8 @@
 
     <ui:composition>
 
-        <p:dialog id="ExhibitionProvidersViewDlg" widgetVar="ExhibitionProvidersViewDialog" modal="true" resizable="true" maximizable="true" appendTo="@(body)" header="جدول نمایش تامین کنندگان در این نمایشگاه">
+        <p:dialog dir="rtl" id="ExhibitionProvidersViewDlg" widgetVar="ExhibitionProvidersViewDialog" modal="true" resizable="true" maximizable="true" appendTo="@(body)" header="جدول نمایش تامین کنندگان در این نمایشگاه">
+            <p:ajax event="close"  oncomplete="PF('ExhibitionProvidersViewDialog').toggleMaximize();" />
             <h:form id="ExhibitionProvidersViewForm">
                 <p:panel header="لیست تامین کنندگان این نمایشگاه">
                     <p:dataTable id="datalistProviders" value="#{exhibitionController.selected.providers}" var="item"
@@ -112,6 +113,7 @@
                                  resizableColumns="true"
                                  liveResize="true"
                                  scrollable="true"
+                                 
                                  >
 
                         <p:column>
@@ -119,6 +121,13 @@
                                 <h:outputText value="ردیف"/>
                             </f:facet>
                             <h:outputText value="#{rowProvidersFactors + 1}"/>
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="شماره فاکتور"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
                         </p:column>
 
                         <p:column>
@@ -156,7 +165,7 @@
                             <f:facet name="header">
                                 <h:outputText value="کارمزد"/>
                             </f:facet>
-                            <h:outputText value="#{item.sumWage}" /><p:spacer width="5px" /><h:outputText value="ريال" />
+                            <h:outputText value="#{exhibitionController.convertSumWageInteger(item.sumWage)}" /><p:spacer width="5px" /><h:outputText value="ريال" />
                         </p:column>
 
                     </p:dataTable>

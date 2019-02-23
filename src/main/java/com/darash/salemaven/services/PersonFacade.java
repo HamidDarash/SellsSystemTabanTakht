@@ -5,7 +5,9 @@
  */
 package com.darash.salemaven.services;
 
+import com.darash.salemaven.entities.Exhibition_;
 import com.darash.salemaven.entities.Person;
+import com.darash.salemaven.entities.Person_;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +77,7 @@ public class PersonFacade extends AbstractFacade<Person> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Person> criteriaQuery = cb.createQuery(Person.class);
         Root<Person> root = criteriaQuery.from(Person.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Person_.id)));
         CriteriaQuery<Person> select = criteriaQuery.select(root);
 
         if (filters != null && filters.size() > 0) {
