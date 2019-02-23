@@ -77,13 +77,16 @@
                             </p:column>ّ
                             <p:column headerText="حذف" style="width:32px">
                                 <p:commandButton rendered="#{creditRow.credit gt 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
+                                 <p:commandButton rendered="#{creditRow.credit eq 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
                                 <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>ّ
 
                             <p:column headerText="ویرایش" style="width:32px" >
                                 <p:rowEditor rendered="#{creditRow.credit gt 0}" />
+                                <p:rowEditor rendered="#{creditRow.credit eq 0}" />
                                 <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>
+                            
                             <f:facet name="footer">
                                 <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk">
                                     <f:actionListener binding="#{rowId + 1}" />

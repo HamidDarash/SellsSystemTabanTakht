@@ -262,8 +262,8 @@ public class PersonController implements Serializable {
     }
 
     public void onRowSelect(SelectEvent event) {
-
-        FacesMessage msg = new FacesMessage("اعتبار فعلی : " + String.valueOf(this.getCreditSelectedUser((Person) event.getObject())));
+ 
+        FacesMessage msg = new FacesMessage("اعتبار فعلی : " +  formatMony(this.getCreditSelectedUser((Person) event.getObject())) + " " + "ريال");
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
