@@ -10,6 +10,7 @@
 
         <p:dialog id="PersonEditDlg" dynamic="true" dir="rtl" height="700px" width="70%"
                   widgetVar="PersonEditDialog" modal="true" maximizable="true" resizable="true"  appendTo="@(body)" header="#{bundle.EditPersonTitle}">
+            <!--<p:ajax event="close" oncomplete="PF('PersonEditDialog').toggleMaximize();" />-->
             <h:form id="PersonEditForm">
                 <p:growl id="msgs" showDetail="true"/>
                 <p:panel id="display" header="ویرایش اطلاعات کاربری">
@@ -48,7 +49,7 @@
                                      editable="true" style="margin-bottom:20px">
 
                             <f:facet name="header">
-                                کنترل اعتبارات شخص در سیستم
+                                جدول تراکنشی اعتبارات شخص در سیستم
                             </f:facet>
 
                             <p:ajax event="rowEdit" listener="#{personController.onRowEdit}" update=":PersonEditForm:msgs" />
@@ -77,7 +78,7 @@
                             </p:column>ّ
                             <p:column headerText="حذف" style="width:32px">
                                 <p:commandButton rendered="#{creditRow.credit gt 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
-                                 <p:commandButton rendered="#{creditRow.credit eq 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
+                                <p:commandButton rendered="#{creditRow.credit eq 0}" actionListener="#{personController.onRowRemove(creditRow)}" icon="ui-icon-trash" process="@this" update="credits"   />
                                 <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>ّ
 
@@ -86,7 +87,7 @@
                                 <p:rowEditor rendered="#{creditRow.credit eq 0}" />
                                 <h:outputText value="خرید" rendered="#{creditRow.credit lt 0}" />
                             </p:column>
-                            
+
                             <f:facet name="footer">
                                 <p:commandButton actionListener="#{personController.onNewAdd()}" process="@this" update="PersonEditForm" value="اضافه کردن اعتبار به شخص" oncomplete="PF('credits').addRow();" icon="ui-icon-disk">
                                     <f:actionListener binding="#{rowId + 1}" />
@@ -99,7 +100,7 @@
 
                     <p:panelGrid columns="2">
                         <p:commandButton id="updateBtnCredit" actionListener="#{personController.update}" value="#{bundle.Save}" update="display,:PersonListForm:datalist,:growl" oncomplete="handleSubmit(args, 'PersonEditDialog');"/>
-                        <p:commandButton id="cancelBtnCredit" value="#{bundle.Cancel}" onclick="PersonEditDialog.hide()"/>
+                        <p:commandButton id="cancelBtnCredit" value="#{bundle.Cancel}" onclick="PersonEditDialog.hide()" />
                     </p:panelGrid>
 
                 </p:panel>

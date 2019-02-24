@@ -5,11 +5,15 @@
  */
 package com.darash.salemaven.services;
 
+import com.darash.salemaven.entities.Exhibition;
 import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.Factor_;
+import com.darash.salemaven.entities.Person;
+import com.darash.salemaven.entities.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +31,9 @@ import javax.persistence.criteria.Root;
 @Stateless
 public class FactorFacade extends AbstractFacade<Factor> {
 
+    @EJB
+    PersonFacade personFacade;
+
     @PersistenceContext(unitName = "com.darash_salemaven_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -38,9 +45,9 @@ public class FactorFacade extends AbstractFacade<Factor> {
     public FactorFacade() {
         super(Factor.class);
     }
-    
-     public List<Factor> filter(int first, int pageSize, Map<String, Object> filters) {
-         
+
+    public List<Factor> filter(int first, int pageSize, Map<String, Object> filters) {
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Factor> criteriaQuery = cb.createQuery(Factor.class);
         Root<Factor> root = criteriaQuery.from(Factor.class);
@@ -50,18 +57,89 @@ public class FactorFacade extends AbstractFacade<Factor> {
         if (filters != null && filters.size() > 0) {
             List<Predicate> predicates = new ArrayList<>();
             for (Map.Entry<String, Object> entry : filters.entrySet()) {
-                System.out.println(entry.getKey());
+//                System.out.println(entry.getKey());
                 String field = entry.getKey();
                 Object value = entry.getValue();
+                Predicate p;
                 if (value == null) {
                     continue;
                 }
-                
-                Expression<String> expr = root.get(field).as(String.class);
-                
-                Predicate p = cb.like(cb.lower(expr),
-                        "%" + value.toString().toLowerCase() + "%");
-                predicates.add(p);
+
+                if (field.equals("person.companyCode") || field.equals("provider.shopName") || field.equals("exhibition.nameExhibition")) {
+
+                    if (field.equals("exhibition.nameExhibition")) {
+                        try {
+                            CriteriaQuery<Exhibition> criteriaQueryExhibition = cb.createQuery(Exhibition.class);
+                            Root<Exhibition> rootExhibition = criteriaQueryExhibition.from(Exhibition.class);
+                            CriteriaQuery<Exhibition> selectExhibition = criteriaQueryExhibition.select(rootExhibition);
+                            selectExhibition.where(cb.equal(rootExhibition.get("nameExhibition"), value));
+                            Expression<String> exprExhibition = rootExhibition.get("nameExhibition").as(String.class);
+                            selectExhibition.where(cb.like(exprExhibition, "%" + value.toString() + "%"));
+                            List<Exhibition> exhibitions = em.createQuery(selectExhibition).getResultList();
+                            Expression<Exhibition> expr2 = root.get("exhibition").as(Exhibition.class);
+                            for (Exhibition ex : exhibitions) {
+                                p = cb.equal(expr2, ex);
+                                predicates.add(p);
+                            }
+
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+                    
+                    if (field.equals("provider.shopName")) {
+                        try {
+                            CriteriaQuery<Provider> criteriaQueryProvider = cb.createQuery(Provider.class);
+                            Root<Provider> rootProvider = criteriaQueryProvider.from(Provider.class);
+                            CriteriaQuery<Provider> selectProvider = criteriaQueryProvider.select(rootProvider);
+                            selectProvider.where(cb.equal(rootProvider.get("shopName"), value));
+                            Expression<String> exprProviderName = rootProvider.get("shopName").as(String.class);
+                            selectProvider.where(cb.like(exprProviderName, "%" + value.toString() + "%"));
+                            List<Provider> providers = em.createQuery(selectProvider).getResultList();
+                            Expression<Provider> expr2 = root.get("provider").as(Provider.class);
+                            for (Provider pr : providers) {
+                                p = cb.equal(expr2, pr);
+                                predicates.add(p);
+                            }
+
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                    if (field.equals("person.companyCode")) {
+                        try {
+                            CriteriaQuery<Person> criteriaQueryPerson = cb.createQuery(Person.class);
+                            Root<Person> rootPerson = criteriaQueryPerson.from(Person.class);
+                            CriteriaQuery<Person> selectPerson = criteriaQueryPerson.select(rootPerson);
+                            selectPerson.where(cb.equal(rootPerson.get("companyCode"), value));
+                            Person person = em.createQuery(selectPerson).getSingleResult();
+
+                            Expression<Person> expr2 = root.get("person").as(Person.class);
+                            p = cb.equal(expr2, person);
+                            predicates.add(p);
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                } else if (field.equals("finalRegistration") || field.equals("returned")) {
+                    if (field.equals("finalRegistration")) {
+                        Expression<Boolean> exprfinalRegistration = root.get("finalRegistration").as(Boolean.class);
+                        p = cb.equal(exprfinalRegistration, value);
+                        predicates.add(p);
+                    }
+                    if (field.equals("returned")) {
+                        Expression<Boolean> exprfinalRegistration = root.get("returned").as(Boolean.class);
+                        p = cb.equal(exprfinalRegistration, value);
+                        predicates.add(p);
+                    }
+                } else {
+                    Expression<String> expr = root.get(field).as(String.class);
+                    p = cb.like(cb.lower(expr),
+                            "%" + value.toString().toLowerCase() + "%");
+                    predicates.add(p);
+                }
             }
             if (predicates.size() > 0) {
                 criteriaQuery.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
@@ -71,7 +149,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Factor> list = query.getResultList();
-      
+
         return list;
     }
 
@@ -86,14 +164,87 @@ public class FactorFacade extends AbstractFacade<Factor> {
             for (Map.Entry<String, Object> entry : filters.entrySet()) {
                 String field = entry.getKey();
                 Object value = entry.getValue();
+                Predicate p;
+
                 if (value == null) {
                     continue;
                 }
 
-                Expression<String> expr = root.get(field).as(String.class);
-                Predicate p = cb.like(cb.lower(expr),
-                        "%" + value.toString().toLowerCase() + "%");
-                predicates.add(p);
+                if (field.equals("person.companyCode") || field.equals("provider.shopName") || field.equals("exhibition.nameExhibition")) {
+
+                    if (field.equals("exhibition.nameExhibition")) {
+                        try {
+                            CriteriaQuery<Exhibition> criteriaQueryExhibition = cb.createQuery(Exhibition.class);
+                            Root<Exhibition> rootExhibition = criteriaQueryExhibition.from(Exhibition.class);
+                            CriteriaQuery<Exhibition> selectExhibition = criteriaQueryExhibition.select(rootExhibition);
+                            selectExhibition.where(cb.equal(rootExhibition.get("nameExhibition"), value));
+                            Expression<String> exprExhibition = rootExhibition.get("nameExhibition").as(String.class);
+                            selectExhibition.where(cb.like(exprExhibition, "%" + value.toString() + "%"));
+                            List<Exhibition> exhibitions = em.createQuery(selectExhibition).getResultList();
+                            Expression<Exhibition> expr2 = root.get("exhibition").as(Exhibition.class);
+                            for (Exhibition ex : exhibitions) {
+                                p = cb.equal(expr2, ex);
+                                predicates.add(p);
+                            }
+
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                    if (field.equals("provider.shopName")) {
+                        try {
+                            CriteriaQuery<Provider> criteriaQueryProvider = cb.createQuery(Provider.class);
+                            Root<Provider> rootProvider = criteriaQueryProvider.from(Provider.class);
+                            CriteriaQuery<Provider> selectProvider = criteriaQueryProvider.select(rootProvider);
+                            selectProvider.where(cb.equal(rootProvider.get("shopName"), value));
+                            Expression<String> exprProviderName = rootProvider.get("shopName").as(String.class);
+                            selectProvider.where(cb.like(exprProviderName, "%" + value.toString() + "%"));
+                            List<Provider> providers = em.createQuery(selectProvider).getResultList();
+                            Expression<Provider> expr2 = root.get("provider").as(Provider.class);
+                            for (Provider pr : providers) {
+                                p = cb.equal(expr2, pr);
+                                predicates.add(p);
+                            }
+
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                    if (field.equals("person.companyCode")) {
+                        try {
+                            CriteriaQuery<Person> criteriaQueryPerson = cb.createQuery(Person.class);
+                            Root<Person> rootPerson = criteriaQueryPerson.from(Person.class);
+                            CriteriaQuery<Person> selectPerson = criteriaQueryPerson.select(rootPerson);
+                            selectPerson.where(cb.equal(rootPerson.get("companyCode"), value));
+                            Person person = em.createQuery(selectPerson).getSingleResult();
+
+                            Expression<Person> expr2 = root.get("person").as(Person.class);
+                            p = cb.equal(expr2, person);
+                            predicates.add(p);
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
+                        }
+                    }
+
+                } else if (field.equals("finalRegistration") || field.equals("returned")) {
+                    if (field.equals("finalRegistration")) {
+                        Expression<Boolean> exprfinalRegistration = root.get("finalRegistration").as(Boolean.class);
+                        p = cb.equal(exprfinalRegistration, value);
+                        predicates.add(p);
+                    }
+                    if (field.equals("returned")) {
+                        Expression<Boolean> exprfinalRegistration = root.get("returned").as(Boolean.class);
+                        p = cb.equal(exprfinalRegistration, value);
+                        predicates.add(p);
+                    }
+                } else {
+                    Expression<String> expr = root.get(field).as(String.class);
+                    p = cb.like(cb.lower(expr),
+                            "%" + value.toString().toLowerCase() + "%");
+                    predicates.add(p);
+                }
             }
             if (predicates.size() > 0) {
                 criteriaQuery.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));

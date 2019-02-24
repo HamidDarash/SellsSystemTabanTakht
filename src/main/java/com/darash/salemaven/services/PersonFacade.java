@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 @Stateless
 public class PersonFacade extends AbstractFacade<Person> {
-    
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(PersonFacade.class); 
+
+    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(PersonFacade.class);
 
     @PersistenceContext(unitName = "com.darash_salemaven_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -33,6 +33,12 @@ public class PersonFacade extends AbstractFacade<Person> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+
+    public Person findByCompanyCode(String companyCode) {
+        TypedQuery<Person> typedQuery = em.createNamedQuery("Person.findByCompanyCode", Person.class)
+                .setParameter("companyCode", companyCode);
+        return typedQuery.getSingleResult();
     }
 
     public List<Person> findAllByLimit(int first, int pageSize) {
@@ -60,7 +66,7 @@ public class PersonFacade extends AbstractFacade<Person> {
         super(Person.class);
     }
 
-       public void ChangePersonInsertMode(boolean insertMode) {
+    public void ChangePersonInsertMode(boolean insertMode) {
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
         // create update
         CriteriaUpdate<Person> update = cb.createCriteriaUpdate(Person.class);
@@ -71,7 +77,7 @@ public class PersonFacade extends AbstractFacade<Person> {
         // perform update
         this.em.createQuery(update).executeUpdate();
     }
-       
+
     public List<Person> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Person> criteriaQuery = cb.createQuery(Person.class);
@@ -100,7 +106,7 @@ public class PersonFacade extends AbstractFacade<Person> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Person> list = query.getResultList();
-        logger.info(query.toString());
+//        logger.info(query.toString());
         return list;
     }
 

@@ -43,7 +43,7 @@ public class QrCode {
 
         try {
             // init directory
-            initDirectory(DIR);
+            initDirectory(directory);
             // Create a qr code with the url as content and a size of WxH px
             bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, hints);
 

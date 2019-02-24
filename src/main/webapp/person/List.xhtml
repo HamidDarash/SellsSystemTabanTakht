@@ -7,8 +7,6 @@
       xmlns:p="http://primefaces.org/ui">
 
     <ui:composition template="/template.xhtml">
-
-
         <ui:define name="title">
             <h:outputText value="#{bundle.ListPersonTitle}"></h:outputText>
         </ui:define>
@@ -34,8 +32,6 @@
                                  >
 
                         <p:ajax event="rowSelect" listener="#{personController.onRowSelect}" process="@form" update="growl createButton viewButton editButton deleteButton"/>
-                        <!--<p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>-->
-
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListPersonTitle_id}"/>
@@ -129,7 +125,7 @@
             <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
-            
+
         </ui:define>
     </ui:composition>
 

@@ -461,6 +461,16 @@ public class FactorController implements Serializable {
         }
     }
 
+    public void toggleReturnedFactor() {
+        if (selected != null) {
+            selected.setReturned(!selected.getReturned());
+            ejbFacade.edit(selected);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "تغییر مرجوعی فاکتور",
+                    "اطلاعات برنامه");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
     public void onAddToFactorDetailEdit() {
         if (countProduct <= 0) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",

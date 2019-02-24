@@ -25,12 +25,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Asynchronous;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 
 @ManagedBean(name = "fileUploadController")
 @SessionScoped
@@ -71,6 +74,9 @@ public class FileUploadController {
         this.progress = progress;
     }
 
+    private void initDirectory(String DIR) throws IOException {
+        Files.createDirectories(Paths.get(DIR));
+    }
     private final String destination = "c:\\tmp";
 
     public void upload(FileUploadEvent event) {
@@ -88,16 +94,13 @@ public class FileUploadController {
 
     public void copyFile(String fileName, InputStream in) {
         try {
-            String FolderPath = "c:\\tmp\\";
+            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            String resHomeImgPath = servletContext.getRealPath("resources");
+
+            String FolderPath = resHomeImgPath + "\\upload";
+            initDirectory(FolderPath);
+            FolderPath += "\\";
             OutputStream out;
-            File theDir = new File(FolderPath + fileName);
-            if (!theDir.exists()) {
-                try {
-                    theDir.mkdir();
-                } catch (SecurityException se) {
-                    System.err.println(se.getMessage());
-                }
-            }
             out = new FileOutputStream(new File(FolderPath + fileName));
             int read;
             byte[] bytes = new byte[1024];

@@ -14,11 +14,12 @@
             <h:outputText value="بخش فاکتورها"></h:outputText>
         </ui:define>
 
-        <ui:define name="body">
-            <h:form id="FactorListForm">
+        <ui:define name="body" >
+            <h:form id="FactorListForm" dir="ltr">
                 <p:panel id="displayFactorPanel" header="نمایش آخرین فاکتورهای سیستم">
 
                     <p:dataTable id="datalistFactors" value="#{factorController.items}" var="item"
+                                 dir="ltr"
                                  selectionMode="single" 
                                  selection="#{factorController.selected}"
                                  paginator="true"
@@ -29,14 +30,13 @@
                                  widgetVar="factorTable"
                                  emptyMessage="محتویاتی جهت نمایش وجود ندارد"
                                  resizableColumns="true"
-                                 liveResize="true"
                                  scrollable="true"
                                  scrollWidth="100%"
                                  lazy="true"
                                  rowStyleClass="#{item.finalRegistration eq true ? (item.condinationFactor eq 'اقساط' ? 'rowInstallment':'rowCache'):'rowUnregister'}"
                                  >
 
-                        <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor removeFactor :growl printFactorButton" />
+                        <p:ajax event="rowSelect" listener="#{factorController.onRowSelect}"  update="showFactorButton EditFactorButton changeRegisterFactor removeFactor :growl printFactorButton changeReturnedFactor" />
 
                         <p:column>
                             <f:facet name="header">
@@ -45,7 +45,7 @@
                             <h:outputText value="#{rowIdFactor + 1}"/>
                         </p:column>
 
-                        <p:column>
+                        <p:column filterBy="#{item.id}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="شماره فاکتور"/>
                             </f:facet>
@@ -68,14 +68,11 @@
                             <h:outputText value="#{item.person.name}"/>
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="کد پرسنلی"/>
-                            </f:facet>
+                        <p:column filterBy="#{item.person.companyCode}" filterMatchMode="contains" headerText="کد پرسنل">
                             <h:outputText value="#{item.person.companyCode}"/>
                         </p:column>
 
-                        <p:column>
+                        <p:column filterBy="#{item.provider.shopName}" filterMatchMode="contains" headerText="نام فروشگاه">
                             <f:facet name="header">
                                 <h:outputText value="نام تامین کننده"/>
                             </f:facet>
@@ -118,33 +115,47 @@
                             <h:outputText value="#{item.percentage} درصد"/>
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="وضعیت مرجوعی"/>
+
+
+                        <p:column filterBy="#{item.returned}" headerText="وضعیت مرجوعی" filterMatchMode="equals">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('factorTable').filter()">
+                                    <f:selectItem itemLabel="همه" itemValue="" />
+                                    <f:selectItem itemLabel="مرجوع شده" itemValue="true" />
+                                    <f:selectItem itemLabel="خیر" itemValue="false" />
+                                </p:selectOneMenu>
                             </f:facet>
-                            <h:outputText rendered="#{item.returned == true}" value="مرجوع شده"/>
-                            <h:outputText rendered="#{item.returned == false}" value="خیر"/>
+                            <h:outputText style="#{item.returned ? 'color: red':'color: green'}" value="#{item.returned ? 'مرجوع شده': 'خیر'}" />
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="وضعیت ثبت"/>
+                        <p:column filterBy="#{item.finalRegistration}" headerText="وضعیت ثبت" filterMatchMode="equals">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('factorTable').filter()">
+                                    <f:selectItem itemLabel="همه" itemValue="" />
+                                    <f:selectItem itemLabel="ثبت نهایی" itemValue="true" />
+                                    <f:selectItem itemLabel="تایید نشده" itemValue="false" />
+                                </p:selectOneMenu>
                             </f:facet>
-                            <h:outputText rendered="#{item.finalRegistration == false}" value="تایید نشده"/>
-                            <h:outputText rendered="#{item.finalRegistration == true}" value="ثبت نهایی"/>
+                            <h:outputText style="#{item.finalRegistration ? 'color: green':'color: red'}" value="#{item.finalRegistration ? 'ثبت نهایی': 'تایید نشده'}" />
+                        </p:column>
+                        
+                        <p:column filterBy="#{item.exhibition.nameExhibition}" filterMatchMode="contains" headerText="نام نمایشگاه">
+                            <h:outputText value="#{item.exhibition.nameExhibition}" />
                         </p:column>
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus" actionListener="#{factorController.prepareCreate()}"  value="ایجاد فاکتور" update=":formInsertFactor :dateFactorForm" oncomplete="PF('dialogInserFactorDialog').show();PF('dialogInserFactorDialog').toggleMaximize();onStatusChange();"/>
                             <p:commandButton id="showFactorButton" value="نمایش" icon="ui-icon-search"  disabled="#{factorController.selected == null}" oncomplete="PF('ProductViewDialog').show();PF('ProductViewDialog').toggleMaximize();" update=":ProductViewForm"/>
                             <p:commandButton id="EditFactorButton" value="ویرایش" icon="ui-icon-pencil"  disabled="#{factorController.selected == null}" update=":formInsertFactorEdit , :formInsertFactorEdit:tableInsertedFactorDetailEdit , :dateFactorFormEdit" oncomplete="PF('dialogEditFactorDialog').show();PF('dialogEditFactorDialog').toggleMaximize();onStatusChange();"  />
-                            <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor}"  value="تایید/رد" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}"/>
+                            <p:commandButton id="changeRegisterFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleRegisterFactor}"  value="تایید/رد" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
+                                <p:confirm header="تغییر وضعیت" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton id="changeReturnedFactor" icon="ui-icon-refresh" actionListener="#{factorController.toggleReturnedFactor}"  value="تغییر مرجوعی" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
+                                <p:confirm header="تغییر مرجوعی" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
+                            </p:commandButton>
                             <p:commandButton id="removeFactor" icon="ui-icon-close" actionListener="#{factorController.removeFactor}"  value="حذف فاکتور" update="FactorListForm:datalistFactors :growl" disabled="#{factorController.selected == null}">
                                 <p:confirm header="حذف" message="آیا از این کار اطمینان دارید؟" icon="ui-icon-alert" />
                             </p:commandButton>
-                            
-                            <p:commandButton id="searchFactorButton" value="جستجوی پیشرفته" icon="ui-icon-search" oncomplete="PF('SearchFactorDialog').show();PF('SearchFactorDialog').toggleMaximize();" update=":SearchFactorForm"/>
-
                             <p:commandButton id="printFactorButton" value="چاپ فاکتور" icon="ui-icon-print"  disabled="#{factorController.selected == null}" oncomplete="PF('dialogPrintFactorDialog').show();PF('dialogPrintFactorDialog').toggleMaximize();" update=":factorPrint"/>
                         </f:facet>
                     </p:dataTable>

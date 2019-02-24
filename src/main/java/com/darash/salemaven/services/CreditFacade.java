@@ -50,8 +50,8 @@ public class CreditFacade extends AbstractFacade<Credit> {
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Credit> root = criteriaQuery.from(Credit.class);
         Expression<Long> e = cb.sum(root.<Long>get("credit"));
-        ParameterExpression<Person> person = cb.parameter(Person.class, "person");
-        CriteriaQuery<Long> select = criteriaQuery.select(e);
+//        ParameterExpression<Person> person = cb.parameter(Person.class, "person");
+//        CriteriaQuery<Long> select = criteriaQuery.select(e);
         criteriaQuery.where(cb.equal(root.get("person"), per));
         return em.createQuery(criteriaQuery).getSingleResult();
     }
