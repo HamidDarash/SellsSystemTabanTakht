@@ -91,13 +91,18 @@
                         <h:form>
                             <p:commandButton value="#{footerController.textBtnConsole}" oncomplete="@form" actionListener="#{footerController.SwichVisibleLogConsole()}"/>
                             <p:log id="clog" rendered="#{footerController.visibleLog}" />
+                            <p:outputLabel for="calc" value="ماشین حساب" style="margin-right: 10px"/> 
+                            <p:inputText id="calc" >
+                                <pe:calculator for="calc" showOn="both" layout="scientific"/>  
+                            </p:inputText>
+                            
                         </h:form>
                     </p:panel>
                 </p:panelGrid>
 
             </p:layoutUnit>
 
-            <p:layoutUnit position="center" style="overflow-x: hidden">
+            <p:layoutUnit position="center" styleClass="mainLayout">
                 <ui:insert name="body"/>
                 <ui:insert name="javascript" />
             </p:layoutUnit>

@@ -12,7 +12,7 @@
 h1,h2,h3,h4,h5,h6,table,textarea, p , select , label , .ui-menuitem-text,.ui-dialog-content,
 .ui-button-text ,strong, span , .ui-layout-unit-header-title,.ui-dialog-title,.ui-panel-title,.ui-fieldset-legend , .ui-panelgrid-cell {
     font-family: Vazir , Arial, sans-serif !important;
-        font-size: 1em !important;
+    font-size: 1em !important;
 }
 
 .ui-dialog-title , .ui-panel-title{
@@ -169,4 +169,23 @@ hr{
 .rowReturned{
     background-color: rgb(255, 255, 0) !important;
     background-image: none;
+}
+
+.mainLayout{
+    overflow: hidden;
+    background-image: url("#{resource['img:logo-takht.png']}");
+    background-size: 400px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.mainLayout > .ui-layout-unit-content{
+    background-color: rgba(255,255,255,.7);
+}
+ 
+body{
+/*    background-image: url("#{resource['img:bg.jpg']}");
+    background-size: 100% auto;
+    background-position: top;
+    margin-bottom: 32px;*/
 }
