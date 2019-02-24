@@ -51,7 +51,7 @@ public class Credit implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "credit")
+    @Column(name = "credit",columnDefinition = "اعتبار هر پرسنل")
     private long credit;
     @Basic(optional = false)
     @NotNull

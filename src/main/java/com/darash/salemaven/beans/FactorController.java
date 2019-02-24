@@ -14,7 +14,6 @@ import com.darash.salemaven.services.FactorFacade;
 import com.darash.salemaven.services.PersonFacade;
 import com.darash.salemaven.services.ProductFacade;
 import com.darash.salemaven.services.ProviderFacade;
-import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -645,11 +644,11 @@ public class FactorController implements Serializable {
 
                         selectedPerson.getFactors().add(selected);
                         selectedProvider.getFactors().add(selected);
-                        selectedExhibitionProvider.getFactors().add(selected);
+                        
                         selected.setPerson(selectedPerson);
                         selected.setProvider(selectedProvider);
                         selected.setExhibition(selectedExhibitionProvider);
-
+                        selectedExhibitionProvider.getFactors().add(selected);
                         selected.setInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");

@@ -46,6 +46,28 @@ public class FactorFacade extends AbstractFacade<Factor> {
         super(Factor.class);
     }
 
+    public List<Factor> findByProviderInExhibition(Exhibition exhibition, Provider provider) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Factor> criteriaQuery = cb.createQuery(Factor.class);
+        Root<Factor> root = criteriaQuery.from(Factor.class);
+        criteriaQuery.orderBy(cb.desc(root.get(Factor_.id)));
+        CriteriaQuery<Factor> select = criteriaQuery.select(root);
+        Predicate p;
+        List<Predicate> predicates = new ArrayList<>();
+        Expression<Exhibition> exprExhibition = root.get("exhibition").as(Exhibition.class);
+        p = cb.equal(exprExhibition, exhibition);
+        predicates.add(p);
+        Expression<Provider> exprProvider = root.get("provider").as(Provider.class);
+        p = cb.equal(exprProvider, provider);
+        predicates.add(p);
+        if (predicates.size() > 0) {
+            criteriaQuery.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+        }
+        TypedQuery<Factor> query = em.createQuery(select);
+        List<Factor> list = query.getResultList();
+        return list;
+    }
+
     public List<Factor> filter(int first, int pageSize, Map<String, Object> filters) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -75,18 +97,16 @@ public class FactorFacade extends AbstractFacade<Factor> {
                             selectExhibition.where(cb.equal(rootExhibition.get("nameExhibition"), value));
                             Expression<String> exprExhibition = rootExhibition.get("nameExhibition").as(String.class);
                             selectExhibition.where(cb.like(exprExhibition, "%" + value.toString() + "%"));
-                            List<Exhibition> exhibitions = em.createQuery(selectExhibition).getResultList();
+                            Exhibition exhibition = em.createQuery(selectExhibition).getSingleResult();
                             Expression<Exhibition> expr2 = root.get("exhibition").as(Exhibition.class);
-                            for (Exhibition ex : exhibitions) {
-                                p = cb.equal(expr2, ex);
-                                predicates.add(p);
-                            }
+                            p = cb.equal(expr2, exhibition);
+                            predicates.add(p);
 
                         } catch (Exception e) {
                             System.err.println(e.getMessage());
                         }
                     }
-                    
+
                     if (field.equals("provider.shopName")) {
                         try {
                             CriteriaQuery<Provider> criteriaQueryProvider = cb.createQuery(Provider.class);
@@ -180,12 +200,10 @@ public class FactorFacade extends AbstractFacade<Factor> {
                             selectExhibition.where(cb.equal(rootExhibition.get("nameExhibition"), value));
                             Expression<String> exprExhibition = rootExhibition.get("nameExhibition").as(String.class);
                             selectExhibition.where(cb.like(exprExhibition, "%" + value.toString() + "%"));
-                            List<Exhibition> exhibitions = em.createQuery(selectExhibition).getResultList();
+                            Exhibition exhibition = em.createQuery(selectExhibition).getSingleResult();
                             Expression<Exhibition> expr2 = root.get("exhibition").as(Exhibition.class);
-                            for (Exhibition ex : exhibitions) {
-                                p = cb.equal(expr2, ex);
-                                predicates.add(p);
-                            }
+                            p = cb.equal(expr2, exhibition);
+                            predicates.add(p);
 
                         } catch (Exception e) {
                             System.err.println(e.getMessage());

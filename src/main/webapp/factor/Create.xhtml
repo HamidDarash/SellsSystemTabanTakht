@@ -161,6 +161,7 @@
                                 <p:outputLabel value="نمایشگاه" for="exhibitionProvider" />
                                 <p:selectOneMenu rendered="#{factorController.selectedProvider != null}" disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
                                     <f:selectItems value="#{factorController.filterOnlyActive(factorController.selectedProvider.exhibitions)}" />
+                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
                                 </p:selectOneMenu>
                             </h:panelGrid>
 

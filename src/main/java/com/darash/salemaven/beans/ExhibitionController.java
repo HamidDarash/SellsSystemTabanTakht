@@ -1,12 +1,15 @@
 package com.darash.salemaven.beans;
 
 import com.darash.salemaven.entities.Exhibition;
+import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.services.util.JsfUtil;
 import com.darash.salemaven.services.util.JsfUtil.PersistAction;
 import com.darash.salemaven.services.ExhibitionFacade;
+import com.darash.salemaven.services.FactorFacade;
 import com.darash.salemaven.services.ProviderFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -33,9 +36,28 @@ public class ExhibitionController implements Serializable {
     private com.darash.salemaven.services.ExhibitionFacade ejbFacade;
     @EJB
     private com.darash.salemaven.services.ProviderFacade providerFacade;
+    @EJB
+    private com.darash.salemaven.services.FactorFacade factorFacade;
+
     private LazyDataModel<Exhibition> items;
     private Exhibition selected;
     private Provider selectedProvider;
+
+    public List<Factor> factorsOfProviderInExhibition() {
+        try {
+            return factorFacade.findByProviderInExhibition(selected, selectedProvider);
+        } catch (Exception e) {
+        }
+        return new ArrayList<>();
+    }
+
+    public FactorFacade getFactorFacade() {
+        return factorFacade;
+    }
+
+    public void setFactorFacade(FactorFacade factorFacade) {
+        this.factorFacade = factorFacade;
+    }
 
     public ProviderFacade getProviderFacade() {
         return providerFacade;

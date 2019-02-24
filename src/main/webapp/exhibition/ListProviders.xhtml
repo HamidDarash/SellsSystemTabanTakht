@@ -101,7 +101,7 @@
                 <p:spacer height="12" />
 
                 <p:panel header="#{exhibitionController.headerProviderFactors()}" rendered="#{exhibitionController.selected != null}">
-                    <p:dataTable id="datalistFactors" value="#{exhibitionController.selectedProvider.factors}" var="item"
+                    <p:dataTable id="datalistFactors" value="#{exhibitionController.factorsOfProviderInExhibition()}" var="item"
                                  selectionMode="single"
                                  paginator="true"
                                  rowKey="#{item.id}"
