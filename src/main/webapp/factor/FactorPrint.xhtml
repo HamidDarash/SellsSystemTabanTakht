@@ -147,12 +147,14 @@
                                     <th colspan="12" style="text-align: center;font-size: 13px;font-weight: bold;">محاسبات نهایی</th>
                                 </tr>
                                 <tr>
+                                    <th>پیش پرداخت</th>
                                     <th>جمع تخفیف</th>
                                     <th>جمع کل</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.prepayable)} ريال"/></td>
                                     <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.sumDiscount)} ريال"/></td>
                                     <td><h:outputText value="#{factorController.formatMonyString(factorController.selected.payable)} ريال"/></td>
                                 </tr>   

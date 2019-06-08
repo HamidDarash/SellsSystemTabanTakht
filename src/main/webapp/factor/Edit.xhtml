@@ -48,9 +48,6 @@
                     </p:panel> 
                     <p:panel id="installmentPanelEdit" header="تنظیم اقساط" rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
                         <p:panelGrid columns="2">
-                            <p:outputLabel value="پیش پرداخت" for="prepaymentEdit" />
-                            <p:inputText value="#{factorController.selected.prepayable}" id="prepaymentEdit" />
-
                             <p:outputLabel for="installmentCountEdit" value="تعداد اقساط"/>
                             <p:selectOneMenu style="width: 80%" id="installmentCountEdit" value="#{factorController.selected.installmentCount}">
                                 <f:selectItem itemLabel="2" itemValue="2" />
@@ -61,6 +58,11 @@
                                 <f:selectItem itemLabel="12" itemValue="12" />
                                 <p:ajax update="dateFactorFormEdit:installmentPanelEdit" process="@this" global="false"/>
                             </p:selectOneMenu>  
+
+                            <p:outputLabel value="پیش پرداخت" for="prepaymentEdit" />
+                            <p:inputText value="#{factorController.selected.prepayable}" id="prepaymentEdit">
+                                <p:ajax event="keyup" process="@this" />
+                            </p:inputText>
 
                         </p:panelGrid>
                     </p:panel>

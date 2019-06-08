@@ -469,7 +469,7 @@ public class FactorController implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-    
+
     public void onAddToFactorDetailEdit() {
         if (countProduct <= 0) {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "تعداد محصول نباید صفر وارد شود",
@@ -622,49 +622,61 @@ public class FactorController implements Serializable {
                             profit = 1.5;
                         }
 
+                        System.out.println("پیش پرداخت " + selected.getPrepayable());
                         //محاسبه هر قسط
                         double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
                         //خالص مانده
-                        int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
+                        int purePrice = sumPrice - Integer.valueOf(selected.getPrepayable());
+                        System.out.println("Khales Mandeh: " + purePrice);
+
                         // کل سود روی خالص  مانده
                         double installmentValueComputing = purePrice * generalProfit;
                         // مبلغ هر قسط ماهیانه
-                        double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
+                        double sumInstallmentAndPaymanet = (installmentValueComputing + purePrice) / Integer.valueOf(selected.getInstallmentCount());
                         //جمع سود و خالص پرداختی
                         long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
 
                         selected.setFactorDetails(selectedFactorDetails);
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
-                        selected.setPayable(String.valueOf(sumPrice));//جمع کل کالاها کم میشود از جمع تخفیف
+                        selected.setPayable(String.valueOf(purePrice));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage((int) (selectedProvider.getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
+                        selected.setSumWage((int) (selectedProvider.getWage() * sumPrice));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
 
                         selected.setInstallmentCount(selected.getCondinationFactor().equals("اقساط") ? selected.getInstallmentCount() : "0");
 
-                        selectedPerson.getFactors().add(selected);
-                        selectedProvider.getFactors().add(selected);
-                        
-                        selected.setPerson(selectedPerson);
-                        selected.setProvider(selectedProvider);
-                        selected.setExhibition(selectedExhibitionProvider);
-                        selectedExhibitionProvider.getFactors().add(selected);
                         selected.setInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
-                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
+                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
-                        if ((getCreditSum(selectedPerson) > sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط")) {
+                        if ((getCreditSum(selectedPerson) > sumPurgeAndProfit)
+                                && selected.getCondinationFactor().equals("اقساط")) {
+                            selected.setPerson(selectedPerson);
+                            selected.setProvider(selectedProvider);
+                            selected.setExhibition(selectedExhibitionProvider);
+                            selectedPerson.getFactors().add(selected);
+                            selectedProvider.getFactors().add(selected);
+                            selectedExhibitionProvider.getFactors().add(selected);
                             ejbFacade.create(selected);
                             //جمع خلص مانده + سود کل مانده
                             // از اعتبار پرسنل کسر میشود
                             Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
                             creditFacade.edit(credit);
-                        } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit) && selected.getCondinationFactor().equals("اقساط") && selectedPerson.isInsertMode()) {
+
+                        } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit)
+                                && selected.getCondinationFactor().equals("اقساط")
+                                && selectedPerson.isInsertMode()) {
                             showMessage();
                         }
 
                         if (selected.getCondinationFactor().equals("نقدی")) {
+                            selected.setPerson(selectedPerson);
+                            selected.setProvider(selectedProvider);
+                            selected.setExhibition(selectedExhibitionProvider);
+                            selectedPerson.getFactors().add(selected);
+                            selectedProvider.getFactors().add(selected);
+                            selectedExhibitionProvider.getFactors().add(selected);
                             getEjbFacade().create(selected);
                         }
 
@@ -706,18 +718,19 @@ public class FactorController implements Serializable {
                             profit = 1.5;
                         }
 
+                        System.out.println("پیش پرداخت " + selected.getPrepayable());
                         //محاسبه هر قسط
                         double generalProfit = (Integer.valueOf(selected.getInstallmentCount()) * profit) / 100;
                         //خالص مانده
-                        int purePrice = sumPrice - sumDiscount - Integer.valueOf(selected.getPrepayable());
+                        int purePrice = sumPrice - Integer.valueOf(selected.getPrepayable());
+                        System.out.println("Khales Mandeh: " + purePrice);
+
                         // کل سود روی خالص  مانده
                         double installmentValueComputing = purePrice * generalProfit;
                         // مبلغ هر قسط ماهیانه
-                        double sumInstallmentAndPaymanet = (installmentValueComputing + (sumPrice - sumDiscount)) / Integer.valueOf(selected.getInstallmentCount());
+                        double sumInstallmentAndPaymanet = (installmentValueComputing + purePrice) / Integer.valueOf(selected.getInstallmentCount());
                         //جمع سود و خالص پرداختی
                         long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
-
-                        System.out.println("sumPurgeAndProfit factor: " + sumPurgeAndProfit);
 
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
                         selected.setPayable(String.valueOf(sumPrice));//جمع کل کالاها کم میشود از جمع تخفیف
@@ -729,7 +742,7 @@ public class FactorController implements Serializable {
 
                         selected.setInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setPercentage(selected.getCondinationFactor().equals("اقساط") ? profit : 0);
-                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) installmentValueComputing) : "0");
+                        selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
                         if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
@@ -741,10 +754,12 @@ public class FactorController implements Serializable {
                             }
                         }
 
-                        if (((selected.getCondinationFactor().equals("اقساط") && this.getSelectedLastCondinationTypeFactor().equals("نقدی"))
-                                || this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("اقساط")) && !selected.getPerson().isInsertMode()) {
+                        if (((selected.getCondinationFactor().equals("اقساط")
+                                && this.getSelectedLastCondinationTypeFactor().equals("نقدی"))
+                                || this.getSelectedLastCondinationTypeFactor().equals("اقساط")
+                                && selected.getCondinationFactor().equals("اقساط"))
+                                && !selected.getPerson().isInsertMode()) {
 
-                            System.out.println("getCreditSum(selectedPerson) + lastFactorCreditValue = " + getCreditSum(selectedPerson) + lastFactorCreditValue);
                             if (((getCreditSum(selected.getPerson()) + lastFactorCreditValue) > sumPurgeAndProfit)) {
                                 getEjbFacade().edit(selected);
 
@@ -760,7 +775,8 @@ public class FactorController implements Serializable {
                             }
                         }
 
-                        if (selected.getCondinationFactor().equals("نقدی") && this.getSelectedLastCondinationTypeFactor().equals("نقدی")) {
+                        if (selected.getCondinationFactor().equals("نقدی")
+                                && this.getSelectedLastCondinationTypeFactor().equals("نقدی")) {
                             getEjbFacade().edit(selected);
                         }
 
