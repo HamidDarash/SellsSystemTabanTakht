@@ -62,7 +62,7 @@ public class FactorController implements Serializable {
     private Person selectedPerson = null;
     private Person lastSelectedPerson = null;
     private QrCode qrCode = new QrCode();
-
+  
     public Person getLastSelectedPerson() {
         return lastSelectedPerson;
     }
@@ -103,7 +103,7 @@ public class FactorController implements Serializable {
             return "";
         }
     }
-
+ 
     public long getCreditSelectedUser() {
         if (selectedPerson != null) {
             return creditFacade.getCreditUser(selectedPerson);
@@ -745,7 +745,9 @@ public class FactorController implements Serializable {
                         selected.setSumInstallmentValue(selected.getCondinationFactor().equals("اقساط") ? String.valueOf((int) sumInstallmentAndPaymanet) : "0");
                         selected.setSumPurgeAndProfitGeneral(selected.getCondinationFactor().equals("اقساط") ? String.valueOf(sumPurgeAndProfit) : String.valueOf(sumPrice - sumDiscount));
 
-                        if (this.getSelectedLastCondinationTypeFactor().equals("اقساط") && selected.getCondinationFactor().equals("نقدی")) {
+                        if (this.getSelectedLastCondinationTypeFactor().equals("اقساط")
+                                && selected.getCondinationFactor().equals("نقدی")
+                                && !selected.getPerson().isInsertMode()) {
                             getEjbFacade().edit(selected);
                             long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
                             List<Credit> credits = creditFacade.findByCredit(-valueCredit);
@@ -776,14 +778,15 @@ public class FactorController implements Serializable {
                         }
 
                         if (selected.getCondinationFactor().equals("نقدی")
-                                && this.getSelectedLastCondinationTypeFactor().equals("نقدی")) {
+                                && this.getSelectedLastCondinationTypeFactor().equals("نقدی")
+                                && !selected.getPerson().isInsertMode()) {
                             getEjbFacade().edit(selected);
                         }
-
-                        if (selected.getPerson() != null) {
-                            selected.getPerson().setInsertMode(false);
-                            personFacade.edit(selected.getPerson());
-                        }
+//
+//                        if (selected.getPerson() != null) {
+//                            selected.getPerson().setInsertMode(false);
+//                            personFacade.edit(selected.getPerson());
+//                        }
 
                         selected = null;
                         productSelectForInsert = null;
@@ -898,4 +901,6 @@ public class FactorController implements Serializable {
     public String getRandomAddressFile() {
         return "/resources/img/qrcodeFactor.png?dummy=" + UUID.randomUUID().toString();
     }
+    
 }
+

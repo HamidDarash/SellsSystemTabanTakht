@@ -32,9 +32,11 @@
                     <p:panel id="displayDate" header="انتخاب تاریخ">
                         <p:panelGrid id="selectDate" columns="2">
                             <p:outputLabel value="انتخاب تاریخ فاکتور" for="factorDate"/>
-                            <p:inputText autocomplete="off" a:component-id="factorDate" id="factorDate" 
-                                         a:placeholder="yyyy/mm/dd" 
-                                         value="#{factorController.selected.dateFactor}" required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
+                            <p:inputText autocomplete="off" a:component-id="factorDate" 
+                                         id="factorDate" 
+                                         a:placeholder="yyyy/mm/dd"
+                                         value="#{factorController.selected.dateFactor}"
+                                         required="true" requiredMessage="تاریخ فاکتور را مشخص کنید">
                                 <f:converter converterId="persian_date" />
                                 <p:ajax event="change" update="@form" process="@this" global="false" oncomplete="onStatusChange()" />
                             </p:inputText>

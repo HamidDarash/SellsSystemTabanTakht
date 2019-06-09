@@ -10,9 +10,14 @@ import com.darash.salemaven.entities.Factor;
 import com.darash.salemaven.entities.Factor_;
 import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.entities.Provider;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.ULocale;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+ 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,7 +30,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
- *
  * @author daresh
  */
 @Stateless
@@ -79,7 +83,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
         if (filters != null && filters.size() > 0) {
             List<Predicate> predicates = new ArrayList<>();
             for (Map.Entry<String, Object> entry : filters.entrySet()) {
-//                System.out.println(entry.getKey());
+                System.out.println(entry.getKey());
                 String field = entry.getKey();
                 Object value = entry.getValue();
                 Predicate p;
@@ -156,8 +160,9 @@ public class FactorFacade extends AbstractFacade<Factor> {
                     }
                 } else {
                     Expression<String> expr = root.get(field).as(String.class);
+                    String valueField = value.toString().toLowerCase();
                     p = cb.like(cb.lower(expr),
-                            "%" + value.toString().toLowerCase() + "%");
+                            "%" + valueField + "%");
                     predicates.add(p);
                 }
             }

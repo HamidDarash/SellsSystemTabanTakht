@@ -192,7 +192,14 @@
                                 <span>متقاضی خرید کالا به شرح فوق بوده و به شرکت تجارت الکترونیک خودرو تابان تاخت وکالت می دهم در صورت عدم تامین اقساط، کلیه اقساط معوقه و خسارات مربوطه را از حقوق و سنوات اینجانب نزد شرکت محل خدمت و یا موجودی سرمایه گذاریم نزد شرکت سرمایه گذاری کارکنان سایپا تامین نماید و هرگونه عذری را از این بابت از خود سلب می نمایم بدیهست شرکت سایپا می تواند جهت کسر اقساط کالا و خدمات خریداری شده توسط اینجانب از حقوق ماهیانه و حق سنوات بنده بنا به اعلام شرکت تابان تاخت اقدام نماید و حق هرگونه اعتراض و طرح ادعا در این خصوص را از خود سلب و ساقط می نمایم.</span><br/>
                             </p>
                             <p style="text-align: center"><span>ضمنا ملاک تعیین و نحوه اقساط ماهیانه اعلام شرکت تجارت الکترونیک خودرو تابان تاخت بوده و شرکت سایپا مسئولیتی در این رابط نخواهد داشت</span></p>
-                            <p style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            <c:if test="#{factorController.selected.returned eq true}">
+                                <p class="signitureMarjoo" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
+
+                            <c:if test="#{factorController.selected.returned eq false}">
+                                <p class="signitureTaeed" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
+
                         </div>
                     </h:panelGroup>
 
@@ -203,7 +210,13 @@
                                 <span>اینجانب</span><p:spacer width="5px"/><span style="display: inline-block;width: 150px;border-top: 1px dashed black"></span><p:spacer width="5px"/>
                                 <span>به نمایندگی از طرف شرکت تجارت الکترونیک خودرو تابان تاخت موارد فرم در خواست فوق و مدارک پیوست را مورد اعتبارسنجی قرارداده و تایید می نمایم.</span>
                             </p>
-                            <p style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            <c:if test="#{factorController.selected.returned eq true}">
+                                <p class="signitureMarjoo" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
+
+                            <c:if test="#{factorController.selected.returned eq false}">
+                                <p class="signitureTaeed" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
                         </div>
                     </h:panelGroup>
                     <h:panelGroup rendered="#{factorController.selected.condinationFactor == 'اقساط'}">
@@ -213,7 +226,13 @@
                                 <span>کالای فوق با مشخصات درج شده توسط اینجانب</span><p:spacer width="5px"/><span style="display: inline-block;width: 150px;border-top: 1px dashed black"></span><p:spacer width="5px"/>
                                 <span>به صورت صحیح و سالم دریافت شد.</span>
                             </p>
-                            <p style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            <c:if test="#{factorController.selected.returned eq true}">
+                                <p class="signitureMarjoo" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
+
+                            <c:if test="#{factorController.selected.returned eq false}">
+                                <p class="signitureTaeed" style="text-align: left;padding-left: 125px;margin-bottom: 30px;">تاریخ/امضاء</p>
+                            </c:if>
                         </div>
                     </h:panelGroup>
                 </h:panelGroup>

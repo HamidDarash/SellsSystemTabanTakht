@@ -135,7 +135,38 @@ hr{
 
 .holderTable{
     border: 2px solid black;
+    position: relative;
 }
+
+.signitureMarjoo:after{
+    position: absolute;
+    bottom: 17px;
+    left: 200px;
+    background-size: 104px 55px;
+    width: 104px;
+    height: 55px;
+    content: ".";
+    color: transparent;
+    background-image: url("#{resource['img:marjoee.png']}");
+    display: inline-block;
+    z-index: 9999;
+}
+
+
+.signitureTaeed:after{
+    position: absolute;
+    bottom: 17px;
+    left: 200px;
+    background-size: 104px 55px;
+    width: 104px;
+    height: 55px;
+    content: ".";
+    color: transparent;
+    display: inline-block;
+    background-image: url("#{resource['img:taeed.png']}");
+    z-index: 9999;
+}
+
 .tamin th , .tamin td{
     border: 1px solid black;
     padding: 0;
@@ -182,10 +213,10 @@ hr{
 .mainLayout > .ui-layout-unit-content{
     background-color: rgba(255,255,255,.7);
 }
- 
+
 body{
-/*    background-image: url("#{resource['img:bg.jpg']}");
-    background-size: 100% auto;
-    background-position: top;
-    margin-bottom: 32px;*/
+    /*    background-image: url("#{resource['img:bg.jpg']}");
+        background-size: 100% auto;
+        background-position: top;
+        margin-bottom: 32px;*/
 }

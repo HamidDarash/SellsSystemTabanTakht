@@ -57,7 +57,7 @@
                                 <h:outputText value="تاریخ فاکتور" />
                             </f:facet>
                             <h:outputText value="#{item.dateFactor}"> 
-                                <f:converter converterId="persian_date"/>
+                                <f:converter converterId="persian_date" />
                             </h:outputText>
                         </p:column>
 
@@ -138,10 +138,10 @@
                             </f:facet>
                             <h:outputText style="#{item.finalRegistration ? 'color: green':'color: red'}" value="#{item.finalRegistration ? 'ثبت نهایی': 'تایید نشده'}" />
                         </p:column>
-                        
+
                         <p:column filterBy="#{item.exhibition.nameExhibition}" filterMatchMode="contains" headerText="نام نمایشگاه">
                             <h:outputText value="#{item.exhibition.nameExhibition}" />
-                            
+
                         </p:column>
 
                         <f:facet name="footer">
