@@ -12,14 +12,21 @@ import com.darash.salemaven.entities.Person;
 import com.darash.salemaven.entities.Provider;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
+import helper.CalendarUtil;
+import helper.DateConvertor;
+import helper.JalaliCalendar;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
- 
+import java.util.logging.Level;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.faces.convert.ConverterException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -28,12 +35,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.log4j.Logger;
 
 /**
  * @author daresh
  */
 @Stateless
 public class FactorFacade extends AbstractFacade<Factor> {
+
+    private static Logger logger = Logger.getLogger(FactorFacade.class);
 
     @EJB
     PersonFacade personFacade;
@@ -161,6 +171,14 @@ public class FactorFacade extends AbstractFacade<Factor> {
                 } else {
                     Expression<String> expr = root.get(field).as(String.class);
                     String valueField = value.toString().toLowerCase();
+
+                    if (field.equals("dateFactor")) {
+                        try {
+                            valueField = ConvertStrToDate(valueField);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                    }
                     p = cb.like(cb.lower(expr),
                             "%" + valueField + "%");
                     predicates.add(p);
@@ -178,7 +196,7 @@ public class FactorFacade extends AbstractFacade<Factor> {
         return list;
     }
 
-    public int getFilteredRowCount(Map<String, Object> filters) {
+    public int getFilteredRowCount(Map<String, Object> filters) throws ParseException {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Factor> root = criteriaQuery.from(Factor.class);
@@ -264,8 +282,16 @@ public class FactorFacade extends AbstractFacade<Factor> {
                     }
                 } else {
                     Expression<String> expr = root.get(field).as(String.class);
+                    String valueField = value.toString().toLowerCase();
+                    if (field.equals("dateFactor")) {
+                        try {
+                            valueField = ConvertStrToDate(valueField);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                        }
+                    }
                     p = cb.like(cb.lower(expr),
-                            "%" + value.toString().toLowerCase() + "%");
+                            "%" + valueField + "%");
                     predicates.add(p);
                 }
             }
@@ -275,5 +301,29 @@ public class FactorFacade extends AbstractFacade<Factor> {
         }
         Long count = em.createQuery(select).getSingleResult();
         return count.intValue();
+    }
+
+    private String ConvertStrToDate(String s) {
+        String[] tempArray;
+        String delimiter = "/";
+        tempArray = s.split(delimiter);
+        int[] temp = {};
+
+        temp = DateConvertor.jalali_to_gregorian(Integer.valueOf(tempArray[0]), Integer.valueOf(tempArray[1]),
+                Integer.valueOf(tempArray[2]));
+
+        if (temp.length == 3) {
+            for (int i = 0; i < temp.length; i++) {
+                if (temp[i] < 10) {
+                    tempArray[i] = "0" + String.valueOf(temp[i]);
+                } else {
+                    tempArray[i] = String.valueOf(temp[i]);
+                }
+            }
+        }
+        if (tempArray.length == 3) {
+            return tempArray[0] + "-" + tempArray[1] + "-" + tempArray[2];
+        }
+        return "No Detect ....";
     }
 }

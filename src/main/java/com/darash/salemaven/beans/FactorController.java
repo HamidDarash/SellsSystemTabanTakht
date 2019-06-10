@@ -37,6 +37,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import helper.QrCode;
+import java.text.ParseException;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 
@@ -62,7 +63,7 @@ public class FactorController implements Serializable {
     private Person selectedPerson = null;
     private Person lastSelectedPerson = null;
     private QrCode qrCode = new QrCode();
-  
+
     public Person getLastSelectedPerson() {
         return lastSelectedPerson;
     }
@@ -103,7 +104,7 @@ public class FactorController implements Serializable {
             return "";
         }
     }
- 
+
     public long getCreditSelectedUser() {
         if (selectedPerson != null) {
             return creditFacade.getCreditUser(selectedPerson);
@@ -385,7 +386,11 @@ public class FactorController implements Serializable {
             public List<Factor> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                 List<Factor> list = ejbFacade.filter(first, pageSize, filters);
                 if (filters != null && filters.size() > 0) {
-                    this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                    try {
+                        this.setRowCount(ejbFacade.getFilteredRowCount(filters));
+                    } catch (ParseException ex) {
+                        Logger.getLogger(FactorController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 return list;
             }
@@ -632,7 +637,8 @@ public class FactorController implements Serializable {
                         // کل سود روی خالص  مانده
                         double installmentValueComputing = purePrice * generalProfit;
                         // مبلغ هر قسط ماهیانه
-                        double sumInstallmentAndPaymanet = (installmentValueComputing + purePrice) / Integer.valueOf(selected.getInstallmentCount());
+                        double sumInstallmentAndPaymanet
+                                = (installmentValueComputing + purePrice) / Integer.valueOf(selected.getInstallmentCount());
                         //جمع سود و خالص پرداختی
                         long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
 
@@ -640,7 +646,7 @@ public class FactorController implements Serializable {
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
                         selected.setPayable(String.valueOf(purePrice));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage((int) (selectedProvider.getWage() * sumPrice));//جمع کل کارمزد
+                        selected.setSumWage((int) (selectedProvider.getWage() * purePrice));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
 
                         selected.setInstallmentCount(selected.getCondinationFactor().equals("اقساط") ? selected.getInstallmentCount() : "0");
@@ -652,6 +658,7 @@ public class FactorController implements Serializable {
 
                         if ((getCreditSum(selectedPerson) > sumPurgeAndProfit)
                                 && selected.getCondinationFactor().equals("اقساط")) {
+
                             selected.setPerson(selectedPerson);
                             selected.setProvider(selectedProvider);
                             selected.setExhibition(selectedExhibitionProvider);
@@ -659,10 +666,15 @@ public class FactorController implements Serializable {
                             selectedProvider.getFactors().add(selected);
                             selectedExhibitionProvider.getFactors().add(selected);
                             ejbFacade.create(selected);
+
+                            selectedPerson.setInsertMode(false);
+                            personFacade.edit(selectedPerson);
+
                             //جمع خلص مانده + سود کل مانده
                             // از اعتبار پرسنل کسر میشود
-                            Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
-                            creditFacade.edit(credit);
+                            System.out.println("Person : " + selected.getPerson());
+                            Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selectedPerson);
+                            creditFacade.create(credit);
 
                         } else if ((getCreditSum(selectedPerson) < sumPurgeAndProfit)
                                 && selected.getCondinationFactor().equals("اقساط")
@@ -677,12 +689,8 @@ public class FactorController implements Serializable {
                             selectedPerson.getFactors().add(selected);
                             selectedProvider.getFactors().add(selected);
                             selectedExhibitionProvider.getFactors().add(selected);
-                            getEjbFacade().create(selected);
-                        }
 
-                        if (selectedPerson != null) {
-                            selectedPerson.setInsertMode(false);
-                            personFacade.edit(selectedPerson);
+                            getEjbFacade().create(selected);
                         }
 
                         selected = null;
@@ -733,9 +741,9 @@ public class FactorController implements Serializable {
                         long sumPurgeAndProfit = purePrice + ((int) installmentValueComputing);
 
                         selected.setSumFactor(String.valueOf(sumPrice));//جمع کل کالاها
-                        selected.setPayable(String.valueOf(sumPrice));//جمع کل کالاها کم میشود از جمع تخفیف
+                        selected.setPayable(String.valueOf(purePrice));//جمع کل کالاها کم میشود از جمع تخفیف
                         selected.setSumDiscount(String.valueOf(sumDiscount));//جمع کا تخفیفات
-                        selected.setSumWage((int) (selected.getProvider().getWage() * (sumPrice - sumDiscount)));//جمع کل کارمزد
+                        selected.setSumWage((int) (selected.getProvider().getWage() * purePrice));//جمع کل کارمزد
                         selected.setFinalRegistration(true);//ثبت نهایی شود
 
                         selected.setInstallmentCount(selected.getCondinationFactor().equals("اقساط") ? selected.getInstallmentCount() : "0");
@@ -762,16 +770,23 @@ public class FactorController implements Serializable {
                                 && selected.getCondinationFactor().equals("اقساط"))
                                 && !selected.getPerson().isInsertMode()) {
 
-                            if (((getCreditSum(selected.getPerson()) + lastFactorCreditValue) > sumPurgeAndProfit)) {
+                            if (((getCreditSum(selected.getPerson())
+                                    + lastFactorCreditValue) > sumPurgeAndProfit)) {
                                 getEjbFacade().edit(selected);
+
+                                selected.getPerson().setInsertMode(false);
+                                personFacade.edit(selected.getPerson());
 
                                 long valueCredit = Long.valueOf(this.getSelectedFactorPurgeAndProfitGeneral());
                                 List<Credit> credits = creditFacade.findByCredit(-valueCredit);
+
                                 if (credits != null && !credits.isEmpty()) {
                                     creditFacade.remove(credits.get(0));
                                 }
-                                Credit credit = new Credit(-(purePrice + ((int) installmentValueComputing)), selected.getPerson());
-                                creditFacade.edit(credit);
+                                Credit credit = new Credit(-(purePrice
+                                        + ((int) installmentValueComputing)), selected.getPerson());
+
+                                creditFacade.create(credit);
                             } else {
                                 showMessageInsertModeLockOrCredit();
                             }
@@ -782,11 +797,6 @@ public class FactorController implements Serializable {
                                 && !selected.getPerson().isInsertMode()) {
                             getEjbFacade().edit(selected);
                         }
-//
-//                        if (selected.getPerson() != null) {
-//                            selected.getPerson().setInsertMode(false);
-//                            personFacade.edit(selected.getPerson());
-//                        }
 
                         selected = null;
                         productSelectForInsert = null;
@@ -901,6 +911,5 @@ public class FactorController implements Serializable {
     public String getRandomAddressFile() {
         return "/resources/img/qrcodeFactor.png?dummy=" + UUID.randomUUID().toString();
     }
-    
-}
 
+}

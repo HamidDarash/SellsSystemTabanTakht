@@ -5,14 +5,8 @@
  */
 package com.darash.salemaven.services;
 
-import com.darash.salemaven.beans.util.JsfUtil;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 
 /**
  *

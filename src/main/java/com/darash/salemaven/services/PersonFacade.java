@@ -6,7 +6,6 @@
 package com.darash.salemaven.services;
 
 import com.darash.salemaven.entities.Person;
-import com.darash.salemaven.entities.Person_;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,6 @@ import org.slf4j.LoggerFactory;
 
 @Stateless
 public class PersonFacade extends AbstractFacade<Person> {
-
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(PersonFacade.class);
 
     @PersistenceContext(unitName = "com.darash_salemaven_war_1.0-SNAPSHOTPU")
     private EntityManager em;
@@ -106,7 +103,7 @@ public class PersonFacade extends AbstractFacade<Person> {
         query.setFirstResult(first);
         query.setMaxResults(pageSize);
         List<Person> list = query.getResultList();
-//        logger.info(query.toString());
+
         return list;
     }
 

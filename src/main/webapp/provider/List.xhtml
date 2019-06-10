@@ -27,6 +27,7 @@
                                  liveResize="true"
                                  scrollable="true"
                                  lazy="true"
+                                 dir="ltr"
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
@@ -80,14 +81,14 @@
                             </f:facet>
                             <h:outputText value="#{item.shopName}"/>
                         </p:column>
-                        
+
                         <p:column filterBy="#{item.wage}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="کارمزد شرکت"/>
                             </f:facet>
                             <h:outputText value="#{item.wage}"/>
                         </p:column>
-                        
+
                         <p:column filterBy="#{item.code}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="کد تامین کننده"/>

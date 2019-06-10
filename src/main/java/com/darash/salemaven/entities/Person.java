@@ -120,6 +120,8 @@ public class Person implements Serializable {
     public void setInsertMode(boolean insertMode) {
         this.insertMode = insertMode;
     }
+    
+    
 
     public Integer getId() {
         return id;

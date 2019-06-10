@@ -52,10 +52,8 @@
                             <h:outputText value="#{item.id}"/>
                         </p:column>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="تاریخ فاکتور" />
-                            </f:facet>
+                        <p:column headerText="تاریخ فاکتور"  filterBy="#{item.dateFactor}" 
+                                  filterMatchMode="exact">
                             <h:outputText value="#{item.dateFactor}"> 
                                 <f:converter converterId="persian_date" />
                             </h:outputText>
