@@ -11,29 +11,33 @@
         <p:dialog id="PersonViewDlg" widgetVar="PersonViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewPersonTitle}">
             <h:form id="PersonViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{personController.selected != null}">
-                        <h:outputText value="#{bundle.ViewPersonLabel_id}"/>
-                        <h:outputText value="#{personController.selected.id}" title="#{bundle.ViewPersonTitle_id}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_name}"/>
-                        <h:outputText value="#{personController.selected.name}" title="#{bundle.ViewPersonTitle_name}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_internationalCode}"/>
-                        <h:outputText value="#{personController.selected.internationalCode}" title="#{bundle.ViewPersonTitle_internationalCode}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_email}"/>
-                        <h:outputText value="#{personController.selected.email}" title="#{bundle.ViewPersonTitle_email}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_company}"/>
-                        <h:outputText value="#{personController.selected.company}" title="#{bundle.ViewPersonTitle_company}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_companyCode}"/>
-                        <h:outputText value="#{personController.selected.companyCode}" title="#{bundle.ViewPersonTitle_companyCode}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_address}"/>
-                        <h:outputText value="#{personController.selected.address}" title="#{bundle.ViewPersonTitle_address}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_mobile}"/>
-                        <h:outputText value="#{personController.selected.mobile}" title="#{bundle.ViewPersonTitle_mobile}"/>
-                        <h:outputText value="#{bundle.ViewPersonLabel_description}"/>
-                        <h:outputText value="#{personController.selected.description}" title="#{bundle.ViewPersonTitle_description}"/>
-                        
-                        <h:outputText value="جمع اعتبار"/>
-                        <h:outputText value="#{personController.formatMony(personController.getCreditSelectedUser(personController.selected))} ريال" title="اعتبار"/>
-                    </p:panelGrid>
+                    <div style="display: block;width: 100%;text-align: center">
+                        <h:graphicImage value="/resources/img/personnel.png" width="128px"/>
+                    </div>
+                    <div>
+                        <p:panelGrid columns="2" rendered="#{personController.selected != null}">
+                            <h:outputText value="#{bundle.ViewPersonLabel_name}"/>
+                            <h:outputText value="#{personController.selected.name}" title="#{bundle.ViewPersonTitle_name}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_internationalCode}"/>
+                            <h:outputText value="#{personController.selected.internationalCode}" title="#{bundle.ViewPersonTitle_internationalCode}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_email}"/>
+                            <h:outputText value="#{personController.selected.email}" title="#{bundle.ViewPersonTitle_email}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_company}"/>
+                            <h:outputText value="#{personController.selected.company}" title="#{bundle.ViewPersonTitle_company}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_companyCode}"/>
+                            <h:outputText value="#{personController.selected.companyCode}" title="#{bundle.ViewPersonTitle_companyCode}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_address}"/>
+                            <h:outputText value="#{personController.selected.address}" title="#{bundle.ViewPersonTitle_address}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_mobile}"/>
+                            <h:outputText value="#{personController.selected.mobile}" title="#{bundle.ViewPersonTitle_mobile}"/>
+                            <h:outputText value="#{bundle.ViewPersonLabel_description}"/>
+                            <h:outputText value="#{personController.selected.description}" title="#{bundle.ViewPersonTitle_description}"/>
+
+                            <h:outputText value="جمع اعتبار"/>
+                            <h:outputText value="#{personController.formatMony(personController.getCreditSelectedUser(personController.selected))} ريال" title="اعتبار"/>
+                        </p:panelGrid>
+                    </div>
+
                     <p:commandButton value="#{bundle.Close}" onclick="PersonViewDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

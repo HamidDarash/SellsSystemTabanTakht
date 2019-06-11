@@ -5,11 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
       >
-
     <ui:composition>
-
         <p:dialog dir="rtl" id="ExhibitionProvidersViewDlg" widgetVar="ExhibitionProvidersViewDialog" modal="true" resizable="true" maximizable="true" appendTo="@(body)" header="جدول نمایش تامین کنندگان در این نمایشگاه">
             <p:ajax event="close"  oncomplete="PF('ExhibitionProvidersViewDialog').toggleMaximize();" />
             <h:form id="ExhibitionProvidersViewForm">
@@ -31,7 +28,6 @@
 
                         <p:ajax event="rowSelect" update="@form" />
                         <p:ajax event="rowUnselect" />
-
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="ردیف"/>
@@ -113,7 +109,7 @@
                                  resizableColumns="true"
                                  liveResize="true"
                                  scrollable="true"
-                                 
+
                                  >
 
                         <p:column>
@@ -167,12 +163,9 @@
                             </f:facet>
                             <h:outputText value="#{exhibitionController.convertSumWageInteger(item.sumWage)}" /><p:spacer width="5px" /><h:outputText value="ريال" />
                         </p:column>
-
                     </p:dataTable>
                 </p:panel>
-
             </h:form>
         </p:dialog>
-
     </ui:composition>
 </html>

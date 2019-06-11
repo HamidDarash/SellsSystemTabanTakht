@@ -229,6 +229,7 @@ body{
     display: inline-block;
     width: 60px;
     color: white;
+    text-align: center;
 }
 
 .diactivateOnTable{
@@ -239,4 +240,41 @@ body{
     display: inline-block;
     width: 60px;
     color: white;
+    text-align: center;
 }
+
+ 
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff8000;
+  border: 2px solid #ff8000;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff8000;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #ff8040;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 0px none #ff8000;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-track:hover {
+  background: #ffffff;
+}
+::-webkit-scrollbar-track:active {
+  background: #ffffff;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+ 
