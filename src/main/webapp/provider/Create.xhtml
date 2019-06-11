@@ -26,13 +26,16 @@
                         <p:inputText id="mobile" value="#{providerController.selected.mobile}" title="#{bundle.CreateProviderTitle_mobile}" />
                         <p:outputLabel value="نام شرکت/فروشگاه" for="shopName" />
                         <p:inputTextarea rows="1" cols="30" id="shopName" value="#{providerController.selected.shopName}" title="#{bundle.CreateProviderTitle_shopName}" />
-                       
+
                         <p:outputLabel value="درصد کارمزد" for="wage" />
                         <p:inputText id="wage" value="#{providerController.selected.wage}" title="#{bundle.CreateProviderTitle_shopName}" />
-                       
+
                         <p:outputLabel value="کد تامین کننده" for="code" />
                         <p:inputText id="code" value="#{providerController.selected.code}" title="#{bundle.CreateProviderTitle_code}" />
-                        
+
+                        <p:outputLabel value="فعال/غیرفعال" for="activate" />
+                        <p:selectBooleanCheckbox id="activate" value="#{providerController.selected.activate}" requiredMessage="فعال یا غیر فعال مشخص شود"/>
+
                     </p:panelGrid>
                     <p:commandButton actionListener="#{providerController.create}" value="#{bundle.Save}" update="display,:ProviderListForm:datalist,:growl" oncomplete="handleSubmit(args,'ProviderCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ProviderCreateDialog.hide()"/>

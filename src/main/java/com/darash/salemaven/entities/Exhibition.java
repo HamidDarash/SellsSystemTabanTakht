@@ -51,7 +51,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     ,
     @NamedQuery(name = "Exhibition.findByManagerName", query = "SELECT e FROM Exhibition e WHERE e.managerName = :managerName")
     ,
-    @NamedQuery(name = "Exhibition.findByActivate", query = "SELECT e FROM Exhibition e WHERE e.activate = :activate") 
+    @NamedQuery(name = "Exhibition.findByActivate", query = "SELECT e FROM Exhibition e WHERE e.activate = :activate")
 })
 public class Exhibition implements Serializable {
 

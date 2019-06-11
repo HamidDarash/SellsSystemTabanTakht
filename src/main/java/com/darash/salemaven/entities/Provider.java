@@ -42,7 +42,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Provider.findByMobile", query = "SELECT p FROM Provider p WHERE p.mobile = :mobile"),
     @NamedQuery(name = "Provider.findByCode", query = "SELECT p FROM Provider p WHERE p.code = :code"),
     @NamedQuery(name = "Provider.findByWage", query = "SELECT p FROM Provider p WHERE p.wage = :wage"),
-    @NamedQuery(name = "Provider.findByNameOrCodeOrFullname", query = "SELECT p FROM Provider p WHERE p.code LIKE :code or p.shopName LIKE :shopName or p.fullname LIKE :fullname or p.internationalCode LIKE :internationalCode")})
+    @NamedQuery(name = "Provider.findByNameOrCodeOrFullnameAndActiveAndExhibition", query = "SELECT p FROM Provider p WHERE (p.code LIKE :code or p.shopName LIKE :shopName or p.fullname LIKE :fullname or p.internationalCode LIKE :internationalCode and p.activate = true) AND :exhibition MEMBER OF p.exhibitions"),
+    @NamedQuery(name = "Provider.findByNameOrCodeOrFullname", query = "SELECT p FROM Provider p WHERE p.code LIKE :code or p.shopName LIKE :shopName or p.fullname LIKE :fullname or p.internationalCode LIKE :internationalCode and p.activate = true")
+
+})
 public class Provider implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -85,6 +88,10 @@ public class Provider implements Serializable {
     @Size(max = 255)
     @Column(name = "code")
     private String code;
+
+    @Basic(optional = false)
+    @Column(name = "activate")
+    private boolean activate = false;
 
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "wage")
@@ -138,7 +145,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(String fullname, String internationalCode, String codeEghtesadi, String address, String email, String mobile, double wage, String shopName, String code) {
+    public Provider(String fullname, String internationalCode, String codeEghtesadi, String address, String email, String mobile, double wage, String shopName, String code, boolean activate) {
         this.fullname = fullname;
         this.internationalCode = internationalCode;
         this.codeEghtesadi = codeEghtesadi;
@@ -148,6 +155,15 @@ public class Provider implements Serializable {
         this.shopName = shopName;
         this.code = code;
         this.wage = wage;
+        this.activate = false;
+    }
+
+    public boolean isActivate() {
+        return activate;
+    }
+
+    public void setActivate(boolean activate) {
+        this.activate = activate;
     }
 
     public double getWage() {

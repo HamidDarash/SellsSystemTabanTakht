@@ -5,6 +5,7 @@
  */
 package com.darash.salemaven.services;
 
+import com.darash.salemaven.entities.Exhibition;
 import com.darash.salemaven.entities.Provider;
 import com.darash.salemaven.entities.Provider_;
 import java.util.ArrayList;
@@ -48,6 +49,16 @@ public class ProviderFacade extends AbstractFacade<Provider> {
         return typedQuery.getResultList();
     }
 
+     public List<Provider> findByNameOrCodeOrFullnameSearchAndExhibition(String parameter, Exhibition exhibition) {
+        TypedQuery<Provider> typedQuery = em.createNamedQuery("Provider.findByNameOrCodeOrFullnameAndActiveAndExhibition", Provider.class)
+                .setParameter("shopName", "%" + parameter + "%")
+                .setParameter("internationalCode", "%" + parameter + "%")
+                .setParameter("code", "%" + parameter + "%")
+                .setParameter("fullname", "%" + parameter + "%")
+                .setParameter("exhibition", exhibition);
+        return typedQuery.getResultList();
+    }
+     
     public List<Provider> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Provider> criteriaQuery = cb.createQuery(Provider.class);

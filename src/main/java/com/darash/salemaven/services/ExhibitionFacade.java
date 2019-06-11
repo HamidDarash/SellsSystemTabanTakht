@@ -39,8 +39,12 @@ public class ExhibitionFacade extends AbstractFacade<Exhibition> {
         super(Exhibition.class);
     }
 
-    
-    
+    public List<Exhibition> getActivateExhibition(boolean bool) {
+        TypedQuery<Exhibition> typedQuery = em.createNamedQuery("Exhibition.findByActivate", Exhibition.class)
+                .setParameter("activate", bool);
+        return typedQuery.getResultList();
+    }
+
     public List<Exhibition> filter(int first, int pageSize, Map<String, Object> filters) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Exhibition> criteriaQuery = cb.createQuery(Exhibition.class);

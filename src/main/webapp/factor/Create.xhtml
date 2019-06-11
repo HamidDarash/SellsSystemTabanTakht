@@ -141,10 +141,16 @@
                     <p:panel id="panelInfoProviderGroup"  visible="#{factorController.selectedPerson != null}">
                         <p:fieldset id="fieldSetProvider" legend="اطلاعات تامین کننده"  >
                             <h:panelGrid id="panelProvider"  columns="4"  >
-                                <p:outputLabel value="تامین کننده" for="searchProvider" />
-                                <p:autoComplete id="searchProvider" value="#{factorController.selectedProvider}"
+                                <p:outputLabel value="نمایشگاه" for="exhibitionProvider" />
+                                <p:selectOneMenu id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
+                                    <f:selectItems value="#{factorController.filterOnlyActive(true)}" />
+                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="تامین کننده" for="searchProvider" rendered="#{factorController.selectedExhibitionProvider != null}"  />
+                                <p:autoComplete id="searchProvider" rendered="#{factorController.selectedExhibitionProvider != null}" value="#{factorController.selectedProvider}"
                                                 completeMethod="#{factorController.findInAllProviderForAutoComplete}"
-                                                var="t" itemLabel="#{t.shopName}" itemValue="#{t}" 
+                                                var="t" itemLabel="#{t.shopName}" itemValue="#{t}"
                                                 >
                                     <p:column headerText="کد تامین کننده">
                                         <h:outputText value="#{t.code}" />
@@ -160,11 +166,7 @@
                                     </p:column>
                                     <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct()}"  update="@form" process="@this" /> 
                                 </p:autoComplete>
-                                <p:outputLabel value="نمایشگاه" for="exhibitionProvider" />
-                                <p:selectOneMenu rendered="#{factorController.selectedProvider != null}" disabled="#{factorController.selectedProvider == null}" id="exhibitionProvider" value="#{factorController.selectedExhibitionProvider}">
-                                    <f:selectItems value="#{factorController.filterOnlyActive(factorController.selectedProvider.exhibitions)}" />
-                                    <p:ajax event="itemSelect" update="@form" process="@this" /> 
-                                </p:selectOneMenu>
+
                             </h:panelGrid>
 
                             <p:dataTable id="datalistProviders" rendered="#{factorController.selectedProvider != null}" value="#{factorController.selectedProvider}" var="item"

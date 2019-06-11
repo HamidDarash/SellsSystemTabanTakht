@@ -95,6 +95,17 @@
                             </f:facet>
                             <h:outputText value="#{item.code}"/>
                         </p:column>
+                        
+                         <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleExibition.ListExhibitionTitle_activate}"/>
+                            </f:facet>
+                             <div style="width: 100%;display: inline-block;text-align: center">
+                                <h:outputText class="activateOnTable" rendered="${item.activate eq true}" value="فعال" />
+                                <h:outputText class="diactivateOnTable" rendered="${item.activate eq false}" value="غیر فعال" />
+                            </div>
+                        </p:column>
+                        
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{providerController.prepareCreate}" update=":ProviderCreateForm" oncomplete="PF('ProviderCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ProviderViewForm" oncomplete="PF('ProviderViewDialog').show()" disabled="#{empty providerController.selected}"/>

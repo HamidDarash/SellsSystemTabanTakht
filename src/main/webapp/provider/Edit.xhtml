@@ -30,6 +30,8 @@
                         <p:inputText id="wage" value="#{providerController.selected.wage}" title="#{bundle.CreateProviderTitle_shopName}" />
                         <p:outputLabel value="کد تامین کننده" for="code" />
                         <p:inputText id="code" value="#{providerController.selected.code}" title="#{bundle.EditProviderTitle_code}" />
+                        <p:outputLabel value="فعال/غیرفعال" for="activate" />
+                        <p:selectBooleanCheckbox id="activate" value="#{providerController.selected.activate}" requiredMessage="فعال یا غیر فعال مشخص شود"/>
 
                     </p:panelGrid>
                     <p:commandButton actionListener="#{providerController.update}" value="#{bundle.Save}" update="display,:ProviderListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ProviderEditDialog');"/>

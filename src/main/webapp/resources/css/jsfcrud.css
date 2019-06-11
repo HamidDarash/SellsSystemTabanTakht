@@ -220,3 +220,23 @@ body{
         background-position: top;
         margin-bottom: 32px;*/
 }
+
+.activateOnTable{
+    padding: 3px;
+    background-color: rgba(0, 153, 0, 1);
+    border: 1px solid rgba(0, 90, 0, 1);
+    border-radius: 2px 2px;
+    display: inline-block;
+    width: 60px;
+    color: white;
+}
+
+.diactivateOnTable{
+    padding: 3px;
+    background-color: rgba(204, 0, 0, 1);
+    border: 1px solid rgba(100, 0, 0, 1);
+    border-radius: 2px 2px;
+    display: inline-block;
+    width: 60px;
+    color: white;
+}

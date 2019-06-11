@@ -214,21 +214,9 @@ public class FactorController implements Serializable {
         this.discountProduct = discountProduct;
     }
 
-    public List<Exhibition> filterOnlyActive(List<Exhibition> exhibitions) {
+    public List<Exhibition> filterOnlyActive(boolean bool) {
         try {
-            if (exhibitions == null) {
-                return new ArrayList<>();
-            }
-            if (exhibitions.isEmpty()) {
-                return new ArrayList<>();
-            }
-            List<Exhibition> es = new ArrayList<>();
-            for (Exhibition exhibition : exhibitions) {
-                if (exhibition.getActivate()) {
-                    es.add(exhibition);
-                }
-            }
-            return es;
+            return exhibitionFacade.getActivateExhibition(bool);
         } catch (Exception e) {
         }
         return new ArrayList<>();
@@ -349,7 +337,7 @@ public class FactorController implements Serializable {
     // find provider autoComplete
     public List<Provider> findInAllProviderForAutoComplete(String search) {
         try {
-            return providerFacade.findByNameOrCodeOrFullnameSearch(search);
+            return providerFacade.findByNameOrCodeOrFullnameSearchAndExhibition(search, selectedExhibitionProvider);
         } catch (Exception e) {
         }
         return new ArrayList<>();

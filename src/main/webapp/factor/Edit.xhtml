@@ -142,6 +142,12 @@
                     <p:panel id="panelInfoProviderGroupEdit"  rendered="#{factorController.selected.provider != null}">
                         <p:fieldset id="fieldSetProviderEdit" legend="اطلاعات تامین کننده"  >
                             <h:panelGrid id="panelProviderEdit"  columns="4"  >
+                                <p:outputLabel value="نمایشگاه" for="exhibitionProviderEdit" />
+                                <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">
+                                    <f:selectItems value="#{factorController.filterOnlyActive(true)}" />
+                                    <p:ajax event="itemSelect" update="@form" process="@this" />
+                                </p:selectOneMenu>
+
                                 <p:outputLabel value="تامین کننده" for="searchProviderEdit" />
                                 <p:autoComplete id="searchProviderEdit" value="#{factorController.selected.provider}"
                                                 completeMethod="#{factorController.findInAllProviderForAutoComplete}"
@@ -161,11 +167,8 @@
                                     </p:column>
                                     <p:ajax event="itemSelect" listener="#{factorController.resetSelectProduct()}"  update="@form" process="@this" /> 
                                 </p:autoComplete>
-                                <p:outputLabel value="نمایشگاه" for="exhibitionProviderEdit" />
-                                <p:selectOneMenu rendered="#{factorController.selected != null}" disabled="#{factorController.selected == null}" id="exhibitionProviderEdit" value="#{factorController.selected.exhibition}">
-                                    <f:selectItems value="#{factorController.filterOnlyActive(factorController.selected.provider.exhibitions)}" />
-                                    <p:ajax event="itemSelect" update="@form" process="@this" />
-                                </p:selectOneMenu>
+
+
                             </h:panelGrid>
 
                             <p:dataTable id="datalistProvidersShowOnlyEdit" rendered="#{factorController.selected.provider != null}" value="#{factorController.selected.provider}" var="item"
