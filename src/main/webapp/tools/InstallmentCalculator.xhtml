@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml" >
+
+        <ui:define name="title">
+            <h:outputText value="ابزار محاسبه قسط"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <p:panel header="ابزار محاسبه قسط">
+                <h:form id="formData">
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <p:panel id="partOne" header="ورود اطلاعات اقساط" class="fullWidth">
+                            <p:panelGrid columns="6" >
+                                <p:panel header="انتخاب فرد">
+                                    <h:panelGrid id="panelPerson" columns="2" cellpadding="5">
+                                        <p:outputLabel value="انتخاب پرسنل" for="searchPerson2" />
+                                        <p:autoComplete class="fullWidth" id="searchPerson2" value="#{installmentCalculatorController.selectedPerson}"
+                                                        completeMethod="#{installmentCalculatorController.findInAllUsersForAutoComplete}"
+                                                        var="p" itemLabel="#{p.name}" itemValue="#{p}">
+                                            <p:column headerText="کد پرسنلی">
+                                                <h:outputText value="#{p.companyCode}" />
+                                            </p:column>
+                                            <p:column headerText="کد ملی">
+                                                <h:outputText value="#{p.internationalCode}" />
+                                            </p:column>
+                                            <p:column headerText="نام کامل">
+                                                <h:outputText value="#{p.name}" />
+                                            </p:column>
+                                            <p:column headerText="نام شرکت">
+                                                <h:outputText value="#{p.company}" />
+                                            </p:column>
+                                            <p:column headerText="اعتبار پرسنل">
+                                                <h:outputText value="#{installmentCalculatorController.getCreditSum(p)}" /> <p:spacer width="10px" /><h:outputText value="ریال" />
+                                            </p:column>
+                                            <p:ajax event="itemSelect" update="@form :growl" process="@this" /> 
+                                        </p:autoComplete>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="ورود مبلغ کل"
+                                         rendered="#{installmentCalculatorController.selectedPerson != null}" 
+                                         >
+                                    <h:panelGrid 
+
+                                        columns="2" id="mablagh" cellpadding="5">
+                                        <p:outputLabel value="ورود مبلغ" for="moneyFull" />
+                                        <p:inputText id="moneyFull" value="#{installmentCalculatorController.moneyFull}" />
+                                    </h:panelGrid>
+                                </p:panel>   
+                                <p:panel header="تعداد اقساط"
+                                         rendered="#{installmentCalculatorController.selectedPerson != null}" 
+                                         >
+                                    <h:panelGrid columns="2" id="countInstallmentPanel" cellpadding="5">
+                                        <p:outputLabel value="اقساط" for="installmentCount" />
+                                        <p:selectOneMenu style="width: 80%" id="installmentCount" value="#{installmentCalculatorController.installmentCount}">
+                                            <f:selectItem itemLabel="2" itemValue="2" />
+                                            <f:selectItem itemLabel="4" itemValue="4" />
+                                            <f:selectItem itemLabel="6" itemValue="6" />
+                                            <f:selectItem itemLabel="8" itemValue="8" />
+                                            <f:selectItem itemLabel="10" itemValue="10" />
+                                            <f:selectItem itemLabel="12" itemValue="12" />
+                                            <p:ajax update="countInstallmentPanel" process="@this" global="false"/> 
+                                        </p:selectOneMenu>  
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="پیش پرداخت" 
+                                         rendered="#{installmentCalculatorController.selectedPerson != null}" 
+                                         >
+                                    <h:panelGrid columns="2" id="prepaymentPanel" cellpadding="5">
+                                        <p:outputLabel value="پیش پرداخت" for="prepaymentValue" />
+                                        <p:inputText value="#{installmentCalculatorController.prePayment}" id="prepaymentValue">
+                                            <p:ajax event="keyup" process="@this" />
+                                        </p:inputText>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="انجام محاسبه">
+                                    <p:commandButton  value="محاسبه شود" actionListener="#{installmentCalculatorController.computeInstallment}" />
+                                </p:panel>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel id="partTwo" header="">
+                            <h:panelGrid columns="12" >
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+
+
+                </h:form>
+            </p:panel>
+        </ui:define>
+
+    </ui:composition>
+</html>

@@ -82,6 +82,11 @@
                                     <p:separator />
                                     <p:menuitem containerStyle="text-align: right" value="اکسل: ورود محصولات" />
                                 </p:menuButton> 
+                                <span class="ui-separator">
+                                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                                </span>
+
+                                    <p:button outcome="/tools/InstallmentCalculator.xhtml"  value="محاسبه گر"/>
                             </f:view>
 
                         </f:facet>
@@ -112,6 +117,7 @@
                                 </p:column>
                                 <p:ajax listener="#{themeSwitcherView.handleThemeName}" update="growl" />
                             </p:themeSwitcher> 
+
                         </h:form>
                     </p:panel>
                 </p:panelGrid>
