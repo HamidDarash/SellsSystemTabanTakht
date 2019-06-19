@@ -33,6 +33,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.apache.log4j.Logger;
@@ -59,6 +61,17 @@ public class FactorFacade extends AbstractFacade<Factor> {
     public FactorFacade() {
         super(Factor.class);
     }
+
+    //SELECT factor.date_factor,factor.id,factor.payable,factor.exhibition_id,exhibition.name_exhibition,exhibition.date_start,provider.fullname FROM factor
+    //INNER JOIN provider
+    //WHERE factor.provider_id = provider.id and factor.date_factor='2019-06-10' and provider.activate=true
+//    public List<Factor> reportFactorsByProviderBetweenDate() {
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Factor> searchQuery = cb.createQuery(Factor.class);
+//        Root<Factor> aRoot = searchQuery.from(Factor.class);
+//        Join<Factor, Provider> bJoin = aRoot.join("mappedB", JoinType.INNER);
+//        bJoin.on(cb.equal(bJoin.get("idLanguage"), 22));
+//    }
 
     public List<Factor> findByProviderInExhibition(Exhibition exhibition, Provider provider) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

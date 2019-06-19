@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       >
 
@@ -16,6 +15,9 @@
 
         <ui:define name="body">
             <p:panel header="آپلود و ورود اکسل به دیتابیس">
+                <div style="display: block;width: 100%;text-align: center">
+                    <h:graphicImage value="/resources/img/excel-import.png" width="128px"/>
+                </div>
                 <h:panelGrid columns="1" style="width: 100%" id="panelUpload" dir="rtl">
                     <h:outputText value="آپلود و ورود اکسل به دیتابیس"></h:outputText>
                     <p:separator />
@@ -33,7 +35,7 @@
                     <p:progressBar id="progressbar" widgetVar="pbAjax" ajax="true" value="#{fileUploadController.progress}"  labelTemplate="{value}%" global="false">
                         <p:ajax event="complete" listener="#{fileUploadController.onComplete}" update="growl ,progressbar , listError ,panelUpload"/>
                     </p:progressBar>
-                    
+
                     <ui:repeat  id="listError" value="#{fileUploadController.listErrorImport}" var="item" varStatus="loop">
                         <p style="color: red;font-weight: bolder"><span style="color: green">خطای فایل : </span> #{item}</p> 
                     </ui:repeat>  

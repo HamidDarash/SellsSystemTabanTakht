@@ -80,13 +80,15 @@
                                     </h:panelGrid>
                                 </p:panel>
                                 <p:panel header="انجام محاسبه">
-                                    <p:commandButton  value="محاسبه شود" actionListener="#{installmentCalculatorController.computeInstallment}" />
+                                    <p:commandButton update="partTwo"  value="محاسبه شود" actionListener="#{installmentCalculatorController.computeInstallment}" />
+                                    <p:commandButton update="@form"  value="مجدد" actionListener="#{installmentCalculatorController.resetform}" />
                                 </p:panel>
                             </p:panelGrid>
                         </p:panel>
-                        <p:panel id="partTwo" header="">
+                        <p:panel id="partTwo" header="مشاهده نتایج" rendered="#{installmentCalculatorController.selectedPerson != null}">
                             <h:panelGrid columns="12" >
-
+                                <h:graphicImage value="/resources/img/installment.png" width="48"/>
+                                <h:outputText escape="false" value="#{installmentCalculatorController.exportHtml}" />
                             </h:panelGrid>
                         </p:panel>
                     </h:panelGrid>
